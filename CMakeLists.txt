@@ -35,6 +35,8 @@ set(mainProgs
 
 	hello
 
+	demoExpAtmosphere
+
 	)
 
 foreach(mainProg ${mainProgs})
