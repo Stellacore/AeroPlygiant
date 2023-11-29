@@ -221,47 +221,63 @@ namespace
 		return tNext;
 	}
 
-	//! Estimate next tangent direction based on local atmospheric refraction
-	inline
-	Vector
-	nextTangent
-		( Vector const & tPrev
-		, Vector const & rCurr
-		, AtmModel const & atm
-		, double const & delta
-		)
+	//! Ray propagation functions
+	struct Propagator
 	{
-		Vector tNext{ tPrev }; // implicit - needs iteration
+		AtmModel const theAtm{};
+		double const theStepSize{ null<double>() };
 
-		// incomming state is fixed
-		double const nuPrev{ atm.nuValue(rCurr - .5*delta*tPrev) };
-
-		// iterate on exiting path
-		double difSq{ 2. };
-		static double const tol{ std::numeric_limits<double>::epsilon() };
-		while (tol < difSq)
+		//! True if this instance is valid
+		inline
+		bool
+		isValid
+			() const
 		{
-			double const nuNext{ atm.nuValue(rCurr + .5*delta*tNext) };
-			Vector const tTemp
-				{ snelsTangent(tPrev, rCurr, nuPrev, nuNext, atm) };
-			difSq = magSq(tTemp - tNext);
-			tNext = tTemp;
+			return engabra::g3::isValid(theStepSize);
 		}
 
-		return tNext;
-	}
+		//! Estimate next tangent based on local atmospheric refraction
+		inline
+		Vector
+		nextTangent
+			( Vector const & tPrev
+			, Vector const & rCurr
+			) const
+		{
+			Vector tNext{ tPrev }; // implicit - needs iteration
 
-	//! Predicted next location delta units along tangent from rVec
-	inline
-	Vector
-	nextLocation
-		( Vector const & rVec
-		, Vector const & tVec
-		, double const & delta
-		)
-	{
-		return { rVec + delta * tVec };
-	}
+			// incomming state is fixed
+			double const nuPrev
+				{ theAtm.nuValue(rCurr - .5*theStepSize*tPrev) };
+
+			// iterate on exiting path
+			double difSq{ 2. };
+			static double const tol{ std::numeric_limits<double>::epsilon() };
+			while (tol < difSq)
+			{
+				double const nuNext
+					{ theAtm.nuValue(rCurr + .5*theStepSize*tNext) };
+				Vector const tTemp
+					{ snelsTangent(tPrev, rCurr, nuPrev, nuNext, theAtm) };
+				difSq = magSq(tTemp - tNext);
+				tNext = tTemp;
+			}
+
+			return tNext;
+		}
+
+		//! Predicted next location stepsize units along tangent from rVec
+		inline
+		Vector
+		nextLocation
+			( Vector const & rVec
+			, Vector const & tVec
+			) const
+		{
+			return { rVec + theStepSize * tVec };
+		}
+
+	}; // Propagator
 
 	//! Put current position and tangent values to stream
 	void
@@ -295,19 +311,35 @@ main
 	std::cout << "    sRadSpace: " << io::fixed(sRadSpace) << '\n';
 
 	double const delta{ 10.e3 };
+	double length{ 0. };
 	std::cout << "delta: " << io::fixed(delta) << '\n';
 
+	// initial conditions
 	Vector const tBeg{ direction(e1 + e3) };
 	Vector const rBeg{ sRadEarth * e3 };
-update(std::cout, tBeg, rBeg, 0u);
 
-	Vector const t1{ nextTangent(tBeg, rBeg, atm, delta) };
-	Vector const r1{ nextLocation(rBeg, t1, delta) };
-update(std::cout, t1, r1, 1u);
+std::size_t ndx{ 0u };
+update(std::cout, tBeg, rBeg, ndx++);
 
-	Vector const t2{ nextTangent(t1, r1, atm, delta) };
-	Vector const r2{ nextLocation(r1, t2, delta) };
-update(std::cout, t2, r2, 2u);
+	// propagate ray forward until TODO??
+	Propagator const prop{ atm, delta };
+
+	Vector tPrev{ tBeg };
+	Vector rCurr{ rBeg };
+	if (prop.isValid())
+	{
+		double const maxLength{ magnitude(sRadSpace - sRadEarth) };
+		while (length < maxLength)
+		{
+			Vector const tNext{ prop.nextTangent(tPrev, rCurr) };
+			Vector const rNext{ prop.nextLocation(rCurr, tNext) };
+update(std::cout, tNext, rNext, ndx++);
+
+			tPrev = tNext;
+			rCurr = rNext;
+			length += delta;
+		}
+	}
 
 }
 
