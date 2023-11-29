@@ -166,10 +166,10 @@ namespace
 	//! Update tangent direction based on current step info
 	inline
 	Vector
-	nextTangent
-		( Vector const & rCurr
-		, Vector const & tCurr
-		, double const & nuCurr
+	snelsTangent
+		( Vector const & tPrev
+		, Vector const & rCurr
+		, double const & nuPrev
 		, double const & nuNext
 		, AtmModel const & atm
 		)
@@ -177,17 +177,17 @@ namespace
 		Vector tNext{ null<Vector>() };
 
 		// check validity
-		// if (isValid(rCurr) && isValid(tCurr))
+		// if (isValid(rCurr) && isValid(tPrev))
 		// ... just assume valid for now
 		{
-			// Default corresponds with case (nuCurr == nuNext)
-			tNext = tCurr;
+			// Default corresponds with case (nuPrev == nuNext)
+			tNext = tPrev;
 
 			// get index field gradient
 			Vector const uCurr{ atm.gradDir(rCurr) };
 
 			// compute refraction bivector at current location
-			BiVector const bivCurr{ (nuCurr/nuNext) * (tCurr*uCurr).theBiv };
+			BiVector const bivCurr{ (nuPrev/nuNext) * (tPrev*uCurr).theBiv };
 
 			// Use radicand value to select between propagation methods
 			// (total internal reflection or refraction)
@@ -195,25 +195,25 @@ namespace
 			if (radicand < 0.)
 			{
 				// (internal) reflection case
-				tNext = (uCurr * tCurr * uCurr).theVec;
+				tNext = (uCurr * tPrev * uCurr).theVec;
 			}
 			else
 			{
 				// refraction case
-				if (nuCurr < nuNext)
+				if (nuPrev < nuNext)
 				{
 					Spinor const spinU{  std::sqrt(radicand), bivCurr };
 					tNext = (spinU * uCurr).theVec;
 				}
-				else if (nuNext < nuCurr)
+				else if (nuNext < nuPrev)
 				{
 					Spinor const spinU{ -std::sqrt(radicand), bivCurr };
 					tNext = (spinU * uCurr).theVec;
 				}
 			//	// Default case
-			//	else // nuCurr == nuNext
+			//	else // nuPrev == nuNext
 			//	{
-			//		tNext = tCurr; // could initialize with this?
+			//		tNext = tPrev; // could initialize with this?
 			//	}
 			}
 		}
@@ -221,48 +221,46 @@ namespace
 		return tNext;
 	}
 
-	//! Representation of location and tangent at point along path
-	struct NodeRT
-	{
-		Vector const theLoc{ null<Vector>() };
-		Vector const theTan{ null<Vector>() };
-
-		//! Location of point on ray
-		inline
-		Vector const &
-		loc
-			() const
-		{
-			return theLoc;
-		}
-
-		//! Path tangent (unit) direction at loc()
-		inline
-		Vector const &
-		tan
-			() const
-		{
-			return theTan;
-		}
-
-	};
-
-	//! Next node (location and exiting tangent : <rVec,tVec>)
+	//! Estimate next tangent direction based on local atmospheric refraction
 	inline
-	NodeRT
-	nextNode
-		( NodeRT const & rtCurr
-		, double const & nuCurr
-		, double const & nuNext
+	Vector
+	nextTangent
+		( Vector const & tPrev
+		, Vector const & rCurr
 		, AtmModel const & atm
 		, double const & delta
 		)
 	{
-		Vector const & rCurr = rtCurr.loc();
-		Vector const & tCurr = rtCurr.tan();
-		Vector const tNext{ nextTangent(rCurr, tCurr, nuCurr, nuNext, atm) };
-		Vector const rNext{ rCurr + delta * tNext };
-		return { rNext, tNext };
+		Vector tNext{ tPrev }; // implicit - needs iteration
+
+		// incomming state is fixed
+		double const nuPrev{ atm.nuValue(rCurr - .5*delta*tPrev) };
+
+		// iterate on exiting path
+		double difSq{ 2. };
+		static double const tol{ std::numeric_limits<double>::epsilon() };
+		while (tol < difSq)
+		{
+			double const nuNext{ atm.nuValue(rCurr + .5*delta*tNext) };
+			Vector const tTemp
+				{ snelsTangent(tPrev, rCurr, nuPrev, nuNext, atm) };
+			difSq = magSq(tTemp - tNext);
+			tNext = tTemp;
+		}
+
+		return tNext;
+	}
+
+	//! Predicted next location delta units along tangent from rVec
+	inline
+	Vector
+	nextLocation
+		( Vector const & rVec
+		, Vector const & tVec
+		, double const & delta
+		)
+	{
+		return { rVec + delta * tVec };
 	}
 
 	//! Put current position and tangent values to stream
@@ -270,28 +268,16 @@ namespace
 	inline
 	update
 		( std::ostream & strm
-		, Vector const & rVec
 		, Vector const & tVec
+		, Vector const & rVec
 		, std::size_t const & ndx
 		)
 	{
 		strm
 			<< " " << std::setw(3) << ndx
-			<< " " << "loc: " << io::fixed(rVec, 8u)
 			<< " " << "tan: " << io::fixed(tVec, 2u)
+			<< " " << "loc: " << io::fixed(rVec, 8u)
 			<< '\n';
-	}
-
-	//! Put current (position, tangent) pari values to stream
-	void
-	inline
-	update
-		( std::ostream & strm
-		, NodeRT const & rtPair
-		, std::size_t const & ndx
-		)
-	{
-		update(strm, rtPair.loc(), rtPair.tan(), ndx);
 	}
 
 } // [anon]
@@ -311,19 +297,17 @@ main
 	double const delta{ 10.e3 };
 	std::cout << "delta: " << io::fixed(delta) << '\n';
 
-	Vector const r0{ sRadEarth * e3 };
-	Vector const t0{ direction(e1 + e3) };
-	NodeRT const rt0{ r0, t0 };
-update(std::cout, rt0, 0u);
+	Vector const tBeg{ direction(e1 + e3) };
+	Vector const rBeg{ sRadEarth * e3 };
+update(std::cout, tBeg, rBeg, 0u);
 
-	double const nu0{ atm.nuValue(r0 - .5*delta*t0) };
-	double const nu1{ atm.nuValue(r0 + .5*delta*t0) };
-	NodeRT const rt1{ nextNode(rt0, nu0, nu1, atm, delta) };
-update(std::cout, rt1, 1u);
+	Vector const t1{ nextTangent(tBeg, rBeg, atm, delta) };
+	Vector const r1{ nextLocation(rBeg, t1, delta) };
+update(std::cout, t1, r1, 1u);
 
-	double const nu2{ atm.nuValue(rt1.loc() + .5*delta*rt1.tan()) };
-	NodeRT const rt2{ nextNode(rt1, nu1, nu2, atm, delta) };
-update(std::cout, rt2, 2u);
+	Vector const t2{ nextTangent(t1, r1, atm, delta) };
+	Vector const r2{ nextLocation(r1, t2, delta) };
+update(std::cout, t2, r2, 2u);
 
 }
 
