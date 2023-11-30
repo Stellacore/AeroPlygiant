@@ -19,6 +19,7 @@
 #include <iomanip>
 #include <iostream>
 #include <limits>
+#include <sstream>
 #include <vector>
 
 
@@ -26,10 +27,47 @@ namespace
 {
 	using namespace engabra::g3;
 
-	constexpr double sNuEarth{ 1.010 }; // big (actual near 1.000273 STP)
-	constexpr double sNuSpace{ 1.000 };
-	constexpr double sRadEarth{ 6370.e3 };
-	constexpr double sRadSpace{ sRadEarth + 100.e3 };
+	//! Data parameters for Planet atmosphere
+	struct Planet
+	{
+		double const theNuGround{ null<double>() };
+		double const theNuSpace{ null<double>() };
+		double const theRadGround{ null<double>() };
+		double const theRadSpace{ null<double>() };
+
+		//! Descriptive information about this instance
+		inline
+		std::string
+		infoString
+			( std::string const & title = {}
+			) const
+		{
+			std::ostringstream oss;
+			if (! title.empty())
+			{
+				oss << title << '\n';
+			}
+			oss << " theNuGround: " << io::fixed(theNuGround);
+			oss << '\n';
+			oss << "  theNuSpace: " << io::fixed(theNuSpace);
+			oss << '\n';
+			oss << "theRadGround: " << io::fixed(theRadGround);
+			oss << '\n';
+			oss << " theRadSpace: " << io::fixed(theRadSpace);
+			return oss.str();
+		}
+
+
+	}; // Planet
+
+	//! Parameters for Earth atmosphere
+	static Planet const sEarth
+		{
+		  1.000273 // nuGround // (for earth, actual is 1.000273 at STP)
+		, 1.000    // nuSpace
+		, 6370.e3  // radiusGround
+		, 6470.e3  // radiusSpace
+		};
 
 	//! Atmospheric model : nu = alpha*exp(-beta*radius)
 	struct AtmModel
@@ -78,15 +116,39 @@ namespace
 		}
 
 
-		double const theAlpha{};
-		double const theBeta{};
+		double const theAlpha{ null<double>() };
+		double const theBeta{ null<double>() };
 
-
-		//! Construct model to match environment constants
+		//! Construct an invalid instance
+		inline
 		AtmModel
 			()
-			: theAlpha{ alpha(sNuEarth, sNuSpace, sRadEarth, sRadSpace) }
-			, theBeta{ beta(sNuEarth, sNuSpace, sRadEarth, sRadSpace) }
+			: theAlpha{ null<double>() }
+			, theBeta{ null<double>() }
+		{
+		}
+
+		//! Construct model to match environment constants
+		inline
+		AtmModel
+			( Planet const & planet
+			)
+			: theAlpha
+				{ alpha
+					( planet.theNuGround
+					, planet.theNuSpace
+					, planet.theRadGround
+					, planet.theRadSpace
+					)
+				}
+			, theBeta
+				{ beta
+					( planet.theNuGround
+					, planet.theNuSpace
+					, planet.theRadGround
+					, planet.theRadSpace
+					)
+				}
 		{ }
 
 		//! Index of refraction value at vector location rVec
@@ -138,8 +200,8 @@ namespace
 	nuProfile
 		( double const & delta
 		, AtmModel const & atm
-		, double const & rBeg = sRadEarth
-		, double const & rEnd = sRadSpace
+		, double const & rBeg = sEarth.theRadGround
+		, double const & rEnd = sEarth.theRadSpace
 		)
 	{
 		std::vector<double> nus;
@@ -219,6 +281,45 @@ namespace
 		double const theNextNu;
 		Vector const theNextTan;
 
+		//! Descriptive information about this instance
+		inline
+		std::string
+		infoString
+			( std::string const & title = {}
+			) const
+		{
+			std::ostringstream oss;
+			if (! title.empty())
+			{
+				oss << title << '\n';
+			}
+			oss << "thePrevTan: " << io::fixed(thePrevTan, 8u, 6u);
+			oss << '\n';
+			oss << " thePrevNu: " << io::fixed(thePrevNu, 8u, 6u);
+			oss << '\n';
+			oss << "theCurrLoc: " << io::fixed(theCurrLoc, 8u, 6u);
+			oss << '\n';
+			oss << " theNextNu: " << io::fixed(theNextNu, 8u, 6u);
+			oss << '\n';
+			oss << "theNextTan: " << io::fixed(theNextTan, 8u, 6u);
+			return oss.str();
+		}
+
+		//! Node associated with reversing direction of evolution
+		inline
+		Node
+		reversed
+			() const
+		{
+			return Node
+				{ -theNextTan
+				,  theNextNu
+				,  theCurrLoc
+				,  thePrevNu
+				, -thePrevTan
+				};
+		}
+
 	}; // Node
 
 	//! Ray propagation functions
@@ -296,6 +397,7 @@ namespace
 		 * (with all attendent pitfalls).
 		 *
 		 */
+		inline
 		std::vector<Node>
 		nodePath
 			( Vector const & tBeg
@@ -390,32 +492,46 @@ int
 main
 	()
 {
-	AtmModel const atm;
-
-	std::cout << "nu(sRadEarth): " << atm.nuValue(sRadEarth*e3) << '\n';
-	std::cout << "nu(sRadSpace): " << atm.nuValue(sRadSpace*e3) << '\n';
-	std::cout << "    sRadEarth: " << io::fixed(sRadEarth) << '\n';
-	std::cout << "    sRadSpace: " << io::fixed(sRadSpace) << '\n';
+	std::cout << sEarth.infoString("sEarth") << '\n';
+	AtmModel const atm(sEarth);
 
 	double const delta{ 10.e3 };
-	double const nominalLength{ magnitude(sRadSpace - sRadEarth) };
+	double const nominalLength
+		{ magnitude(sEarth.theRadSpace - sEarth.theRadGround) };
 
-	std::cout << "delta: " << io::fixed(delta) << '\n';
+	std::cout << "nominalLength: " << io::fixed(nominalLength) << '\n';
+	std::cout << "        delta: " << io::fixed(delta) << '\n';
 
 	// initial conditions
 	Vector const tBeg{ direction(e1 + e3) };
-	Vector const rBeg{ sRadEarth * e3 };
+	Vector const rBeg{ sEarth.theRadGround * e3 };
 
 	// propagate ray forward until maxLength
 	Propagator const prop{ atm, delta };
-	std::vector<Node> const nodes{ prop.nodePath(tBeg, rBeg, nominalLength) };
+	std::vector<Node> const fwdNodes
+		{ prop.nodePath(tBeg, rBeg, nominalLength) };
 
 	// report results
-	std::size_t ndx{ 0u };
-	for (Node const & node : nodes)
+	for (std::size_t nn{0u} ; nn < fwdNodes.size() ; ++nn)
 	{
-		report(std::cout, node, ndx++);
+		report(std::cout, fwdNodes[nn], nn);
 	}
 
+	Node const & endNode = fwdNodes.back();
+	Node const revNode{ endNode.reversed() };
+
+	std::cout << " end node: \n" << endNode.infoString() << '\n';
+	std::cout << " rev node: \n" << revNode.infoString() << '\n';
+
+	// propagate backward
+	std::vector<Node> const revNodes
+		{ prop.nodePath
+			(revNode.thePrevTan, revNode.theCurrLoc, nominalLength)
+		};
+
+	for (std::size_t nn{0u} ; nn < revNodes.size() ; ++nn)
+	{
+		report(std::cout, revNodes[nn], nn);
+	}
 }
 
