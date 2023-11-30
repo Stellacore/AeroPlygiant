@@ -87,18 +87,7 @@ namespace
 			()
 			: theAlpha{ alpha(sNuEarth, sNuSpace, sRadEarth, sRadSpace) }
 			, theBeta{ beta(sNuEarth, sNuSpace, sRadEarth, sRadSpace) }
-		{
-		}
-
-		//! Value of index at scalar radial distance
-		inline
-		double
-		nuValue
-			( double const & radMag
-			) const
-		{
-			return expValue(theAlpha, theBeta, radMag);
-		}
+		{ }
 
 		//! Index of refraction value at vector location rVec
 		inline
@@ -108,7 +97,7 @@ namespace
 			) const
 		{
 			double const rMag{ magnitude(rVec) };
-			return nuValue(rMag);
+			return expValue(theAlpha, theBeta, rMag);
 		}
 
 		//! Gradient (approximation) of Index of refraction at location rVec
@@ -403,8 +392,8 @@ main
 {
 	AtmModel const atm;
 
-	std::cout << "nu(sRadEarth): " << atm.nuValue(sRadEarth) << '\n';
-	std::cout << "nu(sRadSpace): " << atm.nuValue(sRadSpace) << '\n';
+	std::cout << "nu(sRadEarth): " << atm.nuValue(sRadEarth*e3) << '\n';
+	std::cout << "nu(sRadSpace): " << atm.nuValue(sRadSpace*e3) << '\n';
 	std::cout << "    sRadEarth: " << io::fixed(sRadEarth) << '\n';
 	std::cout << "    sRadSpace: " << io::fixed(sRadSpace) << '\n';
 
