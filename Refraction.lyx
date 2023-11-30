@@ -1782,6 +1782,265 @@ Report
 Differential Methods
 \end_layout
 
+\begin_layout Subsection
+Refraction Invariant (?)
+\end_layout
+
+\begin_layout Standard
+The bivector quantity, 
+\begin_inset Formula $\nu\left(t\wedge g\right)$
+\end_inset
+
+, is a refraction invariant - in the instantaneous sense
+\begin_inset Foot
+status open
+
+\begin_layout Plain Layout
+Interpretation of Snel's law is that speed of propagation is constant while
+ path curves (rather than v.v.
+ as in EM theory).
+ The direction of curvature changes depending on changes in the direction
+ of the index gradient.
+\end_layout
+
+\end_inset
+
+.
+ Consider this to be constant, and differentiate, w.r.t.
+ path length 
+\begin_inset Formula $\lambda$
+\end_inset
+
+, to obtain
+\begin_inset Formula 
+\[
+\dot{\nu}\left(t\wedge g\right)+\nu\left(\dot{t}\wedge g\right)+\nu\left(t\wedge\dot{g}\right)=0
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection
+Differential Relationships
+\end_layout
+
+\begin_layout Standard
+Note that 
+\begin_inset Formula $\nu=\nu\left(r\right)$
+\end_inset
+
+ and 
+\begin_inset Formula $r=r\left(\lambda\right)$
+\end_inset
+
+, so that
+\begin_inset Formula 
+\[
+\dot{\nu}=\frac{d\nu}{d\lambda}=\sum\frac{\partial\nu}{\partial\rho_{k}}\frac{d\rho_{k}}{d\lambda}=\nabla\nu\cdot\dot{r}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The tangent vector is given by the position derivative w.r.t.
+ arc length,
+\begin_inset Formula 
+\[
+\dot{r}=\frac{dr}{d\lambda}=t
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The derivative (wrt 
+\begin_inset Formula $\lambda$
+\end_inset
+
+) of the gradient is
+\begin_inset Formula 
+\[
+\dot{g}=\frac{dg}{d\lambda}=\frac{d}{d\lambda}\sum\frac{\partial\nu}{\partial\rho_{k}}e_{k}=\sum\frac{d}{d\lambda}\frac{\partial\nu}{\partial\rho_{k}}e_{k}
+\]
+
+\end_inset
+
+
+\begin_inset Formula 
+\[
+\dot{g}=\lim_{\Delta\lambda\rightarrow0}\frac{g\left(r+\Delta\lambda\dot{r}\right)-g\left(r\right)}{\Delta\lambda}
+\]
+
+\end_inset
+
+
+\begin_inset Formula 
+\[
+g=g\left(r\right)
+\]
+
+\end_inset
+
+
+\begin_inset Formula 
+\[
+\dot{g}=\frac{dg}{d\lambda}=\frac{dg}{d\rho_{1}}\frac{d\rho_{1}}{d\lambda}+\frac{dg}{d\rho_{2}}\frac{d\rho_{2}}{d\lambda}+\frac{dg}{d\rho_{3}}\frac{d\rho_{3}}{d\lambda}
+\]
+
+\end_inset
+
+
+\begin_inset Note Comment
+status collapsed
+
+\begin_layout Plain Layout
+\begin_inset Formula 
+\[
+\frac{dg}{d\lambda}=\frac{d}{d\rho_{1}}\left(\sum\frac{d\nu}{d\rho_{k}}e_{k}\right)\frac{d\rho_{1}}{d\lambda}+\frac{d}{d\rho_{2}}\left(\sum\frac{d\nu}{d\rho_{k}}e_{k}\right)\frac{d\rho_{2}}{d\lambda}+\frac{d}{d\rho_{3}}\left(\sum\frac{d\nu}{d\rho_{k}}e_{k}\right)\frac{d\rho_{3}}{d\lambda}
+\]
+
+\end_inset
+
+
+\begin_inset Formula 
+\[
+\frac{dg}{d\lambda}=\left(\sum\frac{d^{2}\nu}{d\rho_{1}d\rho_{k}}e_{k}\right)\frac{d\rho_{1}}{d\lambda}+\left(\sum\frac{d^{2}\nu}{d\rho_{2}d\rho_{k}}e_{k}\right)\frac{d\rho_{2}}{d\lambda}+\left(\sum\frac{d^{2}\nu}{d\rho_{3}d\rho_{k}}e_{k}\right)\frac{d\rho_{3}}{d\lambda}
+\]
+
+\end_inset
+
+
+\begin_inset Formula 
+\begin{align*}
+\frac{dg}{d\lambda} & =\left(\frac{d^{2}\nu}{d\rho_{1}d\rho_{1}}e_{1}+\frac{d^{2}\nu}{d\rho_{1}d\rho_{2}}e_{2}+\frac{d^{2}\nu}{d\rho_{1}d\rho_{3}}e_{3}\right)\dot{r}_{1}\\
+ & +\left(\frac{d^{2}\nu}{d\rho_{2}d\rho_{1}}e_{1}+\frac{d^{2}\nu}{d\rho_{2}d\rho_{2}}e_{2}+\frac{d^{2}\nu}{d\rho_{2}d\rho_{3}}e_{3}\right)\dot{r}_{2}\\
+ & +\left(\frac{d^{2}\nu}{d\rho_{3}d\rho_{1}}e_{1}+\frac{d^{2}\nu}{d\rho_{3}d\rho_{2}}e_{2}+\frac{d^{2}\nu}{d\rho_{3}d\rho_{3}}e_{3}\right)\dot{r}_{3}
+\end{align*}
+
+\end_inset
+
+
+\begin_inset Formula 
+\begin{align*}
+\frac{dg}{d\lambda} & =\frac{d}{d\rho_{1}}\left(\frac{d\nu}{d\rho_{1}}e_{1}+\frac{d\nu}{d\rho_{2}}e_{2}+\frac{d\nu}{d\rho_{3}}e_{3}\right)\dot{r}_{1}\\
+ & +\frac{d}{d\rho_{2}}\left(\frac{d\nu}{d\rho_{1}}e_{1}+\frac{d\nu}{d\rho_{2}}e_{2}+\frac{d\nu}{d\rho_{3}}e_{3}\right)\dot{r}_{2}\\
+ & +\frac{d}{d\rho_{3}}\left(\frac{d\nu}{d\rho_{1}}e_{1}+\frac{d\nu}{d\rho_{2}}e_{2}+\frac{d\nu}{d\rho_{3}}e_{3}\right)\dot{r}_{3}
+\end{align*}
+
+\end_inset
+
+
+\begin_inset Formula 
+\begin{align*}
+\frac{dg}{d\lambda} & =\frac{dg}{d\rho_{1}}\dot{r}_{1}\\
+ & +\frac{dg}{d\rho_{2}}\dot{r}_{2}\\
+ & +\frac{dg}{d\rho_{3}}\dot{r}_{3}
+\end{align*}
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\begin_inset Formula 
+\begin{align*}
+\dot{g} & =\frac{dg}{d\rho_{1}}\dot{r}_{1}+\frac{dg}{d\rho_{2}}\dot{r}_{2}+\frac{dg}{d\rho_{3}}\dot{r}_{3}
+\end{align*}
+
+\end_inset
+
+
+\begin_inset Formula 
+\[
+\dot{g}=\frac{dg}{d\rho_{1}}\left(\dot{r}\cdot e_{1}\right)+\frac{dg}{d\rho_{2}}\left(\dot{r}\cdot e_{2}\right)+\frac{dg}{d\rho_{3}}\left(\dot{r}\cdot e_{3}\right)
+\]
+
+\end_inset
+
+
+\begin_inset Formula 
+\begin{align*}
+\frac{dg}{d\lambda} & =\left(\frac{d^{2}\nu}{d\rho_{1}d\rho_{1}}e_{1}+\frac{d^{2}\nu}{d\rho_{1}d\rho_{2}}e_{2}+\frac{d^{2}\nu}{d\rho_{1}d\rho_{3}}e_{3}\right)\left(\dot{r}\cdot e_{1}\right)\\
+ & +\left(\frac{d^{2}\nu}{d\rho_{2}d\rho_{1}}e_{1}+\frac{d^{2}\nu}{d\rho_{2}d\rho_{2}}e_{2}+\frac{d^{2}\nu}{d\rho_{2}d\rho_{3}}e_{3}\right)\left(\dot{r}\cdot e_{2}\right)\\
+ & +\left(\frac{d^{2}\nu}{d\rho_{3}d\rho_{1}}e_{1}+\frac{d^{2}\nu}{d\rho_{3}d\rho_{2}}e_{2}+\frac{d^{2}\nu}{d\rho_{3}d\rho_{3}}e_{3}\right)\left(\dot{r}\cdot e_{3}\right)
+\end{align*}
+
+\end_inset
+
+
+\begin_inset Formula 
+\begin{align*}
+\end{align*}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Substitute the above in order to express the refraction invariant as,
+\begin_inset Formula 
+\[
+\nabla\nu\cdot\dot{r}\left(\dot{r}\wedge g\right)+\nu\left(\ddot{r}\wedge g\right)+\nu\left(\dot{r}\wedge\left(\frac{dg}{d\rho_{1}}\dot{r}_{1}+\frac{dg}{d\rho_{2}}\dot{r}_{2}+\frac{dg}{d\rho_{3}}\dot{r}_{3}\right)\right)=0
+\]
+
+\end_inset
+
+Multiply from by 
+\begin_inset Formula $\nu^{-1}$
+\end_inset
+
+,
+\begin_inset Formula 
+\[
+\ddot{r}\wedge g+\frac{\nabla\nu}{\nu}\cdot\dot{r}\left(\dot{r}\wedge g\right)+\left(\dot{r}\wedge\frac{dg}{d\rho_{1}}\right)\dot{r}_{1}+\left(\dot{r}\wedge\frac{dg}{d\rho_{2}}\right)\dot{r}_{2}+\left(\dot{r}\wedge\frac{dg}{d\rho_{3}}\right)\dot{r}_{3}=0
+\]
+
+\end_inset
+
+
+\begin_inset Formula 
+\[
+\ddot{r}\wedge g+\frac{\nabla\nu}{\nu}\cdot\dot{r}\left(\dot{r}\wedge g\right)+\left(\dot{r}\wedge\frac{\partial g}{\partial\rho_{1}}\right)\dot{r}_{1}+\left(\dot{r}\wedge\frac{\partial g}{\partial\rho_{2}}\right)\dot{r}_{2}+\left(\dot{r}\wedge\frac{\partial g}{\partial\rho_{3}}\right)\dot{r}_{3}=0
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+This is a second order, nonlinear, differential equation expressing changes
+ to position, 
+\begin_inset Formula $r$
+\end_inset
+
+, as a function of path length evolution parameter, 
+\begin_inset Formula $\lambda$
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+This should be a necessary condition, however, it is unclear if this is
+ a sufficient condition.
+\end_layout
+
+\begin_layout Section
+Stuff
+\end_layout
+
 \begin_layout Standard
 \begin_inset Note Note
 status open
