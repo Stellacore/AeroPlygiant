@@ -328,14 +328,7 @@ namespace
 		AtmModel const theAtm{};
 		double const theStepDist{ null<double>() };
 
-		//! True if this instance is valid
-		inline
-		bool
-		isValid
-			() const
-		{
-			return engabra::g3::isValid(theStepDist);
-		}
+	private:
 
 		//! Estimate next tangent based on local atmospheric refraction
 		inline
@@ -389,6 +382,17 @@ namespace
 			) const
 		{
 			return { rVec + theStepDist * tVec };
+		}
+
+	public:
+
+		//! True if this instance is valid
+		inline
+		bool
+		isValid
+			() const
+		{
+			return engabra::g3::isValid(theStepDist);
 		}
 
 		/*! Perform forward integration step by step.
@@ -466,7 +470,7 @@ namespace
 		)
 	{
 		strm
-			<< " " << std::setw(3) << ndx
+			<< " " << std::setw(9u) << ndx
 			<< " " << "tPrev: " << io::fixed(tPrev, 2u)
 			<< " " << "rCurr: " << io::fixed(rCurr, 8u)
 			<< " " << "tNext: " << io::fixed(tNext, 2u)
@@ -492,19 +496,26 @@ int
 main
 	()
 {
-	std::cout << sEarth.infoString("sEarth") << '\n';
 	AtmModel const atm(sEarth);
 
 	double const delta{ 10.e3 };
-	double const nominalLength
-		{ magnitude(sEarth.theRadSpace - sEarth.theRadGround) };
-
-	std::cout << "nominalLength: " << io::fixed(nominalLength) << '\n';
-	std::cout << "        delta: " << io::fixed(delta) << '\n';
+	double const nominalLength{ 150.e3 };
+	//	{ magnitude(sEarth.theRadSpace - sEarth.theRadGround) };
 
 	// initial conditions
 	Vector const tBeg{ direction(e1 + e3) };
 	Vector const rBeg{ sEarth.theRadGround * e3 };
+
+	for (double delta{100000.} ; .0001 < delta ; delta /=10.)
+	{
+		Propagator const prop{ atm, delta };
+		std::vector<Node> const fwdNodes
+			{ prop.nodePath(tBeg, rBeg, nominalLength) };
+		std::cout << " delta: " << io::fixed(delta, 7u, 6u) << " ";
+		report(std::cout, fwdNodes.back(), fwdNodes.size());
+	}
+
+return 0;
 
 	// propagate ray forward until maxLength
 	Propagator const prop{ atm, delta };
@@ -512,10 +523,20 @@ main
 		{ prop.nodePath(tBeg, rBeg, nominalLength) };
 
 	// report results
+	std::cout << sEarth.infoString("sEarth") << '\n';
 	for (std::size_t nn{0u} ; nn < fwdNodes.size() ; ++nn)
 	{
 		report(std::cout, fwdNodes[nn], nn);
 	}
+	/*
+	std::cout << "        delta: " << io::fixed(delta) << '\n';
+	std::cout << "nominalLength: " << io::fixed(nominalLength) << '\n';
+	report(std::cout, fwdNodes.back(), fwdNodes.size());
+	*/
+
+}
+
+/* -- TODO good unit test - checking reversal
 
 	Node const & endNode = fwdNodes.back();
 	Node const revNode{ endNode.reversed() };
@@ -533,5 +554,4 @@ main
 	{
 		report(std::cout, revNodes[nn], nn);
 	}
-}
-
+*/
