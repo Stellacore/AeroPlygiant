@@ -1977,10 +1977,27 @@ status collapsed
 
 \end_inset
 
+In matrix form, the Hessian of 
+\begin_inset Formula $g$
+\end_inset
 
+, may be defined as the (3x3) matrix
 \begin_inset Formula 
-\begin{align*}
-\end{align*}
+\[
+\left(\mathrm{H}_{g}\right)_{ij}\equiv\frac{\partial^{2}\nu}{\partial\rho_{i}\partial\rho_{j}}
+\]
+
+\end_inset
+
+ The derivative, 
+\begin_inset Formula $\dot{g}$
+\end_inset
+
+, may be expressed as
+\begin_inset Formula 
+\[
+\dot{g}=\mathrm{H}_{g}\left[\sum\left(\dot{r}\cdot e_{k}\right)e_{k}\right]
+\]
 
 \end_inset
 
@@ -2037,114 +2054,11 @@ This should be a necessary condition, however, it is unclear if this is
  a sufficient condition.
 \end_layout
 
-\begin_layout Section
-Stuff
-\end_layout
-
 \begin_layout Standard
-\begin_inset Note Note
-status open
-
-\begin_layout Plain Layout
-TODO
-\end_layout
-
-\end_inset
-
-/TBD
-\end_layout
-
-\begin_layout Standard
-Start with the constant valued refraction invariant (
-\begin_inset Note Note
-status open
-
-\begin_layout Plain Layout
-TODO
-\end_layout
-
-\end_inset
-
-/TBD - is this really constant when 
-\begin_inset Formula $g$
-\end_inset
-
- is non-planar?)
+In terms of the index field Hessian matrix,
 \begin_inset Formula 
 \[
-\nu\left(t\wedge g\right)=\text{const}
-\]
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-and
-\begin_inset Formula 
-\[
-t=\dot{r}=\frac{dr}{d\lambda}
-\]
-
-\end_inset
-
-and
-\begin_inset Formula 
-\[
-g=\frac{d\nu}{dr}
-\]
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-Differentiate constant relationship to obtain
-\begin_inset Formula 
-\[
-\frac{d\nu}{d\lambda}\left(t\wedge g\right)+\nu\left(\frac{dt}{d\lambda}\wedge g\right)+\nu\left(t\wedge\frac{dg}{d\lambda}\right)=0
-\]
-
-\end_inset
-
-Note that
-\begin_inset Formula 
-\[
-\frac{dt}{d\lambda}=\frac{d^{2}r}{d\lambda^{2}}
-\]
-
-\end_inset
-
-so that
-\begin_inset Formula 
-\[
-\frac{d\nu}{d\lambda}\left(\frac{dr}{d\lambda}\wedge g\right)+\nu\left(\frac{d^{2}r}{d\lambda^{2}}\wedge g\right)+\nu\left(\frac{dr}{d\lambda}\wedge\frac{dg}{d\lambda}\right)=0
-\]
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-Since 
-\begin_inset Formula $\nu$
-\end_inset
-
- is a function of position, 
-\begin_inset Formula $\nu=\nu\left(r\right)$
-\end_inset
-
-, so that, in Cartesian coordinates, 
-\begin_inset Formula $r=\sum\rho_{k}e_{k}$
-\end_inset
-
-,
-\begin_inset Formula 
-\[
-\frac{d\nu}{d\lambda}=\sum\frac{\partial\nu}{\partial\rho_{k}e_{k}}\frac{d\rho_{k}e_{k}}{d\lambda}=\sum\frac{\partial\nu}{\partial\rho_{k}}\frac{d\rho_{k}}{d\lambda}
+\ddot{r}\wedge g+\frac{\nabla\nu}{\nu}\cdot\dot{r}\left(\dot{r}\wedge g\right)+\dot{r}\wedge\left(\mathrm{H}_{g}\left[\sum\left(\dot{r}\cdot e_{k}\right)e_{k}\right]\right)=0
 \]
 
 \end_inset
@@ -2152,105 +2066,15 @@ Since
 
 \begin_inset Formula 
 \[
-\frac{dr}{d\lambda}=\sum\frac{d\rho_{k}}{d\lambda}e_{k}
+\left(\mathrm{H}_{g}\right)_{ij}\equiv\frac{\partial^{2}\nu}{\partial\rho_{i}\partial\rho_{j}}
 \]
 
 \end_inset
 
-
-\begin_inset Formula 
-\[
-\frac{d^{2}r}{d\lambda^{2}}=\sum\frac{d^{2}\rho_{k}}{d\lambda^{2}}e_{k}
-\]
-
-\end_inset
-
-and finally
-\begin_inset Formula 
-\[
-\left(\sum_{k}\frac{\partial\nu}{\partial\rho_{k}}\frac{d\rho_{k}}{d\lambda}\right)\left(\sum_{k}\frac{d\rho_{k}}{d\lambda}e_{k}\wedge g\right)+\nu\left(\sum_{k}\frac{d^{2}\rho_{k}}{d\lambda^{2}}e_{k}\wedge g\right)+\nu\left(\sum_{k}\frac{d\rho_{k}}{d\lambda}e_{k}\wedge\frac{dg}{d\lambda}\right)=0
-\]
-
-\end_inset
-
-or
-\begin_inset Formula 
-\[
-\sum_{k}\left(\frac{d^{2}\rho_{k}}{d\lambda^{2}}e_{k}\wedge g+\frac{d\rho_{k}}{d\lambda}e_{k}\wedge\frac{dg}{d\lambda}\right)+\frac{1}{\nu}\left(\sum_{j}\frac{\partial\nu}{\partial\rho_{j}}\frac{d\rho_{j}}{d\lambda}\right)\left(\sum_{k}\frac{d\rho_{k}}{d\lambda}e_{k}\wedge g\right)=0
-\]
-
-\end_inset
-
-
-\begin_inset Formula 
-\[
-\sum_{k}e_{k}\wedge\left(\frac{d^{2}\rho_{k}}{d\lambda^{2}}g+\frac{d\rho_{k}}{d\lambda}\frac{dg}{d\lambda}\right)+\frac{1}{\nu}\sum_{j,k}\left(\frac{\partial\nu}{\partial\rho_{j}}\frac{d\rho_{j}}{d\lambda}\frac{d\rho_{k}}{d\lambda}e_{k}\right)\wedge g=0
-\]
-
-\end_inset
-
-
-\begin_inset Formula 
-\[
-\sum_{k}e_{k}\wedge\left(\frac{d^{2}\rho_{k}}{d\lambda^{2}}g+\frac{d\rho_{k}}{d\lambda}\frac{dg}{d\lambda}\right)+\sum_{k}\left(\frac{1}{\nu}\sum_{j}\frac{\partial\nu}{\partial\rho_{j}}\frac{d\rho_{j}}{d\lambda}\frac{d\rho_{k}}{d\lambda}e_{k}\right)\wedge g=0
-\]
-
-\end_inset
-
-
-\begin_inset Formula 
-\[
-\sum_{k}\left[e_{k}\wedge\left(\frac{d^{2}\rho_{k}}{d\lambda^{2}}g+\frac{d\rho_{k}}{d\lambda}\frac{dg}{d\lambda}\right)+\left(\frac{1}{\nu}\left(\sum_{j}\frac{\partial\nu}{\partial\rho_{j}}\frac{d\rho_{j}}{d\lambda}\right)\frac{d\rho_{k}}{d\lambda}e_{k}\right)\wedge g\right]=0
-\]
-
-\end_inset
-
-Or, using dot notation for differentiation with respect to 
-\begin_inset Formula $\lambda$
-\end_inset
-
-,
-\begin_inset Formula 
-\[
-\sum_{k}\left[\ddot{\rho_{k}}\left(e_{k}\wedge g\right)+\dot{\rho_{k}}\left(e_{k}\wedge\dot{g}\right)+\frac{1}{\nu}\left(\sum_{j}\frac{\partial\nu}{\partial\rho_{j}}\dot{\rho_{j}}\right)\dot{\rho_{k}}\left(e_{k}\wedge g\right)\right]=0
-\]
-
-\end_inset
-
-
-\begin_inset Formula 
-\[
-\sum_{k}\left[\left(\ddot{\rho_{k}}+\frac{1}{\nu}\left(\sum_{j}\frac{\partial\nu}{\partial\rho_{j}}\dot{\rho_{j}}\right)\dot{\rho_{k}}\right)\left(e_{k}\wedge g\right)+\dot{\rho_{k}}\left(e_{k}\wedge\dot{g}\right)\right]=0
-\]
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-Solution involves to find three scalar functions, 
-\begin_inset Formula $\rho_{k}=\rho_{k}\left(\lambda\right)$
-\end_inset
-
-, that satisfy this equation given that the 
-\begin_inset Formula $e_{k}$
-\end_inset
-
-, 
-\begin_inset Formula $g$
-\end_inset
-
-, 
-\begin_inset Formula $\dot{g}$
-\end_inset
-
-, and 
-\begin_inset Formula $\frac{\partial\nu}{\partial\rho_{j}}$
-\end_inset
-
- are known (can be evaluated arbitrarily).
- 
+Apparently, the first two terms control the curvature and propagation direction
+ in the plane of the index gradient while the last term (involving a matrix-vect
+or multiplication) introduces a torsion influence that changes direction
+ of the plane of propagation.
 \end_layout
 
 \begin_layout Section
