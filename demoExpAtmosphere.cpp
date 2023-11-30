@@ -166,7 +166,7 @@ namespace
 	//! Update tangent direction based on current step info
 	inline
 	Vector
-	snelsTangent
+	refractedTangent
 		( Vector const & tPrev
 		, Vector const & rCurr
 		, double const & nuPrev
@@ -221,11 +221,22 @@ namespace
 		return tNext;
 	}
 
+	//! Data relevant to an individual node
+	struct Node
+	{
+		Vector const thePrevTan;
+		double const thePrevNu;
+		Vector const theCurrLoc;
+		double const theNextNu;
+		Vector const theNextTan;
+
+	}; // Node
+
 	//! Ray propagation functions
 	struct Propagator
 	{
 		AtmModel const theAtm{};
-		double const theStepSize{ null<double>() };
+		double const theStepDist{ null<double>() };
 
 		//! True if this instance is valid
 		inline
@@ -233,7 +244,7 @@ namespace
 		isValid
 			() const
 		{
-			return engabra::g3::isValid(theStepSize);
+			return engabra::g3::isValid(theStepDist);
 		}
 
 		//! Estimate next tangent based on local atmospheric refraction
@@ -242,25 +253,38 @@ namespace
 		nextTangent
 			( Vector const & tPrev
 			, Vector const & rCurr
+			, double * const & ptrNuNext = nullptr
 			) const
 		{
 			Vector tNext{ tPrev }; // implicit - needs iteration
 
 			// incomming state is fixed
 			double const nuPrev
-				{ theAtm.nuValue(rCurr - .5*theStepSize*tPrev) };
+				{ theAtm.nuValue(rCurr - .5*theStepDist*tPrev) };
 
 			// iterate on exiting path
+			double nuNext{ null<double>() }; // return value if requested
 			double difSq{ 2. };
 			static double const tol{ std::numeric_limits<double>::epsilon() };
 			while (tol < difSq)
 			{
-				double const nuNext
-					{ theAtm.nuValue(rCurr + .5*theStepSize*tNext) };
+				// update refraction index to midpoint of predicted next
+				// interval (along evolving next tangent direction).
+				nuNext = theAtm.nuValue(rCurr + .5*theStepDist*tNext);
 				Vector const tTemp
-					{ snelsTangent(tPrev, rCurr, nuPrev, nuNext, theAtm) };
+					{ refractedTangent(tPrev, rCurr, nuPrev, nuNext, theAtm) };
+
+				// evaluate convergence of tangent direction
 				difSq = magSq(tTemp - tNext);
+
+				// candidate return value (if convergence test passes)
 				tNext = tTemp;
+			}
+
+			// set for use in consumer code (if requested)
+			if (ptrNuNext)
+			{
+				*ptrNuNext = nuNext;
 			}
 
 			return tNext;
@@ -274,7 +298,67 @@ namespace
 			, Vector const & tVec
 			) const
 		{
-			return { rVec + theStepSize * tVec };
+			return { rVec + theStepDist * tVec };
+		}
+
+		/*! Perform forward integration step by step.
+		 *
+		 * Essentially is Euler's method for integration of the ray path
+		 * (with all attendent pitfalls).
+		 *
+		 */
+		std::vector<Node>
+		nodePath
+			( Vector const & tBeg
+			, Vector const & rBeg
+			, double const & nominalLength
+			) const
+		{
+			std::vector<Node> nodes;
+
+			if (isValid())
+			{
+				// estimate return structure size and allocate space
+				constexpr double padFactor{ 9./8. }; // about 12% extra
+				double const dubSize{ padFactor * nominalLength / theStepDist };
+				std::size_t const nomSize{ static_cast<std::size_t>(dubSize) };
+				nodes.reserve(nomSize);
+
+				// start with initial conditions
+				Vector tPrev{ tBeg };
+				Vector rCurr{ rBeg };
+				double nuPrev{ null<double>() };
+
+				// propagate until path approximate reaches requested length
+				double length{ 0. };
+				while (length < nominalLength)
+				{
+					// propagate ray through next step
+					double nuNext{ null<double>() };
+					Vector const tNext{ nextTangent(tPrev, rCurr, &nuNext) };
+					Vector const rNext{ nextLocation(rCurr, tNext) };
+
+					// record information for this node
+					Node const node
+						{ tPrev
+						, nuPrev
+						, rCurr
+						, nuNext
+						, tNext
+						};
+					nodes.emplace_back(node);
+
+					// update state for next node
+					tPrev = tNext;
+					rCurr = rNext;
+					nuPrev = nuNext;
+
+					// track length (to terminate propagation)
+					length += theStepDist;
+				}
+			}
+
+			return nodes;
 		}
 
 	}; // Propagator
@@ -282,22 +366,36 @@ namespace
 	//! Put current position and tangent values to stream
 	void
 	inline
-	update
+	report
 		( std::ostream & strm
-		, Vector const & tVec
-		, Vector const & rVec
+		, Vector const & tPrev
+		, Vector const & rCurr
+		, Vector const & tNext
 		, std::size_t const & ndx
 		)
 	{
 		strm
 			<< " " << std::setw(3) << ndx
-			<< " " << "tan: " << io::fixed(tVec, 2u)
-			<< " " << "loc: " << io::fixed(rVec, 8u)
+			<< " " << "tPrev: " << io::fixed(tPrev, 2u)
+			<< " " << "rCurr: " << io::fixed(rCurr, 8u)
+			<< " " << "tNext: " << io::fixed(tNext, 2u)
 			<< '\n';
 	}
 
-} // [anon]
+	//! Put current node data values to stream
+	void
+	inline
+	report
+		( std::ostream & strm
+		, Node const & node
+		, std::size_t const & ndx
+		)
+	{
+		report(strm, node.thePrevTan, node.theCurrLoc, node.theNextTan, ndx);
+	}
 
+
+} // [anon]
 
 int
 main
@@ -311,34 +409,23 @@ main
 	std::cout << "    sRadSpace: " << io::fixed(sRadSpace) << '\n';
 
 	double const delta{ 10.e3 };
-	double length{ 0. };
+	double const nominalLength{ magnitude(sRadSpace - sRadEarth) };
+
 	std::cout << "delta: " << io::fixed(delta) << '\n';
 
 	// initial conditions
 	Vector const tBeg{ direction(e1 + e3) };
 	Vector const rBeg{ sRadEarth * e3 };
 
-std::size_t ndx{ 0u };
-update(std::cout, tBeg, rBeg, ndx++);
-
-	// propagate ray forward until TODO??
+	// propagate ray forward until maxLength
 	Propagator const prop{ atm, delta };
+	std::vector<Node> const nodes{ prop.nodePath(tBeg, rBeg, nominalLength) };
 
-	Vector tPrev{ tBeg };
-	Vector rCurr{ rBeg };
-	if (prop.isValid())
+	// report results
+	std::size_t ndx{ 0u };
+	for (Node const & node : nodes)
 	{
-		double const maxLength{ magnitude(sRadSpace - sRadEarth) };
-		while (length < maxLength)
-		{
-			Vector const tNext{ prop.nextTangent(tPrev, rCurr) };
-			Vector const rNext{ prop.nextLocation(rCurr, tNext) };
-update(std::cout, tNext, rNext, ndx++);
-
-			tPrev = tNext;
-			rCurr = rNext;
-			length += delta;
-		}
+		report(std::cout, node, ndx++);
 	}
 
 }
