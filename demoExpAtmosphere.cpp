@@ -417,7 +417,15 @@ namespace
 				constexpr double padFactor{ 9./8. }; // about 12% extra
 				double const dubSize{ padFactor * nominalLength / theStepDist };
 				std::size_t const nomSize{ static_cast<std::size_t>(dubSize) };
-				nodes.reserve(nomSize);
+
+				std::size_t stride{ 1u };
+				std::size_t saveSize{ nomSize };
+				if (1000u < nomSize)
+				{
+					stride = nomSize / 1000u;
+				}
+				std::size_t const useSize{ nomSize / stride + 10u };
+				nodes.reserve(useSize);
 
 				// start with initial conditions
 				Vector tPrev{ tBeg };
@@ -426,6 +434,7 @@ namespace
 
 				// propagate until path approximate reaches requested length
 				double length{ 0. };
+				std::size_t loopNum{ 0u };
 				while (length < nominalLength)
 				{
 					// propagate ray through next step
@@ -433,15 +442,18 @@ namespace
 					Vector const tNext{ nextTangent(tPrev, rCurr, &nuNext) };
 					Vector const rNext{ nextLocation(rCurr, tNext) };
 
-					// record information for this node
-					Node const node
-						{ tPrev
-						, nuPrev
-						, rCurr
-						, nuNext
-						, tNext
-						};
-					nodes.emplace_back(node);
+					if (nodes.empty() || (0u == (loopNum++ % stride)))
+					{
+						// record information for this node
+						Node const node
+							{ tPrev
+							, nuPrev
+							, rCurr
+							, nuNext
+							, tNext
+							};
+						nodes.emplace_back(node);
+					}
 
 					// update state for next node
 					tPrev = tNext;
@@ -470,7 +482,7 @@ namespace
 		)
 	{
 		strm
-			<< " " << std::setw(9u) << ndx
+			<< " ndx: " << std::setw(9u) << ndx
 			<< " " << "tPrev: " << io::fixed(tPrev, 2u)
 			<< " " << "rCurr: " << io::fixed(rCurr, 8u)
 			<< " " << "tNext: " << io::fixed(tNext, 2u)
@@ -506,7 +518,7 @@ main
 	Vector const tBeg{ direction(e1 + e3) };
 	Vector const rBeg{ sEarth.theRadGround * e3 };
 
-	for (double delta{100000.} ; .0001 < delta ; delta /=10.)
+	for (double delta{100000.} ; .000001 < delta ; delta /=10.)
 	{
 		Propagator const prop{ atm, delta };
 		std::vector<Node> const fwdNodes
