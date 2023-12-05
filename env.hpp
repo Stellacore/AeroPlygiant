@@ -63,9 +63,39 @@ namespace env
 		, 6470.e3  // radiusSpace
 		};
 
+	//! Interface specification for refractive media volume
+	struct IndexVolume
+	{
+		//! Index of refraction value at vector location rVec
+		virtual
+		double
+		nuValue
+			( Vector const & rVec
+			) const = 0;
+
+		//! Gradient (approximation) of Index of refraction at location rVec
+		virtual
+		Vector
+		nuGradient
+			( Vector const & rVec
+			) const = 0;
+
+		//! Unitary direction assocsiated with atm.nuGradient
+		//! Unitary direction assocsiated with atm.nuGradient
+		inline
+		Vector
+		gradDir
+			( Vector const & rVec
+			) const
+		{
+			return direction(nuGradient(rVec));
+		}
+
+	}; // IndexVolume
+
 
 	//! Atmospheric model : nu = alpha*exp(-beta*radius)
-	struct AtmModel
+	struct AtmModel : public IndexVolume
 	{
 		//! Classic exponential decay model
 		inline
@@ -147,6 +177,7 @@ namespace env
 		{ }
 
 		//! Index of refraction value at vector location rVec
+		virtual
 		inline
 		double
 		nuValue
@@ -158,6 +189,7 @@ namespace env
 		}
 
 		//! Gradient (approximation) of Index of refraction at location rVec
+		virtual
 		inline
 		Vector
 		nuGradient
@@ -175,16 +207,6 @@ namespace env
 				{ nuValue(rVec + del * e3) - nuValue(rVec - del * e3) };
 			double const scale{ 1. / (2. * del) };
 			return { scale * Vector{ dNu1, dNu2, dNu3 } };
-		}
-
-		//! Unitary direction assocsiated with atm.nuGradient
-		inline
-		Vector
-		gradDir
-			( Vector const & rVec
-			) const
-		{
-			return direction(nuGradient(rVec));
 		}
 
 		//! Sampling of atm.nuValue() values
@@ -208,7 +230,6 @@ namespace env
 			}
 			return nus;
 		}
-
 
 	}; // AtmModel
 
