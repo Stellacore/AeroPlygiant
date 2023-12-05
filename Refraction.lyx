@@ -128,79 +128,25 @@ literal "false"
 .
 \end_layout
 
-\begin_layout Standard
-TODO/TBD - checkout work and references in
-\begin_inset space ~
-\end_inset
-
-
-\begin_inset CommandInset citation
-LatexCommand citet
-key "REN2019163055"
-literal "false"
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-Derivation of 
-\begin_inset Quotes eld
-\end_inset
-
-ray equation
-\begin_inset Quotes erd
-\end_inset
-
-:
-\end_layout
-
-\begin_layout Standard
-https://www.phy.pku.edu.cn/__local/1/B8/99/687EDDC5B886B271958D1CD906D_C14EBA85_7342
-9.pdf?e=.pdf
-\end_layout
-
-\begin_layout Standard
-Physics Dept UofCal paper: https://arxiv.org/pdf/1609.08921.pdf 
-\begin_inset Quotes eld
-\end_inset
-
-ATMOSPHERIC REFRACTION BASED ON ATMOSPHERIC PRESSURE AND TEMPERATURE DATA
-\begin_inset Quotes erd
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-Survey of numerical methods for nonlinear PDEs
-\end_layout
-
-\begin_layout Standard
-https://www.math.umd.edu/~tadmor/pub/PDEs/Tadmor%20BAMS_v49-2012.pdf
-\end_layout
-
-\begin_layout Standard
-Forward and Backward Euler's methods
-\end_layout
-
-\begin_layout Standard
-https://digitalcommons.lib.uconn.edu/cgi/viewcontent.cgi?article=1118&context=srhono
-rs_theses
-\end_layout
-
-\begin_layout Standard
-
-\end_layout
-
 \begin_layout Subsection
-Advanced Methods
+Useful resources
 \end_layout
 
 \begin_layout Standard
-E.g.
- using Fermat's principal, solving electromagnetic wave equations, etc.
+TODO/TBD - checkout works and references
+\end_layout
+
+\begin_layout Subsubsection
+General Refraction Theory
+\end_layout
+
+\begin_layout Paragraph
+Nishidate, Yohei
+\end_layout
+
+\begin_layout Standard
+Using Fermat's principal, solving electromagnetic wave equations, etc.
+ Good references to other work.
 \end_layout
 
 \begin_layout Standard
@@ -217,7 +163,146 @@ literal "false"
 
 \end_inset
 
- - looks to have good references to other work.
+
+\end_layout
+
+\begin_layout Paragraph
+Ren
+\end_layout
+
+\begin_layout Standard
+Derivation of 
+\begin_inset Quotes eld
+\end_inset
+
+ray equation
+\begin_inset Quotes erd
+\end_inset
+
+ in
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset CommandInset citation
+LatexCommand citet
+key "REN2019163055"
+literal "false"
+
+\end_inset
+
+.
+ But somewhat difficult to understand (language barrier)
+\end_layout
+
+\begin_layout Itemize
+https://www.phy.pku.edu.cn/__local/1/B8/99/687EDDC5B886B271958D1CD906D_C14EBA85_7342
+9.pdf?e=.pdf
+\end_layout
+
+\begin_layout Subsubsection
+Astronomy - Specific Theory
+\end_layout
+
+\begin_layout Paragraph
+Nauenberg, Michael
+\end_layout
+
+\begin_layout Standard
+Physics Dept University of California
+\end_layout
+
+\begin_layout Itemize
+https://arxiv.org/pdf/1609.08921.pdf 
+\begin_inset Quotes eld
+\end_inset
+
+ATMOSPHERIC REFRACTION BASED ON ATMOSPHERIC PRESSURE AND TEMPERATURE DATA
+\begin_inset Quotes erd
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsubsection
+Remote Sensing - Specific Theory
+\end_layout
+
+\begin_layout Paragraph
+Gyer:
+\end_layout
+
+\begin_layout Standard
+Model for remote sensing data
+\end_layout
+
+\begin_layout Itemize
+https://www.asprs.org/wp-content/uploads/pers/1996journal/mar/1996_mar_301-310.pdf
+\end_layout
+
+\begin_layout Paragraph
+Vermeer:
+\end_layout
+
+\begin_layout Itemize
+https://foto.aalto.fi/seura/julkaisut/pjf/pjf_e/2019/PJF2019_Vermeer_Ronnholm.pdf
+\end_layout
+
+\begin_layout Subsubsection
+Sensing and Sounding Data
+\end_layout
+
+\begin_layout Paragraph
+Windy.com
+\end_layout
+
+\begin_layout Standard
+Data fetching and interpolation resource
+\end_layout
+
+\begin_layout Itemize
+https://www.windy.com
+\end_layout
+
+\begin_layout Paragraph
+University Wyoming
+\end_layout
+
+\begin_layout Standard
+Daily sounding data
+\end_layout
+
+\begin_layout Itemize
+http://weather.uwyo.edu/upperair/sounding.html
+\end_layout
+
+\begin_layout Subsubsection
+Numeric Solution Techniques
+\end_layout
+
+\begin_layout Paragraph
+Tadmor, Eitan
+\end_layout
+
+\begin_layout Standard
+Review of numerical methods for nonlinear PDEs
+\end_layout
+
+\begin_layout Itemize
+https://www.math.umd.edu/~tadmor/pub/PDEs/Tadmor%20BAMS_v49-2012.pdf
+\end_layout
+
+\begin_layout Paragraph
+Bui, Timothy
+\end_layout
+
+\begin_layout Standard
+Forward and Backward Euler's methods
+\end_layout
+
+\begin_layout Itemize
+https://digitalcommons.lib.uconn.edu/cgi/viewcontent.cgi?article=1118&context=srhono
+rs_theses
 \end_layout
 
 \begin_layout Section
@@ -269,6 +354,12 @@ status open
 \begin_inset Caption Standard
 
 \begin_layout Plain Layout
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:PathChangeIllustration"
+
+\end_inset
+
 Illustration of path change at 
 \begin_inset Formula $i$
 \end_inset
@@ -287,11 +378,42 @@ Illustration of path change at
 
 \end_inset
 
-First consider the fundamental geometry and properties of the system.
+As a starting point, first consider the fundamental geometry and properties
+ of optical refraction within one small layer of a continuous propagation
+ medium as illustrated in Figure
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig:PathChangeIllustration"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+.
 \end_layout
 
 \begin_layout Standard
-TODO/TBD - Figure for this
+An individual discrete refraction step con be associated with the ray passing
+ through a contour surface of equal index of refraction value (e.g.
+ contour 
+\begin_inset Formula $\nu_{i}$
+\end_inset
+
+ in the figure).
+ The ray path is incident on this surface with ray tangent direction, 
+\begin_inset Formula $t_{i-1}$
+\end_inset
+
+, and leaves the surface with tangent direction, 
+\begin_inset Formula $t_{i+1}$
+\end_inset
+
+.
 \end_layout
 
 \begin_layout Subsection
@@ -346,17 +468,92 @@ Assume the ability to evaluate the following quantities on demand for arbitrary
 \end_layout
 
 \begin_layout Description
-\begin_inset Formula $u_{i}$
+\begin_inset Formula $g_{i}$
 \end_inset
 
- Unit direction of index gradient at 
+ Gradient of index of refraction, 
+\begin_inset Formula $\nu$
+\end_inset
+
+, at 
 \begin_inset Formula $r_{i}$
 \end_inset
 
 , i.e.
 \begin_inset Formula 
 \[
-u_{i}=\hat{g}_{i}=\left.\frac{\nabla\nu}{\left|\nabla\nu\right|}\right|_{i}
+g_{i}=\nabla\nu
+\]
+
+\end_inset
+
+In Cartesian coordinate system with constant orthonormal vector basis, 
+\begin_inset Formula $\left\{ e_{k}\right\} $
+\end_inset
+
+, the gradient at location, 
+\begin_inset Formula $r=\sum_{k}\rho_{k}e_{k}$
+\end_inset
+
+ is
+\begin_inset Formula 
+\[
+\nabla\nu\equiv\left(\sum_{k}e_{k}\frac{\partial}{\partial\rho_{k}}\right)\nu\left(r\right)
+\]
+
+\end_inset
+
+In spherical polar coordinates, with (location dependent) orthonormal basis,
+ 
+\begin_inset Formula $\left\{ e_{r},e_{\vartheta},e_{\phi}\right\} $
+\end_inset
+
+, the gradient at location, 
+\begin_inset Formula $r=r\left(\rho,\vartheta,\phi\right)$
+\end_inset
+
+, is
+\begin_inset Formula 
+\[
+\nabla\nu=\left(e_{r}\frac{\partial}{\partial\rho}+e_{\vartheta}\frac{1}{\rho}\frac{\partial}{\partial\vartheta}+e_{\phi}\frac{1}{\rho\sin\vartheta}\frac{\partial}{\partial\phi}\right)\nu\left(r\right)
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Description
+\begin_inset Formula $u_{i}$
+\end_inset
+
+ Unit direction of gradient, 
+\begin_inset Formula $g_{i}$
+\end_inset
+
+,
+\begin_inset Formula 
+\[
+u_{i}=\hat{g}_{i}=\frac{g_{i}}{\left|g_{i}\right|}=\left.\frac{\nabla\nu}{\left|\nabla\nu\right|}\right|_{i}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Description
+\begin_inset Formula $\mathrm{H}_{g}$
+\end_inset
+
+ Hessian matrix for index of refraction, 
+\begin_inset Formula $\nu$
+\end_inset
+
+, in Cartesian frame,
+\begin_inset Formula 
+\[
+\left\{ \mathrm{H}_{g}\right\} _{ij}\equiv\frac{\partial^{2}}{\partial\rho_{i}\partial\rho_{j}}\nu\left(r\right)
 \]
 
 \end_inset
@@ -485,7 +682,7 @@ Index of Refraction Evaluation
 
 \begin_layout Standard
 Determine the values, 
-\begin_inset Formula $\nu_{i}$
+\begin_inset Formula $\nu_{i-1}$
 \end_inset
 
  and 
@@ -498,7 +695,7 @@ Determine the values,
 
 .
  This can be done by evaluating 
-\begin_inset Formula $\nu_{i}$
+\begin_inset Formula $\nu$
 \end_inset
 
  a short distance before 
@@ -515,20 +712,23 @@ Determine the values,
 
 .
  E.g.
- in terms of path length
 \begin_inset Formula 
 \begin{align*}
-\nu_{i} & =\nu\left(r_{i}-\frac{1}{2}\Delta_{\lambda,i}t_{i}\right)\\
+\nu_{i-1} & =\nu\left(r_{i}-\frac{1}{2}\Delta_{\lambda,i}t_{i}\right)\\
 \nu_{i+1} & =\nu\left(r_{i}+\frac{1}{2}\Delta_{\lambda,i}t_{i}\right)
 \end{align*}
 
 \end_inset
 
-For this, the path length can be assigned arbitrarily or estimated from
- the prior points on path e.g.
+For this, the path length step, 
+\begin_inset Formula $\Delta_{\lambda,i}$
+\end_inset
+
+, can be assigned arbitrarily or estimated from the prior points on path
+ e.g.
 \begin_inset Formula 
 \[
-\Delta_{\lambda,i}=\left|r_{i}-r_{i-1}\right|
+\Delta_{\lambda,i}=\frac{1}{2}\left|r_{i}-r_{i+1}\right|
 \]
 
 \end_inset
@@ -542,7 +742,7 @@ However a more general approach is to express the index of refraction values
 \begin_inset Formula $\nu$
 \end_inset
 
-, and the displacement of position.
+, and the displacement between adjacent nodes.
  E.g.
  the change in index can be approximated based on half the distance between
  the previous and the next location along ray.
@@ -566,7 +766,8 @@ future
 \begin_inset Formula $r_{i+1}$
 \end_inset
 
-) complicates the iterative strategy to be discussed below.
+) complicates evaluation and that an iterative strategy is suggested as
+ discussed below.
 \end_layout
 
 \begin_layout Subsection
@@ -611,7 +812,7 @@ Assume an infinitesimally thin interface at
 \end_inset
 
  in which the index changes from value 
-\begin_inset Formula $\nu_{0}$
+\begin_inset Formula $\nu_{-1}$
 \end_inset
 
  to value 
@@ -620,6 +821,11 @@ Assume an infinitesimally thin interface at
 
  along a plane with direction that is orthogonal to vector, 
 \begin_inset Formula $u_{0}$
+\end_inset
+
+.
+ Assume the incident ray has direction, 
+\begin_inset Formula $t_{0}$
 \end_inset
 
 .
@@ -2071,8 +2277,8 @@ This is a second order, nonlinear, differential equation expressing changes
 \end_layout
 
 \begin_layout Standard
-This should be a necessary condition, however, it is unclear if this is
- a sufficient condition.
+This should be a necessary condition, however, it is unclear if it is a
+ sufficient condition.
 \end_layout
 
 \begin_layout Standard
@@ -2094,8 +2300,54 @@ In terms of the index field Hessian matrix,
 
 Apparently, the first two terms control the curvature and propagation direction
  in the plane of the index gradient while the last term (involving a matrix-vect
-or multiplication) introduces a torsion influence that changes direction
+or multiplication) introduces a torsion influence capable of changing direction
  of the plane of propagation.
+\end_layout
+
+\begin_layout Subsection
+Special Case
+\end_layout
+
+\begin_layout Standard
+Consider a plane stratified atmosphere.
+ In this case, the only gradient term that survives is, 
+\begin_inset Formula $\nabla\nu=\frac{\partial\nu}{\partial\rho_{3}}e_{3}$
+\end_inset
+
+.
+ And for 
+\begin_inset Formula $\mathrm{H}_{g}$
+\end_inset
+
+, only the 
+\begin_inset Formula $\frac{d^{2}\nu}{d\rho_{3}d\rho_{3}}$
+\end_inset
+
+ term survives, so that
+\begin_inset Formula 
+\[
+\ddot{r}\wedge\frac{\partial\nu}{\partial\rho_{3}}e_{3}+\frac{1}{\nu}\frac{\partial\nu}{\partial\rho_{3}}e_{3}\cdot\dot{r}\left(\dot{r}\wedge\frac{\partial\nu}{\partial\rho_{3}}e_{3}\right)+\dot{r}\wedge\left(\frac{\partial^{2}\nu}{\partial\rho_{3}\partial\rho_{3}}\left(\dot{r}\cdot e_{3}\right)e_{3}\right)=0
+\]
+
+\end_inset
+
+
+\begin_inset Formula 
+\[
+\frac{\partial\nu}{\partial\rho_{3}}\left(\ddot{r}\wedge e_{3}\right)+\frac{1}{\nu}\left(\frac{\partial\nu}{\partial\rho_{3}}\right)^{2}\left(\dot{r}\cdot e_{3}\right)\left(\dot{r}\wedge e_{3}\right)+\frac{\partial^{2}\nu}{\partial\rho_{3}\partial\rho_{3}}\left(\dot{r}\cdot e_{3}\right)\left(\dot{r}\wedge e_{3}\right)=0
+\]
+
+\end_inset
+
+
+\begin_inset Formula 
+\[
+\frac{\partial\nu}{\partial\rho_{3}}\left(\ddot{r}\wedge e_{3}\right)+\left[\frac{1}{\nu}\left(\frac{\partial\nu}{\partial\rho_{3}}\right)^{2}+\frac{\partial^{2}\nu}{\partial\rho_{3}\partial\rho_{3}}\right]\left(\dot{r}\cdot e_{3}\right)\left(\dot{r}\wedge e_{3}\right)=0
+\]
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Section
@@ -2278,6 +2530,17 @@ Overall,
  & =\exp\left(\frac{\left|r_{1}\right|}{\left|r_{1}\right|-\left|r_{0}\right|}\nu_{0}-\frac{\left|r\right|}{\left|r_{1}\right|-\left|r_{0}\right|}\nu_{0}\right)\\
  & =\exp\left(\frac{\left|r_{1}\right|-\left|r\right|}{\left|r_{1}\right|-\left|r_{0}\right|}\nu_{0}\right)
 \end{align*}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset CommandInset bibtex
+LatexCommand bibtex
+btprint "btPrintCited"
+bibfiles "Papers"
 
 \end_inset
 
