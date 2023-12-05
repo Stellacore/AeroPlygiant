@@ -6,6 +6,7 @@ cmake_minimum_required(VERSION 3.13)
 
 set(aProjName "Refraction")
 set(aProjVersion "0.1.0") # Set this based on features, updates and patches
+set(aProjLib "${aProjName}Lib")
 
 project(
 	${aProjName}
@@ -31,6 +32,18 @@ find_package(engabra REQUIRED NO_MODULE)
 message(engabra Found: ${engabra_FOUND})
 message(engabra Version: ${engabra_VERSION})
 
+# ===
+# === Library
+# ===
+
+message(aProjLib: ${aProjLib})
+# add_library(aProjLib
+# 	)
+
+# ===
+# === Main Programs
+# ===
+
 set(mainProgs
 
 	hello
@@ -52,4 +65,10 @@ target_link_libraries(
 
 endforeach(mainProg)
 
+# ===
+# === Unit tests
+# ===
+
+# include(CTest)
+enable_testing()
 
