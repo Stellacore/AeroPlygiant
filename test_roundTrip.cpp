@@ -34,8 +34,9 @@ main
 	ray::Propagator const prop{ atm, delta };
 
 	// trace ray forward
-	std::vector<ray::Node> const fwdNodes
-		{ prop.nodePath(tFwdBeg, rFwdBeg, nomDist) };
+	std::vector<ray::Node> fwdNodes;
+	fwdNodes.reserve(10u * 1024u); // size determines how much tracing
+	prop.traceNodes(tFwdBeg, rFwdBeg, &fwdNodes);
 
 	// get last node in forward pass
 	ray::Node const & lastNode = fwdNodes.back();
@@ -43,8 +44,9 @@ main
 	Vector const & rRevBeg =  lastNode.theCurrLoc;
 
 	// trace ray in reverse direction
-	std::vector<ray::Node> const revNodes
-		{ prop.nodePath(tRevBeg, rRevBeg, nomDist) };
+	std::vector<ray::Node> revNodes;
+	revNodes.reserve(fwdNodes.size());
+	prop.traceNodes(tRevBeg, rRevBeg, &revNodes);
 
 	ray::Node const & endNode = revNodes.back();
 	Vector const & tExp = tFwdBeg;

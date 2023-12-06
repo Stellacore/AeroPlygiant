@@ -214,6 +214,44 @@ namespace ray
 		 * (with all attendent pitfalls).
 		 *
 		 */
+		template <typename Consumer>
+		inline
+		void
+		traceNodes
+			( Vector const & tBeg
+			, Vector const & rBeg
+			, Consumer * const & ptConsumer
+			) const
+		{
+			if (isValid())
+			{
+				// start with initial conditions
+				Vector tPrev{ tBeg };
+				Vector rCurr{ rBeg };
+				double nuPrev{ null<double>() };
+
+				// propagate until path approximate reaches requested length
+				while (ptConsumer->size() < ptConsumer->capacity())
+				{
+					// propagate ray through next step
+					double nuNext{ null<double>() };
+					Vector const tNext{ nextTangent(tPrev, rCurr, &nuNext) };
+					Vector const rNext{ nextLocation(rCurr, tNext) };
+
+					// Provide intermediate info to consumer
+					ptConsumer->emplace_back
+						(Node{ tPrev, nuPrev, rCurr, nuNext, tNext });
+
+					// update state for next node
+					tPrev = tNext;
+					rCurr = rNext;
+					nuPrev = nuNext;
+				}
+			}
+		}
+
+/*TODO*/
+		//! \brief Return nodes in a std::vector structure.
 		inline
 		std::vector<Node>
 		nodePath
@@ -240,46 +278,13 @@ namespace ray
 				std::size_t const useSize{ nomSize / stride + 10u };
 				nodes.reserve(useSize);
 
-				// start with initial conditions
-				Vector tPrev{ tBeg };
-				Vector rCurr{ rBeg };
-				double nuPrev{ null<double>() };
-
-				// propagate until path approximate reaches requested length
-				double length{ 0. };
-				std::size_t loopNum{ 0u };
-				while (length < nominalLength)
-				{
-					// propagate ray through next step
-					double nuNext{ null<double>() };
-					Vector const tNext{ nextTangent(tPrev, rCurr, &nuNext) };
-					Vector const rNext{ nextLocation(rCurr, tNext) };
-
-					if (nodes.empty() || (0u == (loopNum++ % stride)))
-					{
-						// record information for this node
-						Node const node
-							{ tPrev
-							, nuPrev
-							, rCurr
-							, nuNext
-							, tNext
-							};
-						nodes.emplace_back(node);
-					}
-
-					// update state for next node
-					tPrev = tNext;
-					rCurr = rNext;
-					nuPrev = nuNext;
-
-					// track length (to terminate propagation)
-					length += theStepDist;
-				}
+				traceNodes(tBeg, rBeg, &nodes);
+std::cout << "nodes.size; " << nodes.size() << std::endl;
 			}
 
 			return nodes;
 		}
+/*TODO*/
 
 	}; // Propagator
 
