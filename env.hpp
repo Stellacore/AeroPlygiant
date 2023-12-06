@@ -80,17 +80,6 @@ namespace env
 			( Vector const & rVec
 			) const = 0;
 
-		//! Unitary direction assocsiated with atm.nuGradient
-		//! Unitary direction assocsiated with atm.nuGradient
-		inline
-		Vector
-		gradDir
-			( Vector const & rVec
-			) const
-		{
-			return direction(nuGradient(rVec));
-		}
-
 	}; // IndexVolume
 
 
