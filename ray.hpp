@@ -104,7 +104,7 @@ namespace ray
 	inline
 	Vector
 	refractedTangent
-		( Vector const & tPrev
+		( Vector const & tPrev //!< Must be unit length
 		, Vector const & rCurr
 		, double const & nuPrev
 		, double const & nuNext
@@ -123,6 +123,8 @@ namespace ray
 			// get index field gradient
 			Vector const gCurr{ ptObj->nuGradient(rCurr) };
 			double const gMagSq{ magSq(gCurr) };
+//std::cout << "  gCurr: " << io::fixed(gCurr, 1u, 18u) << std::endl;
+//std::cout << "  gMagSq: " << io::fixed(gMagSq, 1u, 18u) << std::endl;
 			if (std::numeric_limits<double>::epsilon() < gMagSq)
 			{
 				// unit direction of gradient
@@ -135,22 +137,56 @@ namespace ray
 
 				// Use radicand value to select between propagation methods
 				// (total internal reflection or refraction)
-				double const radicand{ 1. -magSq(bivCurr) };
+				double const radicand{ 1. - magSq(bivCurr) };
+
+/*
+std::cout << "  nuP/N: " << io::fixed(nuPrev/nuNext, 1u, 18u) << std::endl;
+std::cout << "  tPrev: " << io::fixed(tPrev, 1u, 18u) << std::endl;
+std::cout << "  uCurr: " << io::fixed(uCurr, 1u, 18u) << std::endl;
+std::cout << "  bivCurr: " << io::fixed(bivCurr, 1u, 18u) << std::endl;
+std::cout << "  radicand: " << io::fixed(radicand, 1u, 18u) << std::endl;
+*/
+
+constexpr bool showIt{ false };
+if (showIt)
+{
+std::cout
+	<< "nuPrev: " << io::fixed(nuPrev)
+	<< "  "
+	<< "nuNext: " << io::fixed(nuNext)
+	<< "  "
+	;
+if (nuPrev > nuNext)
+	std::cout << "  ->  ";
+if (nuPrev < nuNext)
+	std::cout << "   <- ";
+if (nuPrev == nuNext)
+	std::cout << "   == ";
+std::cout
+	<< "  tPrev: " << io::fixed(tPrev, 1u, 18u)
+	<< "  rCurr: " << io::fixed(rCurr, 1u, 18u)
+	<< '\n';
+std::cout << "  uCurr: " << io::fixed(uCurr, 1u, 18u) << std::endl;
+std::cout << "  radicand: " << io::fixed(radicand, 1u, 18u) << std::endl;
+}
 				if (radicand < 0.)
 				{
 					// (internal) reflection case
-					tNext = (uCurr * tPrev * uCurr).theVec;
+					tNext = -(uCurr * tPrev * uCurr).theVec;
+std::cout << "\n###### REFLECTION #########\n";
 				}
 				else
 				{
 					// refraction case
 					if (nuPrev < nuNext)
 					{
+//std::cout << "Spin-A\n";
 						Spinor const spinU{  std::sqrt(radicand), bivCurr };
 						tNext = (spinU * uCurr).theVec;
 					}
 					else if (nuNext < nuPrev)
 					{
+//std::cout << "Spin-B\n";
 						Spinor const spinU{ -std::sqrt(radicand), bivCurr };
 						tNext = (spinU * uCurr).theVec;
 					}
@@ -178,7 +214,7 @@ namespace ray
 		inline
 		Vector
 		nextTangent
-			( Vector const & tPrev
+			( Vector const & tPrev //!< Must be unit length
 			, Vector const & rCurr
 			, double * const & ptrNuNext = nullptr
 			) const
@@ -194,7 +230,9 @@ namespace ray
 			double difSq{ 2. };
 			static double const tol{ std::numeric_limits<double>::epsilon() };
 			std::size_t numLoop{ 0u };
-			constexpr std::size_t maxLoop{ 1000u };
+constexpr std::size_t maxLoop{ 10u };
+//TODO does this converge?
+//std::cout << "---- looping\n";
 			while ((tol < difSq) && (numLoop++ < maxLoop))
 			{
 				// update refraction index to midpoint of predicted next
@@ -205,12 +243,24 @@ namespace ray
 						(tPrev, rCurr, nuPrev, nuNext, thePtObj)
 					};
 
+/*
+Vector const rPrev{ rCurr - .5*theStepDist*tPrev };
+Vector const rNext{ rCurr + .5*theStepDist*tNext };
+std::cout
+	<< "  rPrev: " << io::fixed(rPrev, 1u, 9u)
+	<< "  rCurr: " << io::fixed(rCurr, 1u, 9u)
+	<< "  rNext: " << io::fixed(rNext, 1u, 9u)
+	<< "  tTemp: " << io::fixed(tTemp, 1u, 9u)
+	<< std::endl;
+*/
+
 				// evaluate convergence of tangent direction
 				difSq = magSq(tTemp - tNext);
 
 				// candidate return value (if convergence test passes)
 				tNext = tTemp;
 			}
+//std::cout << "--\n";
 
 			// set for use in consumer code (if requested)
 			if (ptrNuNext)
@@ -261,7 +311,7 @@ namespace ray
 			if (isValid())
 			{
 				// start with initial conditions
-				Vector tPrev{ tBeg };
+				Vector tPrev{ direction(tBeg) };
 				Vector rCurr{ rBeg };
 				double nuPrev{ null<double>() };
 

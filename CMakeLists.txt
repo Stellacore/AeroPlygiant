@@ -15,6 +15,9 @@ project(
 	LANGUAGES CXX
 	)
 
+include(CTest)
+enable_testing()
+
 
 message("### CMAKE_MAJOR_VERSION: " ${CMAKE_MAJOR_VERSION})
 message("### CMAKE_MINOR_VERSION: " ${CMAKE_MINOR_VERSION})
@@ -54,14 +57,12 @@ set(mainProgs
 
 foreach(mainProg ${mainProgs})
 
-# Executable for build system testing
-add_executable (${mainProg} ${mainProg}.cpp)
-
-target_link_libraries(
-	${mainProg}
-	PRIVATE
-		engabra::engabra
-	)
+	add_executable (${mainProg} ${mainProg}.cpp)
+	target_link_libraries(
+		${mainProg}
+		PRIVATE
+			engabra::engabra
+		)
 
 endforeach(mainProg)
 
@@ -69,14 +70,22 @@ endforeach(mainProg)
 # === Unit tests
 # ===
 
-include(CTest)
-enable_testing()
+set(testProgs
 
-add_executable(test_roundTrip test_roundTrip.cpp)
-target_link_libraries(
 	test_roundTrip
-	PRIVATE
-		engabra::engabra
+	test_Path
+
 	)
-add_test(NAME roundTrip COMMAND test_roundTrip)
+
+foreach(testProg ${testProgs})
+
+	add_executable(${testProg} ${testProg}.cpp)
+	target_link_libraries(
+		${testProg}
+		PRIVATE
+			engabra::engabra
+		)
+	add_test(NAME ${testProg} COMMAND ${testProg})
+
+endforeach(testProg)
 
