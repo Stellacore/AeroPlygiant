@@ -212,12 +212,6 @@ namespace ray
 				tNext = tTemp;
 			}
 
-std::cout << "tNext: " << tNext << " numLoop: " << numLoop << std::endl;
-if (! engabra::g3::isValid(tNext))
-{
-	exit(8);
-}
-
 			// set for use in consumer code (if requested)
 			if (ptrNuNext)
 			{
