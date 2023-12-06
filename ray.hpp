@@ -299,7 +299,7 @@ namespace ray
 			<< " " << "tPrev: " << io::fixed(tPrev, 2u)
 			<< " " << "rCurr: " << io::fixed(rCurr, 8u)
 			<< " " << "tNext: " << io::fixed(tNext, 2u)
-			<< '\n';
+			;
 		return oss.str();
 	}
 

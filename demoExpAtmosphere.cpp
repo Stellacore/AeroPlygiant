@@ -33,7 +33,6 @@ main
 		{ env::sEarth.theRadGround * engabra::g3::e3 };
 
 	// ray tracing parameters
-//	double const delta{ .01 };
 	double const nominalLength{ atm.thickness() };
 
 	// trace ray with various step sizes
@@ -46,9 +45,11 @@ main
 		std::cout << ray::nodeInfo(fwdNodes.back(), fwdNodes.size());
 	}
 
+/*
 return 0;
 
 	// propagate ray forward until maxLength
+//	double const delta{ .01 };
 	ray::Propagator const prop{ atm, delta };
 	std::vector<ray::Node> const fwdNodes
 		{ prop.nodePath(tBeg, rBeg, nominalLength) };
@@ -59,6 +60,8 @@ return 0;
 	{
 		std::cout << ray::nodeInfo(fwdNodes[nn], nn);
 	}
+*/
+
 	/*
 	std::cout << "        delta: " << io::fixed(delta) << '\n';
 	std::cout << "nominalLength: " << io::fixed(nominalLength) << '\n';

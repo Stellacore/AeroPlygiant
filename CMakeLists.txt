@@ -69,6 +69,14 @@ endforeach(mainProg)
 # === Unit tests
 # ===
 
-# include(CTest)
+include(CTest)
 enable_testing()
+
+add_executable(test_roundTrip test_roundTrip.cpp)
+target_link_libraries(
+	test_roundTrip
+	PRIVATE
+		engabra::engabra
+	)
+add_test(NAME roundTrip COMMAND test_roundTrip)
 
