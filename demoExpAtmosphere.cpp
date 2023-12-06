@@ -37,7 +37,7 @@ main
 	// trace ray with various step sizes
 	for (double delta{100000.} ; .001 < delta ; delta /=10.)
 	{
-		ray::Propagator const prop{ atm, delta };
+		ray::Propagator const prop{ &atm, delta };
 		std::vector<ray::Node> const fwdNodes
 			{ prop.nodePath(tBeg, rBeg, nominalLength) };
 		std::cout << " delta: " << engabra::g3::io::fixed(delta, 7u, 6u) << " ";

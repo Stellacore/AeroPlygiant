@@ -3,7 +3,7 @@
 //
 
 
-//! \file Atmospheric Refraction Example.
+//! \file Atmospheric Refraction Example - round trip ray tracing
 
 
 #include "env.hpp"
@@ -31,7 +31,7 @@ main
 	// ray tracing parameters
 	double const delta{ 0.100 }; // meters
 	double const nomDist{ atm.thickness() };
-	ray::Propagator const prop{ atm, delta };
+	ray::Propagator const prop{ &atm, delta };
 
 	// trace ray forward
 	std::vector<ray::Node> fwdNodes;

@@ -85,7 +85,7 @@ namespace ray
 		, Vector const & rCurr
 		, double const & nuPrev
 		, double const & nuNext
-		, env::AtmModel const & atm
+		, env::IndexVolume const * const & ptObj
 		)
 	{
 		Vector tNext{ null<Vector>() };
@@ -98,7 +98,7 @@ namespace ray
 			tNext = tPrev;
 
 			// get index field gradient
-			Vector const uCurr{ atm.gradDir(rCurr) };
+			Vector const uCurr{ ptObj->gradDir(rCurr) };
 
 			// compute refraction bivector at current location
 			BiVector const bivCurr{ (nuPrev/nuNext) * (tPrev*uCurr).theBiv };
@@ -138,12 +138,12 @@ namespace ray
 	//! Ray propagation functions
 	struct Propagator
 	{
-		env::AtmModel const theAtm{};
+		env::IndexVolume const * const thePtObj{ nullptr };
 		double const theStepDist{ null<double>() };
 
 	private:
 
-		//! Estimate next tangent based on local atmospheric refraction
+		//! Estimate next tangent based on local object refraction
 		inline
 		Vector
 		nextTangent
@@ -156,7 +156,7 @@ namespace ray
 
 			// incomming state is fixed
 			double const nuPrev
-				{ theAtm.nuValue(rCurr - .5*theStepDist*tPrev) };
+				{ thePtObj->nuValue(rCurr - .5*theStepDist*tPrev) };
 
 			// iterate on exiting path
 			double nuNext{ null<double>() }; // return value if requested
@@ -166,9 +166,11 @@ namespace ray
 			{
 				// update refraction index to midpoint of predicted next
 				// interval (along evolving next tangent direction).
-				nuNext = theAtm.nuValue(rCurr + .5*theStepDist*tNext);
+				nuNext = thePtObj->nuValue(rCurr + .5*theStepDist*tNext);
 				Vector const tTemp
-					{ refractedTangent(tPrev, rCurr, nuPrev, nuNext, theAtm) };
+					{ refractedTangent
+						(tPrev, rCurr, nuPrev, nuNext, thePtObj)
+					};
 
 				// evaluate convergence of tangent direction
 				difSq = magSq(tTemp - tNext);
