@@ -1,6 +1,13 @@
 
-# Refraction - repository for optical refraction analysis and simulation
+# AeroPlygiant - Atmospheric refraction simulation and analysis
 
+## Project Info
+
+The name, AeroPlygaint, is a catenation of "aero" and "plygiant". "Aero"
+as in pertaining to Earth's atmosphere (as in aerial remote sensing) and
+"Plygaint" from Welsh language meaning "refraction". I.e. AeroPlygiant is
+a package supporting analysis of atmospheric refraction in the context of
+air-borne remote sensing.
 
 ## Build Info
 
