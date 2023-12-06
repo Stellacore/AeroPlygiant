@@ -67,18 +67,34 @@ namespace env
 	struct IndexVolume
 	{
 		//! Index of refraction value at vector location rVec
+		inline
 		virtual
 		double
 		nuValue
 			( Vector const & rVec
 			) const = 0;
 
-		//! Gradient (approximation) of Index of refraction at location rVec
+		/*! \brief Gradient (approximate) for Index of refraction at rVec.
+		 *
+		 * Default implementation estimates gradient numerically.
+		 */
+		inline
 		virtual
 		Vector
 		nuGradient
 			( Vector const & rVec
-			) const = 0;
+			) const
+		{
+			double const mag{ magnitude(rVec) };
+			static double const del
+				{ std::sqrt(std::numeric_limits<double>::epsilon()) };
+			static double const scale{ 1. / (2.*del) };
+			return Vector
+				{ scale * (nuValue(rVec + del*e1) - nuValue(rVec - del*e1))
+				, scale * (nuValue(rVec + del*e2) - nuValue(rVec - del*e2))
+				, scale * (nuValue(rVec + del*e3) - nuValue(rVec - del*e3))
+				};
+		}
 
 	}; // IndexVolume
 
