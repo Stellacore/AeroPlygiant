@@ -19,7 +19,6 @@
  * classes in this project.
  *
  */
-
 int
 main
 	()
@@ -44,29 +43,5 @@ main
 		std::cout << " delta: " << engabra::g3::io::fixed(delta, 7u, 6u) << " ";
 		std::cout << ray::nodeInfo(fwdNodes.back(), fwdNodes.size());
 	}
-
-/*
-return 0;
-
-	// propagate ray forward until maxLength
-//	double const delta{ .01 };
-	ray::Propagator const prop{ atm, delta };
-	std::vector<ray::Node> const fwdNodes
-		{ prop.nodePath(tBeg, rBeg, nominalLength) };
-
-	// report results
-	std::cout << env::sEarth.infoString("env::sEarth") << '\n';
-	for (std::size_t nn{0u} ; nn < fwdNodes.size() ; ++nn)
-	{
-		std::cout << ray::nodeInfo(fwdNodes[nn], nn);
-	}
-*/
-
-	/*
-	std::cout << "        delta: " << io::fixed(delta) << '\n';
-	std::cout << "nominalLength: " << io::fixed(nominalLength) << '\n';
-	report(std::cout, fwdNodes.back(), fwdNodes.size());
-	*/
-
 }
 
