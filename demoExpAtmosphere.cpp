@@ -26,17 +26,18 @@ main
 {
 	env::AtmModel const atm(env::sEarth);
 
-	double const delta{ 10.e3 };
-	double const nominalLength{ 150.e3 };
-	//	{ magnitude(env::sEarth.theRadSpace - env::sEarth.theRadGround) };
-
 	// initial conditions
 	engabra::g3::Vector const tBeg
 		{ engabra::g3::direction(engabra::g3::e1 + engabra::g3::e3) };
 	engabra::g3::Vector const rBeg
 		{ env::sEarth.theRadGround * engabra::g3::e3 };
 
-	for (double delta{100000.} ; .000001 < delta ; delta /=10.)
+	// ray tracing parameters
+//	double const delta{ .01 };
+	double const nominalLength{ atm.thickness() };
+
+	// trace ray with various step sizes
+	for (double delta{100000.} ; .001 < delta ; delta /=10.)
 	{
 		ray::Propagator const prop{ atm, delta };
 		std::vector<ray::Node> const fwdNodes

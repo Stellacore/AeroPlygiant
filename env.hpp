@@ -141,6 +141,8 @@ namespace env
 		}
 
 
+		double const theRadGround{ null<double>() };
+		double const theRadSpace{ null<double>() };
 		double const theAlpha{ null<double>() };
 		double const theBeta{ null<double>() };
 
@@ -158,23 +160,34 @@ namespace env
 		AtmModel
 			( Planet const & planet
 			)
-			: theAlpha
+			: theRadGround{ planet.theRadGround }
+			, theRadSpace{ planet.theRadSpace }
+			, theAlpha
 				{ alpha
 					( planet.theNuGround
 					, planet.theNuSpace
-					, planet.theRadGround
-					, planet.theRadSpace
+					, theRadGround
+					, theRadSpace
 					)
 				}
 			, theBeta
 				{ beta
 					( planet.theNuGround
 					, planet.theNuSpace
-					, planet.theRadGround
-					, planet.theRadSpace
+					, theRadGround
+					, theRadSpace
 					)
 				}
 		{ }
+
+		//! Thickness of atmosphere
+		inline
+		double
+		thickness
+			() const
+		{
+			return theRadSpace - theRadGround;
+		}
 
 		//! Index of refraction value at vector location rVec
 		virtual
