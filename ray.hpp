@@ -11,10 +11,8 @@
 #include "env.hpp"
 
 #include <Engabra>
-// #include <g3opsMul.hpp>
 
-// #include <iomanip>
-// #include <iostream>
+#include <cmath>
 #include <limits>
 #include <sstream>
 #include <string>
@@ -35,6 +33,31 @@ namespace ray
 		Vector const theCurrLoc;
 		double const theNextNu;
 		Vector const theNextTan;
+
+		//! Descriptive information about this instance
+		inline
+		std::string
+		infoBrief
+			( std::string const & title = {}
+			) const
+		{
+			std::ostringstream oss;
+			if (! title.empty())
+			{
+				oss << title << '\n';
+			}
+			oss << " tan ";
+			oss << io::fixed(thePrevTan, 3u, 6u);
+			oss << " nu ";
+			oss << io::fixed(thePrevNu, 3u, 6u);
+			oss << " loc ";
+			oss << io::fixed(theCurrLoc, 3u, 6u);
+			oss << " nu ";
+			oss << io::fixed(theNextNu, 3u, 6u);
+			oss << " tan ";
+			oss << io::fixed(theNextTan, 3u, 6u);
+			return oss.str();
+		}
 
 		//! Descriptive information about this instance
 		inline
@@ -98,37 +121,45 @@ namespace ray
 			tNext = tPrev;
 
 			// get index field gradient
-			Vector const uCurr{ ptObj->gradDir(rCurr) };
-
-			// compute refraction bivector at current location
-			BiVector const bivCurr{ (nuPrev/nuNext) * (tPrev*uCurr).theBiv };
-
-			// Use radicand value to select between propagation methods
-			// (total internal reflection or refraction)
-			double const radicand{ 1. -magSq(bivCurr) };
-			if (radicand < 0.)
+			Vector const gCurr{ ptObj->nuGradient(rCurr) };
+			double const gMagSq{ magSq(gCurr) };
+			if (std::numeric_limits<double>::epsilon() < gMagSq)
 			{
-				// (internal) reflection case
-				tNext = (uCurr * tPrev * uCurr).theVec;
-			}
-			else
-			{
-				// refraction case
-				if (nuPrev < nuNext)
+				// unit direction of gradient
+				// TODO - probably can redo formulae to work with full grad?
+				Vector const uCurr{ (1./std::sqrt(gMagSq)) * gCurr };
+
+				// compute refraction bivector at current location
+				BiVector const bivCurr
+					{ (nuPrev/nuNext) * (tPrev*uCurr).theBiv };
+
+				// Use radicand value to select between propagation methods
+				// (total internal reflection or refraction)
+				double const radicand{ 1. -magSq(bivCurr) };
+				if (radicand < 0.)
 				{
-					Spinor const spinU{  std::sqrt(radicand), bivCurr };
-					tNext = (spinU * uCurr).theVec;
+					// (internal) reflection case
+					tNext = (uCurr * tPrev * uCurr).theVec;
 				}
-				else if (nuNext < nuPrev)
+				else
 				{
-					Spinor const spinU{ -std::sqrt(radicand), bivCurr };
-					tNext = (spinU * uCurr).theVec;
+					// refraction case
+					if (nuPrev < nuNext)
+					{
+						Spinor const spinU{  std::sqrt(radicand), bivCurr };
+						tNext = (spinU * uCurr).theVec;
+					}
+					else if (nuNext < nuPrev)
+					{
+						Spinor const spinU{ -std::sqrt(radicand), bivCurr };
+						tNext = (spinU * uCurr).theVec;
+					}
+				//	// Default case
+				//	else // nuPrev == nuNext
+				//	{
+				//		tNext = tPrev; // could initialize with this?
+				//	}
 				}
-			//	// Default case
-			//	else // nuPrev == nuNext
-			//	{
-			//		tNext = tPrev; // could initialize with this?
-			//	}
 			}
 		}
 
@@ -162,7 +193,9 @@ namespace ray
 			double nuNext{ null<double>() }; // return value if requested
 			double difSq{ 2. };
 			static double const tol{ std::numeric_limits<double>::epsilon() };
-			while (tol < difSq)
+			std::size_t numLoop{ 0u };
+			constexpr std::size_t maxLoop{ 1000u };
+			while ((tol < difSq) && (numLoop++ < maxLoop))
 			{
 				// update refraction index to midpoint of predicted next
 				// interval (along evolving next tangent direction).
@@ -178,6 +211,12 @@ namespace ray
 				// candidate return value (if convergence test passes)
 				tNext = tTemp;
 			}
+
+std::cout << "tNext: " << tNext << " numLoop: " << numLoop << std::endl;
+if (! engabra::g3::isValid(tNext))
+{
+	exit(8);
+}
 
 			// set for use in consumer code (if requested)
 			if (ptrNuNext)
@@ -249,6 +288,7 @@ namespace ray
 					rCurr = rNext;
 					nuPrev = nuNext;
 				}
+std::cout << "\n####\n#### done tracing\n####\n";
 			}
 		}
 
