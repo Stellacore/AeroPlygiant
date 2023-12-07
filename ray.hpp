@@ -16,6 +16,7 @@
 #include <limits>
 #include <sstream>
 #include <string>
+#include <utility>
 #include <vector>
 
 
@@ -100,112 +101,78 @@ namespace ray
 
 	}; // Node
 
-	//! Update tangent direction based on current step info
+	//! Characterization of ray path tangent interacting at step boundary.
+	enum NodeChange
+	{
+		  Unaltered //!< Tangent dir unchanged (no gradient)
+		, Converged //!< Tangent dir refracted toward gradient (into dense)
+		, Diverged  //!< Tangent dir refracted away from gradient (into sparse)
+		, Reflected //!< Tangent dir reflected from boundary (total internal)
+
+	}; // NodeChange
+
+	//! Update tangent direction across single (idealized) interface boundary.
 	inline
-	Vector
-	refractedTangent
-		( Vector const & tPrev //!< Must be unit length
-		, Vector const & rCurr
+	std::pair<Vector, NodeChange>
+	nextTangentDir
+		( Vector const & tDirPrev //!< Must be unit length
 		, double const & nuPrev
+		, Vector const & gCurr
 		, double const & nuNext
-		, env::IndexVolume const * const & ptObj
+		, env::IndexVolume const * const & ptMedia
 		)
 	{
-		Vector tNext{ null<Vector>() };
-
-		// check validity
-		// if (isValid(rCurr) && isValid(tPrev))
-		// ... just assume valid for now
+		// default to unaltered
+		std::pair<Vector, NodeChange> tanDirChange{ tDirPrev, Unaltered };
+		Vector & tDirNext = tanDirChange.first;
+		NodeChange & tChange = tanDirChange.second;
+		//
+		static double const tol
+			{ std::sqrt(std::numeric_limits<double>::epsilon()) };
+		if (! nearlyEquals(gCurr, zero<Vector>(), tol)) // tangent dir changes
 		{
-			// Default corresponds with case (nuPrev == nuNext)
-			tNext = tPrev;
-
-			// get index field gradient
-			Vector const gCurr{ ptObj->nuGradient(rCurr) };
-			double const gMagSq{ magSq(gCurr) };
-//std::cout << "  gCurr: " << io::fixed(gCurr, 1u, 18u) << std::endl;
-//std::cout << "  gMagSq: " << io::fixed(gMagSq, 1u, 18u) << std::endl;
-			if (std::numeric_limits<double>::epsilon() < gMagSq)
+			double const gCurrSq{ magSq(gCurr) };
+			Vector const gCurrInv{ (1./gCurrSq) * gCurr };
+			// compute refraction bivector
+			BiVector const currB{ (nuPrev/nuNext) * (tDirPrev*gCurr).theBiv };
+			// note that sq(bivector) = -magSq(bivector)
+			double const radicand{ gCurrSq - magSq(currB) };
+			//
+			// use current conditions to select computation option
+			//
+			if (radicand < 0.) // total internal reflection
 			{
-				// unit direction of gradient
-				// TODO - probably can redo formulae to work with full grad?
-				Vector const uCurr{ (1./std::sqrt(gMagSq)) * gCurr };
-
-				// compute refraction bivector at current location
-				BiVector const bivCurr
-					{ (nuPrev/nuNext) * (tPrev*uCurr).theBiv };
-
-				// Use radicand value to select between propagation methods
-				// (total internal reflection or refraction)
-				double const radicand{ 1. - magSq(bivCurr) };
-
-/*
-std::cout << "  nuP/N: " << io::fixed(nuPrev/nuNext, 1u, 18u) << std::endl;
-std::cout << "  tPrev: " << io::fixed(tPrev, 1u, 18u) << std::endl;
-std::cout << "  uCurr: " << io::fixed(uCurr, 1u, 18u) << std::endl;
-std::cout << "  bivCurr: " << io::fixed(bivCurr, 1u, 18u) << std::endl;
-std::cout << "  radicand: " << io::fixed(radicand, 1u, 18u) << std::endl;
-*/
-
-constexpr bool showIt{ false };
-if (showIt)
-{
-std::cout
-	<< "nuPrev: " << io::fixed(nuPrev)
-	<< "  "
-	<< "nuNext: " << io::fixed(nuNext)
-	<< "  "
-	;
-if (nuPrev > nuNext)
-	std::cout << "  ->  ";
-if (nuPrev < nuNext)
-	std::cout << "   <- ";
-if (nuPrev == nuNext)
-	std::cout << "   == ";
-std::cout
-	<< "  tPrev: " << io::fixed(tPrev, 1u, 18u)
-	<< "  rCurr: " << io::fixed(rCurr, 1u, 18u)
-	<< '\n';
-std::cout << "  uCurr: " << io::fixed(uCurr, 1u, 18u) << std::endl;
-std::cout << "  radicand: " << io::fixed(radicand, 1u, 18u) << std::endl;
-}
-				if (radicand < 0.)
+				// reflect tangent from interface plane (dual to gCurr)
+				tDirNext = -(gCurr * tDirPrev * gCurrInv).theVec;
+				tChange = Reflected;
+			}
+			else
+			{
+				double const rootXi{ std::sqrt(radicand) };
+				if (nuPrev < nuNext) // propagating into more dense media
 				{
-					// (internal) reflection case
-					tNext = -(uCurr * tPrev * uCurr).theVec;
-std::cout << "\n###### REFLECTION #########\n";
+					Spinor const spin{  rootXi, currB };
+					tDirNext = (spin * gCurrInv).theVec;
+					tChange = Converged;
 				}
 				else
+				if (nuNext < nuPrev) // propagating into less dense media
 				{
-					// refraction case
-					if (nuPrev < nuNext)
-					{
-//std::cout << "Spin-A\n";
-						Spinor const spinU{  std::sqrt(radicand), bivCurr };
-						tNext = (spinU * uCurr).theVec;
-					}
-					else if (nuNext < nuPrev)
-					{
-//std::cout << "Spin-B\n";
-						Spinor const spinU{ -std::sqrt(radicand), bivCurr };
-						tNext = (spinU * uCurr).theVec;
-					}
-				//	// Default case
-				//	else // nuPrev == nuNext
-				//	{
-				//		tNext = tPrev; // could initialize with this?
-				//	}
+					Spinor const spin{ -rootXi, currB };
+					tDirNext = (spin * gCurrInv).theVec;
+					tChange = Diverged;
 				}
+				// (nuNext == nuPrev) // same as default (gCurr == 0)
 			}
 		}
-
-		return tNext;
+		//
+		return tanDirChange;
 	}
 
 	//! Ray propagation functions
 	struct Propagator
 	{
-		env::IndexVolume const * const thePtObj{ nullptr };
+		env::IndexVolume const * const thePtMedia{ nullptr };
 		double const theStepDist{ null<double>() };
 
 	private:
@@ -223,25 +190,27 @@ std::cout << "\n###### REFLECTION #########\n";
 
 			// incomming state is fixed
 			double const nuPrev
-				{ thePtObj->nuValue(rCurr - .5*theStepDist*tPrev) };
+				{ thePtMedia->nuValue(rCurr - .5*theStepDist*tPrev) };
+			Vector const gCurr{ thePtMedia->nuGradient(rCurr) };
 
 			// iterate on exiting path
 			double nuNext{ null<double>() }; // return value if requested
 			double difSq{ 2. };
 			static double const tol{ std::numeric_limits<double>::epsilon() };
 			std::size_t numLoop{ 0u };
-constexpr std::size_t maxLoop{ 10u };
+			constexpr std::size_t maxLoop{ 10u };
 //TODO does this converge?
 //std::cout << "---- looping\n";
 			while ((tol < difSq) && (numLoop++ < maxLoop))
 			{
 				// update refraction index to midpoint of predicted next
 				// interval (along evolving next tangent direction).
-				nuNext = thePtObj->nuValue(rCurr + .5*theStepDist*tNext);
-				Vector const tTemp
-					{ refractedTangent
-						(tPrev, rCurr, nuPrev, nuNext, thePtObj)
+				nuNext = thePtMedia->nuValue(rCurr + .5*theStepDist*tNext);
+				std::pair<Vector, NodeChange> const tDirChange
+					{ nextTangentDir
+						(tPrev, nuPrev, gCurr, nuNext, thePtMedia)
 					};
+				Vector const & tTemp = tDirChange.first;
 
 /*
 Vector const rPrev{ rCurr - .5*theStepDist*tPrev };
@@ -260,7 +229,7 @@ std::cout
 				// candidate return value (if convergence test passes)
 				tNext = tTemp;
 			}
-//std::cout << "--\n";
+//std::cout << "-- numLoop: " << numLoop << '\n';
 
 			// set for use in consumer code (if requested)
 			if (ptrNuNext)
