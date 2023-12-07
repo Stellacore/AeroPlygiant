@@ -91,6 +91,8 @@ namespace ray
 		std::string
 		infoBrief
 			( std::string const & title = {}
+			, std::size_t const & precisionVec = 6u
+			, std::size_t const & precisionNu = 6u
 			) const
 		{
 			std::ostringstream oss;
@@ -99,16 +101,17 @@ namespace ray
 				oss << title << '\n';
 			}
 			oss << " tan ";
-			oss << io::fixed(thePrevTan, 3u, 6u);
+			oss << io::fixed(thePrevTan, 3u, precisionVec);
 			oss << " nu ";
-			oss << io::fixed(thePrevNu, 3u, 6u);
+			oss << io::fixed(thePrevNu, 3u, precisionNu);
 			oss << " loc ";
-			oss << io::fixed(theCurrLoc, 3u, 6u);
+			oss << io::fixed(theCurrLoc, 3u, precisionVec);
 			oss << " nu ";
-			oss << io::fixed(theNextNu, 3u, 6u);
+			oss << io::fixed(theNextNu, 3u, precisionNu);
 			oss << " tan ";
-			oss << io::fixed(theNextTan, 3u, 6u);
-			oss << " chng ";
+			oss << io::fixed(theNextTan, 3u, precisionVec);
+			//oss << " chng ";
+			oss << "  ";
 			oss << nameFor(theDirChange);
 			return oss.str();
 		}
