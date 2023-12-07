@@ -79,7 +79,7 @@
 \begin_body
 
 \begin_layout Title
-Refraction Modeling
+AeroPlygiant Refraction Model
 \end_layout
 
 \begin_layout Abstract
@@ -350,19 +350,6 @@ Discrete Step Approximation
 \end_layout
 
 \begin_layout Standard
-\begin_inset Note Note
-status open
-
-\begin_layout Plain Layout
-TODO
-\end_layout
-
-\end_inset
-
-/TBD - Tentative, a bit wonky, and likely to contain various errors.
-\end_layout
-
-\begin_layout Standard
 \begin_inset Float figure
 wide false
 sideways false
@@ -508,7 +495,7 @@ incoming
 \end_layout
 
 \begin_layout Subsection
-Environment Values
+Propagation Environment
 \end_layout
 
 \begin_layout Standard
@@ -801,7 +788,7 @@ For this, the path length step,
  e.g.
 \begin_inset Formula 
 \[
-\Delta_{\lambda,i}=\frac{1}{2}\left|r_{i}-r_{i+1}\right|
+\Delta_{\lambda,i}=\frac{1}{2}\left|r_{i}-r_{i-1}\right|
 \]
 
 \end_inset
@@ -840,12 +827,28 @@ future
 \begin_inset Formula $r_{i+1}$
 \end_inset
 
-) complicates evaluation and that an iterative strategy is suggested as
- discussed below.
+) complicates evaluation of 
+\begin_inset Formula $\nu_{i+1}$
+\end_inset
+
+.
+ An iterative strategy for addressing this is presented below.
 \end_layout
 
 \begin_layout Subsection
-Iterative Step
+Path Propagation Step
+\end_layout
+
+\begin_layout Standard
+A complete ray path can be computed step by step using a forward propagation
+ strategy described in this section.
+ The method described here is essentially using Euler's method for solving
+ the (as yet unspecified) differential equation system governing the ray
+ path propagation.
+ As such, it may be expected to share the same general characteristics -
+ e.g.
+ easy implementation, but relatively poor performance compared with higher
+ order and more advanced methods.
 \end_layout
 
 \begin_layout Subsubsection
@@ -853,7 +856,15 @@ Notation
 \end_layout
 
 \begin_layout Standard
-Introduce indices:
+For both conceptual and bookkeeping clarity, introducing the following 
+\begin_inset Quotes eld
+\end_inset
+
+per-step
+\begin_inset Quotes erd
+\end_inset
+
+ concepts and subscript notation.
 \end_layout
 
 \begin_layout Description
@@ -861,12 +872,12 @@ Introduce indices:
 \end_inset
 
  Current (e.g.
- 
+ involving only the 
 \begin_inset Formula $i$
 \end_inset
 
-) - identify quantities that are associated with the IoR level surface at
- which refraction (or reflection) is being computed.
+-th node) - identify quantities that are associated with the IoR level surface
+ at which refraction (or reflection) is being computed.
 \end_layout
 
 \begin_layout Description
@@ -874,8 +885,12 @@ Introduce indices:
 \end_inset
 
  Previous (e.g.
- 
+ involving nodes, 
 \begin_inset Formula $i-1$
+\end_inset
+
+ and 
+\begin_inset Formula $i$
 \end_inset
 
 ) - identify quantities that are 
@@ -897,7 +912,11 @@ before
 \end_inset
 
  Next (e.g.
- 
+ involving nodes, 
+\begin_inset Formula $i$
+\end_inset
+
+ and 
 \begin_inset Formula $i+1$
 \end_inset
 
@@ -1156,11 +1175,11 @@ Sample the IoR field,
 \begin_inset Formula $\nu\left(r\right)$
 \end_inset
 
-, at the estimated next evaluation location based on the 
+, based on the 
 \begin_inset Formula $j$
 \end_inset
 
--th estimate of that next evaluation location.
+-th estimate of the next evaluation location.
  I.e.
 \begin_inset Formula 
 \[
@@ -1182,7 +1201,21 @@ Use this initial IoR estimate,
 \begin_inset Formula $t_{n,j}$
 \end_inset
 
-, (using relationships and formula presented below).
+, (using relationships and formula presented below in section
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "subsec:Tangent-Direction-Update"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+).
  I.e.
  evaluate the functional form
 \begin_inset Formula 
@@ -1215,11 +1248,11 @@ If the estimated tangent, and gradient are mostly in the same direction,
 \end_inset
 
 , the new estimated tangent direction represents refraction.
- In this (transmission) case the estimated next evaluation position in terms
+ In this case (transmission) the estimated next evaluation position in terms
  of the forward ray direction via
 \begin_inset Formula 
 \[
-q_{n,j+1}=r_{c}+\frac{1}{2}\left|r_{c}-r_{p}\right|t_{n,j}
+q_{n,j+1}=r_{c}+\frac{1}{2}\left|r_{c}-r_{p}\right|t_{n,j}\,;\,0<t_{n,j}\cdot g_{c}
 \]
 
 \end_inset
@@ -1235,11 +1268,11 @@ If the estimated tangent, and gradient are mostly in opposing directions,
 \end_inset
 
 , the new estimated tangent direction represents a total internal reflection.
- In this (reflection) case, estimate the next evaluation position in terms
+ In this case (reflection), estimate the next evaluation position in terms
  of the interface gradient direction via
 \begin_inset Formula 
 \[
-q_{n,j+1}=r_{c}+\frac{1}{2}\left|r_{c}-r_{p}\right|g_{c}
+q_{n,j+1}=r_{c}+\frac{1}{2}\left|r_{c}-r_{p}\right|g_{c}\,;\,t_{n,j}\cdot g_{c}\le0
 \]
 
 \end_inset
@@ -1311,8 +1344,16 @@ for some appropriately small scalar value,
 .
 \end_layout
 
+\begin_deeper
 \begin_layout Enumerate
-Note that at convergence:
+TODO/TBD - It is not obvious if there is a formal justification if this
+ should converge.
+ It seems to work in software code, but...??
+\end_layout
+
+\end_deeper
+\begin_layout Enumerate
+At convergence:
 \end_layout
 
 \begin_deeper
@@ -1321,11 +1362,11 @@ For transmission case, the estimated evaluation location,
 \begin_inset Formula $q_{n,j+1}$
 \end_inset
 
-, provides the estimated next node location indirectly.
- I.e.
+, is half way toward the estimated next node location which may be computed
+ immediately as
 \begin_inset Formula 
 \[
-r_{n}=r_{c}+2\left|q_{n,j+1}-r_{c}\right|
+r_{n}=r_{c}+2\left(q_{n,j+1}-r_{c}\right)=2q_{n,j+1}-r_{c}
 \]
 
 \end_inset
@@ -1340,12 +1381,13 @@ For reflection case, the estimated evaluation location has no direct reuse,
 \end_layout
 
 \end_deeper
-\begin_layout Standard
-TODO/TBD - It is not obvious if there is a formal justification if this
- should converge.
-\end_layout
-
 \begin_layout Subsubsection
+\begin_inset CommandInset label
+LatexCommand label
+name "subsec:Tangent-Direction-Update"
+
+\end_inset
+
 Tangent Direction Update
 \end_layout
 
@@ -1369,6 +1411,35 @@ This assumes the next IoR value,
 
 \begin_layout Paragraph
 Snel's Law
+\begin_inset Foot
+status open
+
+\begin_layout Plain Layout
+Snel's name may be spelled with either one 
+\begin_inset Quotes eld
+\end_inset
+
+l
+\begin_inset Quotes erd
+\end_inset
+
+ or with two - e.g.
+ https://en.wikipedia.org/wiki/Willebrord_Snellius.
+ It seems his actual name is Snel, but that he used the Latinized version,
+ 
+\begin_inset Quotes eld
+\end_inset
+
+Snellius
+\begin_inset Quotes erd
+\end_inset
+
+ in many publications (TODO/cite).
+\end_layout
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Standard
@@ -1583,8 +1654,12 @@ which may be expressed in terms of the geometric product as
 
 \end_inset
 
-Multiply each side by its own reverse, thereby forming the squared magnitude
- relationship,
+Multiply each side by its own reverse (viz.
+ 
+\begin_inset Formula $g_{c}t_{n}\nu_{n}=-B+\lambda$
+\end_inset
+
+), thereby forming the squared magnitude relationship,
 \begin_inset Formula 
 \[
 \nu_{n}^{2}t_{n}^{2}g_{c}^{2}=\lambda_{n}^{2}-B^{2}
@@ -1690,11 +1765,11 @@ If the gradient is non zero,
 \begin_inset Formula $g_{c}\ne0$
 \end_inset
 
-, the next tangent direction may be expressed explicitly such that, 
-\begin_inset Formula $t_{n}$
+, the next tangent direction, 
+\begin_inset Formula $\hat{t}_{n}$
 \end_inset
 
-, may be expressed directly as
+, may be expressed explicitly as
 \begin_inset Formula 
 \[
 \hat{t}_{n}=\begin{cases}
@@ -1706,9 +1781,9 @@ If the gradient is non zero,
 
 \end_inset
 
-The last relations follows form the simple observation that, if there is
- no gradient to the IoR field, then the ray does not change direction at
- this interface boundary.
+The last relationship follows form the simple observation that, if there
+ is no gradient to the IoR field, then the ray does not change direction
+ at this interface boundary.
 \end_layout
 
 \begin_layout Standard
@@ -1743,11 +1818,15 @@ previous
 \begin_inset Quotes erd
 \end_inset
 
- values for 
+ values defining 
 \begin_inset Formula $B$
 \end_inset
 
-, and express the geometric relationship as
+, as 
+\begin_inset Formula $B=\nu_{p}\left(t_{p}\wedge g_{c}\right)$
+\end_inset
+
+, in order to express the geometric relationship as
 \begin_inset Note Comment
 status collapsed
 
@@ -1838,12 +1917,27 @@ The index of refraction values,
 
 , are associated with locations within the overall IoR scalar field that
  are spatially removed from the boundary at which the refraction is being
- evaluated (by about half a ray propagation step size).
+ evaluated (by about half a ray propagation step size - cf.
+ Figure
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig:Comparison-of-IoR-Models"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+).
 \end_layout
 
 \begin_layout Itemize
-Since the change for index of refraction scalar values is already represented
- by the 
+Since the change for index of refraction is already represented by the scalar
+ values, 
 \begin_inset Formula $\nu_{p}$
 \end_inset
 
@@ -1851,7 +1945,7 @@ Since the change for index of refraction scalar values is already represented
 \begin_inset Formula $\nu_{n}$
 \end_inset
 
- values, only the direction of the gradient vector is important for representing
+, only the direction of the gradient vector is important for representing
  the direction of the (locally) planar discrete interface boundary (at the
  current propagation node).
 \end_layout
@@ -1879,7 +1973,7 @@ next
 \begin_inset Formula $\hat{t}_{n}$
 \end_inset
 
-, the square root operation assume that the scalar valued radicand is positive.
+, the square root operation assumes that the scalar valued radicand is positive.
  I.e.
  that
 \begin_inset Formula 
@@ -1910,18 +2004,18 @@ critical angle
 \begin_inset Quotes erd
 \end_inset
 
-) the magnitude of the bivector factor becomes large enough to violate this
- condition.
+) the magnitude of the bivector factor becomes large enough such that the
+ radicand becomes negative.
  I.e.
- the radicand quantity,
+ such that
 \begin_inset Formula 
 \[
-g_{c}^{2}-\left(\frac{\nu_{p}}{\nu_{n}}\right)^{2}\left|t_{p}\wedge g_{c}\right|^{2}
+g_{c}^{2}-\left(\frac{\nu_{p}}{\nu_{n}}\right)^{2}\left|t_{p}\wedge g_{c}\right|^{2}<0
 \]
 
 \end_inset
 
-becomes negative.
+
 \end_layout
 
 \begin_layout Standard
@@ -1932,6 +2026,52 @@ For the case of total internal reflection (or for reflection in general),
 
  (otherwise, the radicand is identically zero and there is no refraction
  nor reflection).
+\end_layout
+
+\begin_layout Standard
+TODO/TBD - if the radicand is zero, then the resulting 
+\begin_inset Formula $\hat{t}_{n}$
+\end_inset
+
+ is directed orthogonal to the gradient, 
+\begin_inset Formula $g_{c}$
+\end_inset
+
+.
+\begin_inset Note Comment
+status open
+
+\begin_layout Plain Layout
+Since
+\begin_inset Formula 
+\[
+\hat{t}_{n}=\begin{cases}
+\left[\frac{\nu_{p}}{\nu_{n}}\left(t_{p}\wedge g_{c}\right)\right]g_{c}^{-1} & g_{c}\ne0,\,\nu_{p}<\nu_{n}\\
+\left[\frac{\nu_{p}}{\nu_{n}}\left(t_{p}\wedge g_{c}\right)\right]g_{c}^{-1} & g_{c}\ne0,\,\nu_{n}<\nu_{p}\\
+\hat{t}_{p} & g_{c}=0,\,\nu_{n}=\nu_{p}
+\end{cases}
+\]
+
+\end_inset
+
+and the bivector, 
+\begin_inset Formula $\hat{t}_{p}\wedge g_{c}$
+\end_inset
+
+ turns the vector, 
+\begin_inset Formula $g_{c}^{-1}$
+\end_inset
+
+ a quarter turn (then scaled it by 
+\begin_inset Formula $\nu_{p}\nu_{n}^{-1}$
+\end_inset
+
+).
+\end_layout
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Standard
@@ -1948,7 +2088,7 @@ For reflection, the direction of the reflected ray,
  This may be expressed algebraically as
 \begin_inset Formula 
 \[
-\hat{t}_{n}=-g_{c}\hat{t}_{p}g_{c}^{-1}\,;\,\left(g_{c}^{2}+\left(\frac{\nu_{p}}{\nu_{n}}\right)^{2}\left(t_{p}\wedge g_{c}\right)^{2}<0\right)
+\left(\hat{t}_{n}=-g_{c}\hat{t}_{p}g_{c}^{-1}\right)\iff\left(g_{c}^{2}+\left(\frac{\nu_{p}}{\nu_{n}}\right)^{2}\left(t_{p}\wedge g_{c}\right)^{2}<0\right)
 \]
 
 \end_inset
