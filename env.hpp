@@ -88,13 +88,12 @@ namespace env
 				//!< Use half this value as difference estimating gradient
 			) const
 		{
-			double const mag{ magnitude(rVec) };
 			double const del{ .5 * stepSize };
-			double const scale{ 1. / stepSize }; // 1./(2.*del)
+			double const scl{ 1. / stepSize };
 			return Vector
-				{ scale * (nuValue(rVec + del*e1) - nuValue(rVec - del*e1))
-				, scale * (nuValue(rVec + del*e2) - nuValue(rVec - del*e2))
-				, scale * (nuValue(rVec + del*e3) - nuValue(rVec - del*e3))
+				{ scl * (nuValue(rVec + del*e1) - nuValue(rVec - del*e1))
+				, scl * (nuValue(rVec + del*e2) - nuValue(rVec - del*e2))
+				, scl * (nuValue(rVec + del*e3) - nuValue(rVec - del*e3))
 				};
 		}
 
