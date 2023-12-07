@@ -83,12 +83,14 @@ namespace env
 		Vector
 		nuGradient
 			( Vector const & rVec
+				//!< Location at which to estimate gradient
+			, double const & stepSize
+				//!< Use half this value as difference estimating gradient
 			) const
 		{
 			double const mag{ magnitude(rVec) };
-			static double const del
-				{ std::sqrt(std::numeric_limits<double>::epsilon()) };
-			static double const scale{ 1. / (2.*del) };
+			double const del{ .5 * stepSize };
+			double const scale{ 1. / stepSize }; // 1./(2.*del)
 			return Vector
 				{ scale * (nuValue(rVec + del*e1) - nuValue(rVec - del*e1))
 				, scale * (nuValue(rVec + del*e2) - nuValue(rVec - del*e2))
