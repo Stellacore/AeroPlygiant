@@ -83,8 +83,9 @@ Refraction Modeling
 \end_layout
 
 \begin_layout Abstract
-This note summarizes development of equations governing propagation of a
- refracted optical ray.
+This note summarizes development of equations governing the three dimensional
+ propagation of an optical ray path traversing a volume of space associated
+ with an arbitrarily complex refractive media.
  First discrete numerical method is developed.
  Then attempts are made to cast this into differential form.
 \end_layout
@@ -2110,7 +2111,7 @@ future
 \begin_inset Formula $\nu_{n}$
 \end_inset
 
-, must be estimated as part of a iterative process as described in paragraph
+, must be estimated as part of an iterative process as described in paragraph
 \begin_inset space ~
 \end_inset
 
@@ -2128,7 +2129,796 @@ noprefix "false"
 \end_layout
 
 \begin_layout Section
+Differential Methods
+\end_layout
+
+\begin_layout Subsection
+Refraction Invariant (?)
+\end_layout
+
+\begin_layout Standard
+\begin_inset Note Note
+status open
+
+\begin_layout Plain Layout
 TODO
+\end_layout
+
+\end_inset
+
+/TBD - Tentative and Probably Wrong
+\end_layout
+
+\begin_layout Standard
+The bivector quantity, 
+\begin_inset Formula $\nu\left(t\wedge g\right)$
+\end_inset
+
+, is a refraction invariant - in the instantaneous sense
+\begin_inset Foot
+status open
+
+\begin_layout Plain Layout
+Interpretation of Snel's law is that speed of propagation is constant while
+ path curves (rather than v.v.
+ as in EM theory).
+ The direction of curvature changes depending on changes in the direction
+ of the index gradient.
+\end_layout
+
+\end_inset
+
+.
+ Consider this to be constant, and differentiate, w.r.t.
+ path length 
+\begin_inset Formula $\lambda$
+\end_inset
+
+, to obtain
+\begin_inset Formula 
+\[
+\dot{\nu}\left(t\wedge g\right)+\nu\left(\dot{t}\wedge g\right)+\nu\left(t\wedge\dot{g}\right)=0
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection
+Differential Relationships
+\end_layout
+
+\begin_layout Standard
+\begin_inset Note Note
+status open
+
+\begin_layout Plain Layout
+TODO
+\end_layout
+
+\end_inset
+
+/TBD - Tentative and Probably Wrong
+\end_layout
+
+\begin_layout Standard
+Note that 
+\begin_inset Formula $\nu=\nu\left(r\right)$
+\end_inset
+
+ and 
+\begin_inset Formula $r=r\left(\lambda\right)$
+\end_inset
+
+, so that
+\begin_inset Formula 
+\[
+\dot{\nu}=\frac{d\nu}{d\lambda}=\sum\frac{\partial\nu}{\partial\rho_{k}}\frac{d\rho_{k}}{d\lambda}=\nabla\nu\cdot\dot{r}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The tangent vector is given by the position derivative w.r.t.
+ arc length,
+\begin_inset Formula 
+\[
+\dot{r}=\frac{dr}{d\lambda}=t
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The derivative (wrt 
+\begin_inset Formula $\lambda$
+\end_inset
+
+) of the gradient is
+\begin_inset Formula 
+\[
+\dot{g}=\frac{dg}{d\lambda}=\frac{d}{d\lambda}\sum\frac{\partial\nu}{\partial\rho_{k}}e_{k}=\sum\frac{d}{d\lambda}\frac{\partial\nu}{\partial\rho_{k}}e_{k}
+\]
+
+\end_inset
+
+
+\begin_inset Formula 
+\[
+\dot{g}=\lim_{\Delta\lambda\rightarrow0}\frac{g\left(r+\Delta\lambda\dot{r}\right)-g\left(r\right)}{\Delta\lambda}
+\]
+
+\end_inset
+
+
+\begin_inset Formula 
+\[
+g=g\left(r\right)
+\]
+
+\end_inset
+
+
+\begin_inset Formula 
+\[
+\dot{g}=\frac{dg}{d\lambda}=\frac{dg}{d\rho_{1}}\frac{d\rho_{1}}{d\lambda}+\frac{dg}{d\rho_{2}}\frac{d\rho_{2}}{d\lambda}+\frac{dg}{d\rho_{3}}\frac{d\rho_{3}}{d\lambda}
+\]
+
+\end_inset
+
+
+\begin_inset Note Comment
+status collapsed
+
+\begin_layout Plain Layout
+\begin_inset Formula 
+\[
+\frac{dg}{d\lambda}=\frac{d}{d\rho_{1}}\left(\sum\frac{d\nu}{d\rho_{k}}e_{k}\right)\frac{d\rho_{1}}{d\lambda}+\frac{d}{d\rho_{2}}\left(\sum\frac{d\nu}{d\rho_{k}}e_{k}\right)\frac{d\rho_{2}}{d\lambda}+\frac{d}{d\rho_{3}}\left(\sum\frac{d\nu}{d\rho_{k}}e_{k}\right)\frac{d\rho_{3}}{d\lambda}
+\]
+
+\end_inset
+
+
+\begin_inset Formula 
+\[
+\frac{dg}{d\lambda}=\left(\sum\frac{d^{2}\nu}{d\rho_{1}d\rho_{k}}e_{k}\right)\frac{d\rho_{1}}{d\lambda}+\left(\sum\frac{d^{2}\nu}{d\rho_{2}d\rho_{k}}e_{k}\right)\frac{d\rho_{2}}{d\lambda}+\left(\sum\frac{d^{2}\nu}{d\rho_{3}d\rho_{k}}e_{k}\right)\frac{d\rho_{3}}{d\lambda}
+\]
+
+\end_inset
+
+
+\begin_inset Formula 
+\begin{align*}
+\frac{dg}{d\lambda} & =\left(\frac{d^{2}\nu}{d\rho_{1}d\rho_{1}}e_{1}+\frac{d^{2}\nu}{d\rho_{1}d\rho_{2}}e_{2}+\frac{d^{2}\nu}{d\rho_{1}d\rho_{3}}e_{3}\right)\dot{r}_{1}\\
+ & +\left(\frac{d^{2}\nu}{d\rho_{2}d\rho_{1}}e_{1}+\frac{d^{2}\nu}{d\rho_{2}d\rho_{2}}e_{2}+\frac{d^{2}\nu}{d\rho_{2}d\rho_{3}}e_{3}\right)\dot{r}_{2}\\
+ & +\left(\frac{d^{2}\nu}{d\rho_{3}d\rho_{1}}e_{1}+\frac{d^{2}\nu}{d\rho_{3}d\rho_{2}}e_{2}+\frac{d^{2}\nu}{d\rho_{3}d\rho_{3}}e_{3}\right)\dot{r}_{3}
+\end{align*}
+
+\end_inset
+
+
+\begin_inset Formula 
+\begin{align*}
+\frac{dg}{d\lambda} & =\frac{d}{d\rho_{1}}\left(\frac{d\nu}{d\rho_{1}}e_{1}+\frac{d\nu}{d\rho_{2}}e_{2}+\frac{d\nu}{d\rho_{3}}e_{3}\right)\dot{r}_{1}\\
+ & +\frac{d}{d\rho_{2}}\left(\frac{d\nu}{d\rho_{1}}e_{1}+\frac{d\nu}{d\rho_{2}}e_{2}+\frac{d\nu}{d\rho_{3}}e_{3}\right)\dot{r}_{2}\\
+ & +\frac{d}{d\rho_{3}}\left(\frac{d\nu}{d\rho_{1}}e_{1}+\frac{d\nu}{d\rho_{2}}e_{2}+\frac{d\nu}{d\rho_{3}}e_{3}\right)\dot{r}_{3}
+\end{align*}
+
+\end_inset
+
+
+\begin_inset Formula 
+\begin{align*}
+\frac{dg}{d\lambda} & =\frac{dg}{d\rho_{1}}\dot{r}_{1}\\
+ & +\frac{dg}{d\rho_{2}}\dot{r}_{2}\\
+ & +\frac{dg}{d\rho_{3}}\dot{r}_{3}
+\end{align*}
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\begin_inset Formula 
+\begin{align*}
+\dot{g} & =\frac{dg}{d\rho_{1}}\dot{r}_{1}+\frac{dg}{d\rho_{2}}\dot{r}_{2}+\frac{dg}{d\rho_{3}}\dot{r}_{3}
+\end{align*}
+
+\end_inset
+
+
+\begin_inset Formula 
+\[
+\dot{g}=\frac{dg}{d\rho_{1}}\left(\dot{r}\cdot e_{1}\right)+\frac{dg}{d\rho_{2}}\left(\dot{r}\cdot e_{2}\right)+\frac{dg}{d\rho_{3}}\left(\dot{r}\cdot e_{3}\right)
+\]
+
+\end_inset
+
+
+\begin_inset Formula 
+\begin{align*}
+\frac{dg}{d\lambda} & =\left(\frac{d^{2}\nu}{d\rho_{1}d\rho_{1}}e_{1}+\frac{d^{2}\nu}{d\rho_{1}d\rho_{2}}e_{2}+\frac{d^{2}\nu}{d\rho_{1}d\rho_{3}}e_{3}\right)\left(\dot{r}\cdot e_{1}\right)\\
+ & +\left(\frac{d^{2}\nu}{d\rho_{2}d\rho_{1}}e_{1}+\frac{d^{2}\nu}{d\rho_{2}d\rho_{2}}e_{2}+\frac{d^{2}\nu}{d\rho_{2}d\rho_{3}}e_{3}\right)\left(\dot{r}\cdot e_{2}\right)\\
+ & +\left(\frac{d^{2}\nu}{d\rho_{3}d\rho_{1}}e_{1}+\frac{d^{2}\nu}{d\rho_{3}d\rho_{2}}e_{2}+\frac{d^{2}\nu}{d\rho_{3}d\rho_{3}}e_{3}\right)\left(\dot{r}\cdot e_{3}\right)
+\end{align*}
+
+\end_inset
+
+In matrix form, the Hessian of 
+\begin_inset Formula $g$
+\end_inset
+
+, may be defined as the (3x3) matrix
+\begin_inset Formula 
+\[
+\left(\mathrm{H}_{g}\right)_{ij}\equiv\frac{\partial^{2}\nu}{\partial\rho_{i}\partial\rho_{j}}
+\]
+
+\end_inset
+
+ The derivative, 
+\begin_inset Formula $\dot{g}$
+\end_inset
+
+, may be expressed as
+\begin_inset Formula 
+\[
+\dot{g}=\mathrm{H}_{g}\left[\sum\left(\dot{r}\cdot e_{k}\right)e_{k}\right]
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Substitute the above in order to express the refraction invariant as,
+\begin_inset Formula 
+\[
+\nabla\nu\cdot\dot{r}\left(\dot{r}\wedge g\right)+\nu\left(\ddot{r}\wedge g\right)+\nu\left(\dot{r}\wedge\left(\frac{dg}{d\rho_{1}}\dot{r}_{1}+\frac{dg}{d\rho_{2}}\dot{r}_{2}+\frac{dg}{d\rho_{3}}\dot{r}_{3}\right)\right)=0
+\]
+
+\end_inset
+
+Multiply from by 
+\begin_inset Formula $\nu^{-1}$
+\end_inset
+
+,
+\begin_inset Formula 
+\[
+\ddot{r}\wedge g+\frac{\nabla\nu}{\nu}\cdot\dot{r}\left(\dot{r}\wedge g\right)+\left(\dot{r}\wedge\frac{dg}{d\rho_{1}}\right)\dot{r}_{1}+\left(\dot{r}\wedge\frac{dg}{d\rho_{2}}\right)\dot{r}_{2}+\left(\dot{r}\wedge\frac{dg}{d\rho_{3}}\right)\dot{r}_{3}=0
+\]
+
+\end_inset
+
+
+\begin_inset Formula 
+\[
+\ddot{r}\wedge g+\frac{\nabla\nu}{\nu}\cdot\dot{r}\left(\dot{r}\wedge g\right)+\left(\dot{r}\wedge\frac{\partial g}{\partial\rho_{1}}\right)\dot{r}_{1}+\left(\dot{r}\wedge\frac{\partial g}{\partial\rho_{2}}\right)\dot{r}_{2}+\left(\dot{r}\wedge\frac{\partial g}{\partial\rho_{3}}\right)\dot{r}_{3}=0
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+This is a second order, nonlinear, differential equation expressing changes
+ to position, 
+\begin_inset Formula $r$
+\end_inset
+
+, as a function of path length evolution parameter, 
+\begin_inset Formula $\lambda$
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+This should be a necessary condition, however, it is unclear if it is a
+ sufficient condition.
+\end_layout
+
+\begin_layout Standard
+In terms of the index field Hessian matrix,
+\begin_inset Formula 
+\[
+\ddot{r}\wedge g+\frac{\nabla\nu}{\nu}\cdot\dot{r}\left(\dot{r}\wedge g\right)+\dot{r}\wedge\left(\mathrm{H}_{g}\left[\sum\left(\dot{r}\cdot e_{k}\right)e_{k}\right]\right)=0
+\]
+
+\end_inset
+
+
+\begin_inset Formula 
+\[
+\left(\mathrm{H}_{g}\right)_{ij}\equiv\frac{\partial^{2}\nu}{\partial\rho_{i}\partial\rho_{j}}
+\]
+
+\end_inset
+
+Apparently, the first two terms control the curvature and propagation direction
+ in the plane of the index gradient while the last term (involving a matrix-vect
+or multiplication) introduces a torsion influence capable of changing direction
+ of the plane of propagation.
+\end_layout
+
+\begin_layout Subsection
+Special Case
+\end_layout
+
+\begin_layout Standard
+\begin_inset Note Note
+status open
+
+\begin_layout Plain Layout
+TODO
+\end_layout
+
+\end_inset
+
+/TBD - Tentative and Probably Wrong
+\end_layout
+
+\begin_layout Standard
+Consider a plane stratified atmosphere.
+ In this case, the only gradient term that survives is, 
+\begin_inset Formula $\nabla\nu=\frac{\partial\nu}{\partial\rho_{3}}e_{3}$
+\end_inset
+
+.
+ And for 
+\begin_inset Formula $\mathrm{H}_{g}$
+\end_inset
+
+, only the 
+\begin_inset Formula $\frac{d^{2}\nu}{d\rho_{3}d\rho_{3}}$
+\end_inset
+
+ term survives, so that
+\begin_inset Formula 
+\[
+\ddot{r}\wedge\frac{\partial\nu}{\partial\rho_{3}}e_{3}+\frac{1}{\nu}\frac{\partial\nu}{\partial\rho_{3}}e_{3}\cdot\dot{r}\left(\dot{r}\wedge\frac{\partial\nu}{\partial\rho_{3}}e_{3}\right)+\dot{r}\wedge\left(\frac{\partial^{2}\nu}{\partial\rho_{3}\partial\rho_{3}}\left(\dot{r}\cdot e_{3}\right)e_{3}\right)=0
+\]
+
+\end_inset
+
+
+\begin_inset Formula 
+\[
+\frac{\partial\nu}{\partial\rho_{3}}\left(\ddot{r}\wedge e_{3}\right)+\frac{1}{\nu}\left(\frac{\partial\nu}{\partial\rho_{3}}\right)^{2}\left(\dot{r}\cdot e_{3}\right)\left(\dot{r}\wedge e_{3}\right)+\frac{\partial^{2}\nu}{\partial\rho_{3}\partial\rho_{3}}\left(\dot{r}\cdot e_{3}\right)\left(\dot{r}\wedge e_{3}\right)=0
+\]
+
+\end_inset
+
+
+\begin_inset Formula 
+\[
+\frac{\partial\nu}{\partial\rho_{3}}\left(\ddot{r}\wedge e_{3}\right)+\left[\frac{1}{\nu}\left(\frac{\partial\nu}{\partial\rho_{3}}\right)^{2}+\frac{\partial^{2}\nu}{\partial\rho_{3}\partial\rho_{3}}\right]\left(\dot{r}\cdot e_{3}\right)\left(\dot{r}\wedge e_{3}\right)=0
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Section
+Atmosphere Model Example
+\end_layout
+
+\begin_layout Standard
+Consider if the index of refraction (IoR) field, 
+\begin_inset Formula $\nu$
+\end_inset
+
+, is an exponential function of distance from a center of spherical symmetry
+\begin_inset Note Comment
+status collapsed
+
+\begin_layout Plain Layout
+(TODO/TBD - or might use spherical polar coordinate system - along with
+ updated expression for the gradient, but in any case...).
+\end_layout
+
+\end_inset
+
+ I.e.
+ let 
+\begin_inset Formula 
+\[
+\nu=\alpha e^{-\beta\left|r\right|}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The IoR field may be expressed with respect to a Cartesian coordinate system
+ as
+\begin_inset Formula 
+\[
+\nu=\alpha\exp\left(-\beta\sqrt{\rho_{1}^{2}+\rho_{2}^{2}+\rho_{3}^{2}}\right)
+\]
+
+\end_inset
+
+In this Cartesian frame, the gradient is easily computed as
+\begin_inset Formula 
+\begin{align*}
+g=\nabla\nu=\sum_{k}\partial_{k}\nu & =\sum\alpha\exp\left(-\beta\left|r\right|\right)\left(-\beta\frac{1}{2}\frac{1}{\left|r\right|}2\rho_{k}\right)e_{k}\\
+ & =-\alpha\beta\frac{e^{-\beta\left|r\right|}}{\left|r\right|}\sum\rho_{k}e_{k}\\
+ & =-\alpha\beta\frac{e^{-\beta\left|r\right|}}{\left|r\right|}r
+\end{align*}
+
+\end_inset
+
+Although a Cartesian frame was assumed to demonstrate computation of the
+ gradient, the resulting expression on the last line is coordinate system
+ independent, so that, in general
+\begin_inset Formula 
+\begin{align*}
+g=\nabla\nu & =-\alpha\beta\nu\frac{r}{\left|r\right|}\\
+ & =-\alpha\beta\nu\hat{r}
+\end{align*}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The associated (coordinate system independent) gradient magnitude is
+\begin_inset Note Comment
+status collapsed
+
+\begin_layout Plain Layout
+\begin_inset Formula 
+\begin{align*}
+\left|g\right|=\sqrt{g^{2}} & =\sqrt{\left(-\frac{\alpha\beta}{\left|r\right|}\nu\sum\rho_{k}e_{k}\right)\left(-\frac{\alpha\beta}{\left|r\right|}\nu\sum\rho_{k}e_{k}\right)}\\
+ & =\frac{\alpha\beta}{\left|r\right|}\nu\sqrt{\left(\sum\rho_{k}e_{k}\right)\left(\sum\rho_{k}e_{k}\right)}\\
+ & =\frac{\alpha\beta}{\left|r\right|}\nu\sqrt{rr}\\
+ & =\frac{\alpha\beta}{\left|r\right|}\nu\left|r\right|\\
+ & =\alpha\beta\nu
+\end{align*}
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\begin_inset Formula 
+\begin{align*}
+\left|g\right|=\sqrt{g^{2}} & =\sqrt{\left(-\alpha\beta\nu\hat{r}\right)\left(-\alpha\beta\nu\hat{r}\right)}\\
+ & =\alpha\beta\nu\sqrt{\hat{r}^{2}}\\
+ & =\alpha\beta\nu
+\end{align*}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The associated (coordinate system independent) gradient unit direction is
+\begin_inset Note Comment
+status collapsed
+
+\begin_layout Plain Layout
+\begin_inset Formula 
+\begin{align*}
+u=\frac{g}{\left|g\right|} & =\frac{-\frac{\alpha\beta}{\left|r\right|}\nu\sum\rho_{k}e_{k}}{\sqrt{\left(-\frac{\alpha\beta}{\left|r\right|}\nu\sum\rho_{k}e_{k}\right)^{2}}}\\
+ & =\frac{-\sum\rho_{k}e_{k}}{\sqrt{\left(\sum\rho_{k}e_{k}\right)^{2}}}\\
+ & =\frac{-r}{\left|r\right|}\\
+ & =-\hat{r}
+\end{align*}
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\begin_inset Formula 
+\begin{align*}
+u=\frac{g}{\left|g\right|} & =\frac{-\alpha\beta\nu\hat{r}}{\alpha\beta\nu}\\
+ & =-\hat{r}
+\end{align*}
+
+\end_inset
+
+I.e.
+ for the radially symmetric index of refraction field (decreasing with distance
+ from center), the gradient is aligned radially inward as expected.
+\end_layout
+
+\begin_layout Subsection
+Determining the Exponential Model Parameters
+\end_layout
+
+\begin_layout Standard
+Assume a (radially symmetric) exponential atmospheric index of refraction
+ model of the form
+\begin_inset Formula 
+\[
+\nu\left(r\right)=\alpha e^{-\beta\left|r\right|}=e^{\ln\alpha-\beta\left|r\right|}
+\]
+
+\end_inset
+
+along with known/desired boundary conditions
+\begin_inset Formula 
+\begin{align*}
+\nu\left(r=r_{0}\right) & =\nu_{0}\\
+\nu\left(r=r_{1}\right) & =\nu_{1}
+\end{align*}
+
+\end_inset
+
+for which it is desired to determine values for the free parameters, 
+\begin_inset Formula $\alpha$
+\end_inset
+
+ and 
+\begin_inset Formula $\beta$
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Subsubsection
+Boundary Conditions
+\end_layout
+
+\begin_layout Standard
+Utilize the boundary conditions to form a pair of simultaneous equations,
+\begin_inset Formula 
+\[
+\alpha e^{-\beta\sqrt{r_{0}^{2}}}=\nu_{0}
+\]
+
+\end_inset
+
+
+\begin_inset Formula 
+\[
+\alpha e^{-\beta\sqrt{r_{1}^{2}}}=\nu_{1}
+\]
+
+\end_inset
+
+the solution of which provides the desired model parameter values.
+\end_layout
+
+\begin_layout Subsubsection
+Solution Approach
+\end_layout
+
+\begin_layout Standard
+To develop a solution, divide the first equation by the second to obtain
+\begin_inset Formula 
+\[
+e^{\beta\left(\sqrt{r_{1}^{2}}-\sqrt{r_{0}^{2}}\right)}=\frac{\nu_{0}}{\nu_{1}}
+\]
+
+\end_inset
+
+At this point, taking logarithms of both sides, allows solving for 
+\begin_inset Formula $\beta$
+\end_inset
+
+, assuming 
+\begin_inset Formula $\left|r_{1}\right|\ne\left|r_{0}\right|$
+\end_inset
+
+, via
+\begin_inset Note Comment
+status collapsed
+
+\begin_layout Plain Layout
+\begin_inset Formula 
+\[
+\beta=\left(\ln\frac{\nu_{0}}{\nu_{1}}\right)\left(\sqrt{r_{1}^{2}}-\sqrt{r_{0}^{2}}\right)^{-1}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\begin_inset Formula 
+\[
+\beta=\frac{\ln\nu_{0}-\ln\nu_{1}}{\sqrt{r_{1}^{2}}-\sqrt{r_{0}^{2}}}
+\]
+
+\end_inset
+
+To determine complete the solution, insert this expression for 
+\begin_inset Formula $\beta$
+\end_inset
+
+ into either of the boundary conditions to determine for 
+\begin_inset Formula $\alpha$
+\end_inset
+
+.
+ I.e.
+\begin_inset Formula 
+\[
+\alpha=\nu_{0}\exp\left(\beta\sqrt{r_{0}^{2}}\right)=\nu_{0}\exp\left(\frac{\ln\nu_{0}-\ln\nu_{1}}{\sqrt{r_{1}^{2}}-\sqrt{r_{0}^{2}}}\sqrt{r_{0}^{2}}\right)
+\]
+
+\end_inset
+
+or
+\begin_inset Formula 
+\[
+\alpha=\nu_{1}\exp\left(\beta\sqrt{r_{1}^{2}}\right)=\nu_{1}\exp\left(\frac{\ln\nu_{0}-\ln\nu_{1}}{\sqrt{r_{1}^{2}}-\sqrt{r_{0}^{2}}}\sqrt{r_{1}^{2}}\right)
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The two solutions for 
+\begin_inset Formula $\alpha$
+\end_inset
+
+ may also be expressed
+\begin_inset Note Comment
+status collapsed
+
+\begin_layout Plain Layout
+as
+\begin_inset Formula 
+\[
+\alpha=\nu_{0}\exp\left(\ln\frac{\nu_{0}}{\nu_{1}}\frac{\left|r_{0}\right|}{\left|r_{1}\right|-\left|r_{0}\right|}\right)
+\]
+
+\end_inset
+
+
+\begin_inset Formula 
+\[
+\alpha=\nu_{1}\exp\left(\ln\frac{\nu_{0}}{\nu_{1}}\frac{\left|r_{1}\right|}{\left|r_{1}\right|-\left|r_{0}\right|}\right)
+\]
+
+\end_inset
+
+or,
+\end_layout
+
+\end_inset
+
+ in terms of 
+\begin_inset Formula $\ln\alpha$
+\end_inset
+
+, as
+\begin_inset Formula 
+\[
+\ln\alpha=\ln\nu_{0}+\frac{\left|r_{0}\right|}{\left|r_{1}\right|-\left|r_{0}\right|}\ln\frac{\nu_{0}}{\nu_{1}}
+\]
+
+\end_inset
+
+
+\begin_inset Formula 
+\[
+\ln\alpha=\ln\nu_{1}+\frac{\left|r_{1}\right|}{\left|r_{1}\right|-\left|r_{0}\right|}\ln\frac{\nu_{0}}{\nu_{1}}
+\]
+
+\end_inset
+
+
+\begin_inset Note Comment
+status collapsed
+
+\begin_layout Plain Layout
+Or as
+\begin_inset Formula 
+\begin{align*}
+\ln\alpha & =\ln\nu_{0}+\frac{\left|r_{0}\right|}{\left|r_{1}\right|-\left|r_{0}\right|}\ln\nu_{0}-\frac{\left|r_{0}\right|}{\left|r_{1}\right|-\left|r_{0}\right|}\ln\nu_{1}\\
+ & =\left(1+\frac{\left|r_{0}\right|}{\left|r_{1}\right|-\left|r_{0}\right|}\right)\ln\nu_{0}-\frac{\left|r_{0}\right|}{\left|r_{1}\right|-\left|r_{0}\right|}\ln\nu_{1}
+\end{align*}
+
+\end_inset
+
+
+\begin_inset Formula 
+\begin{align*}
+\ln\alpha & =\left(1+\frac{\left|r_{0}\right|}{\left|r_{1}\right|-\left|r_{0}\right|}\right)\ln\nu_{0}-\left(\frac{\left|r_{0}\right|}{\left|r_{1}\right|-\left|r_{0}\right|}\right)\ln\nu_{1}
+\end{align*}
+
+\end_inset
+
+and
+\begin_inset Formula 
+\begin{align*}
+\ln\alpha & =\ln\nu_{1}+\frac{\left|r_{1}\right|}{\left|r_{1}\right|-\left|r_{0}\right|}\ln\nu_{0}-\frac{\left|r_{1}\right|}{\left|r_{1}\right|-\left|r_{0}\right|}\ln\nu_{1}\\
+ & =\frac{\left|r_{1}\right|}{\left|r_{1}\right|-\left|r_{0}\right|}\ln\nu_{0}+\left(1-\frac{\left|r_{1}\right|}{\left|r_{1}\right|-\left|r_{0}\right|}\right)\ln\nu_{1}
+\end{align*}
+
+\end_inset
+
+
+\begin_inset Formula 
+\begin{align*}
+\ln\alpha & =\left(\frac{\left|r_{1}\right|}{\left|r_{1}\right|-\left|r_{0}\right|}\right)\ln\nu_{0}+\left(1-\frac{\left|r_{1}\right|}{\left|r_{1}\right|-\left|r_{0}\right|}\right)\ln\nu_{1}
+\end{align*}
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+both of which are equivalent to
+\begin_inset Formula 
+\begin{align*}
+\ln\alpha & =\left(\frac{\left|r_{1}\right|}{\left|r_{1}\right|-\left|r_{0}\right|}\right)\ln\nu_{0}-\left(\frac{\left|r_{0}\right|}{\left|r_{1}\right|-\left|r_{0}\right|}\right)\ln\nu_{1}
+\end{align*}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsubsection
+Complete Refraction Model
+\end_layout
+
+\begin_layout Standard
+Overall, the spherically symmetric exponential model satisfying the desired
+ boundary values is
+\begin_inset Formula 
+\begin{align*}
+\nu\left(r\right) & =e^{\ln\alpha-\beta\left|r\right|}\\
+\ln\alpha & =\left(\frac{\left|r_{1}\right|}{\left|r_{1}\right|-\left|r_{0}\right|}\right)\ln\nu_{0}-\left(\frac{\left|r_{0}\right|}{\left|r_{1}\right|-\left|r_{0}\right|}\right)\ln\nu_{1}\\
+\beta & =\frac{\ln\nu_{0}-\ln\nu_{1}}{\left|r_{1}\right|-\left|r_{0}\right|}
+\end{align*}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset CommandInset bibtex
+LatexCommand bibtex
+btprint "btPrintCited"
+bibfiles "Papers"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Section
+\start_of_appendix
+Previous Initial Work – To Be Scrapped
 \end_layout
 
 \begin_layout Subsection
@@ -2163,7 +2953,6 @@ Associate index of refraction,
 \end_inset
 
 , and allow the path to begin parallel to the incident direction).
- 
 \end_layout
 
 \end_inset
@@ -3364,794 +4153,6 @@ Report
 \end_inset
 
  for use in next iteration
-\end_layout
-
-\begin_layout Section
-Differential Methods
-\end_layout
-
-\begin_layout Subsection
-Refraction Invariant (?)
-\end_layout
-
-\begin_layout Standard
-\begin_inset Note Note
-status open
-
-\begin_layout Plain Layout
-TODO
-\end_layout
-
-\end_inset
-
-/TBD - Tentative and Probably Wrong
-\end_layout
-
-\begin_layout Standard
-The bivector quantity, 
-\begin_inset Formula $\nu\left(t\wedge g\right)$
-\end_inset
-
-, is a refraction invariant - in the instantaneous sense
-\begin_inset Foot
-status open
-
-\begin_layout Plain Layout
-Interpretation of Snel's law is that speed of propagation is constant while
- path curves (rather than v.v.
- as in EM theory).
- The direction of curvature changes depending on changes in the direction
- of the index gradient.
-\end_layout
-
-\end_inset
-
-.
- Consider this to be constant, and differentiate, w.r.t.
- path length 
-\begin_inset Formula $\lambda$
-\end_inset
-
-, to obtain
-\begin_inset Formula 
-\[
-\dot{\nu}\left(t\wedge g\right)+\nu\left(\dot{t}\wedge g\right)+\nu\left(t\wedge\dot{g}\right)=0
-\]
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Subsection
-Differential Relationships
-\end_layout
-
-\begin_layout Standard
-\begin_inset Note Note
-status open
-
-\begin_layout Plain Layout
-TODO
-\end_layout
-
-\end_inset
-
-/TBD - Tentative and Probably Wrong
-\end_layout
-
-\begin_layout Standard
-Note that 
-\begin_inset Formula $\nu=\nu\left(r\right)$
-\end_inset
-
- and 
-\begin_inset Formula $r=r\left(\lambda\right)$
-\end_inset
-
-, so that
-\begin_inset Formula 
-\[
-\dot{\nu}=\frac{d\nu}{d\lambda}=\sum\frac{\partial\nu}{\partial\rho_{k}}\frac{d\rho_{k}}{d\lambda}=\nabla\nu\cdot\dot{r}
-\]
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-The tangent vector is given by the position derivative w.r.t.
- arc length,
-\begin_inset Formula 
-\[
-\dot{r}=\frac{dr}{d\lambda}=t
-\]
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-The derivative (wrt 
-\begin_inset Formula $\lambda$
-\end_inset
-
-) of the gradient is
-\begin_inset Formula 
-\[
-\dot{g}=\frac{dg}{d\lambda}=\frac{d}{d\lambda}\sum\frac{\partial\nu}{\partial\rho_{k}}e_{k}=\sum\frac{d}{d\lambda}\frac{\partial\nu}{\partial\rho_{k}}e_{k}
-\]
-
-\end_inset
-
-
-\begin_inset Formula 
-\[
-\dot{g}=\lim_{\Delta\lambda\rightarrow0}\frac{g\left(r+\Delta\lambda\dot{r}\right)-g\left(r\right)}{\Delta\lambda}
-\]
-
-\end_inset
-
-
-\begin_inset Formula 
-\[
-g=g\left(r\right)
-\]
-
-\end_inset
-
-
-\begin_inset Formula 
-\[
-\dot{g}=\frac{dg}{d\lambda}=\frac{dg}{d\rho_{1}}\frac{d\rho_{1}}{d\lambda}+\frac{dg}{d\rho_{2}}\frac{d\rho_{2}}{d\lambda}+\frac{dg}{d\rho_{3}}\frac{d\rho_{3}}{d\lambda}
-\]
-
-\end_inset
-
-
-\begin_inset Note Comment
-status collapsed
-
-\begin_layout Plain Layout
-\begin_inset Formula 
-\[
-\frac{dg}{d\lambda}=\frac{d}{d\rho_{1}}\left(\sum\frac{d\nu}{d\rho_{k}}e_{k}\right)\frac{d\rho_{1}}{d\lambda}+\frac{d}{d\rho_{2}}\left(\sum\frac{d\nu}{d\rho_{k}}e_{k}\right)\frac{d\rho_{2}}{d\lambda}+\frac{d}{d\rho_{3}}\left(\sum\frac{d\nu}{d\rho_{k}}e_{k}\right)\frac{d\rho_{3}}{d\lambda}
-\]
-
-\end_inset
-
-
-\begin_inset Formula 
-\[
-\frac{dg}{d\lambda}=\left(\sum\frac{d^{2}\nu}{d\rho_{1}d\rho_{k}}e_{k}\right)\frac{d\rho_{1}}{d\lambda}+\left(\sum\frac{d^{2}\nu}{d\rho_{2}d\rho_{k}}e_{k}\right)\frac{d\rho_{2}}{d\lambda}+\left(\sum\frac{d^{2}\nu}{d\rho_{3}d\rho_{k}}e_{k}\right)\frac{d\rho_{3}}{d\lambda}
-\]
-
-\end_inset
-
-
-\begin_inset Formula 
-\begin{align*}
-\frac{dg}{d\lambda} & =\left(\frac{d^{2}\nu}{d\rho_{1}d\rho_{1}}e_{1}+\frac{d^{2}\nu}{d\rho_{1}d\rho_{2}}e_{2}+\frac{d^{2}\nu}{d\rho_{1}d\rho_{3}}e_{3}\right)\dot{r}_{1}\\
- & +\left(\frac{d^{2}\nu}{d\rho_{2}d\rho_{1}}e_{1}+\frac{d^{2}\nu}{d\rho_{2}d\rho_{2}}e_{2}+\frac{d^{2}\nu}{d\rho_{2}d\rho_{3}}e_{3}\right)\dot{r}_{2}\\
- & +\left(\frac{d^{2}\nu}{d\rho_{3}d\rho_{1}}e_{1}+\frac{d^{2}\nu}{d\rho_{3}d\rho_{2}}e_{2}+\frac{d^{2}\nu}{d\rho_{3}d\rho_{3}}e_{3}\right)\dot{r}_{3}
-\end{align*}
-
-\end_inset
-
-
-\begin_inset Formula 
-\begin{align*}
-\frac{dg}{d\lambda} & =\frac{d}{d\rho_{1}}\left(\frac{d\nu}{d\rho_{1}}e_{1}+\frac{d\nu}{d\rho_{2}}e_{2}+\frac{d\nu}{d\rho_{3}}e_{3}\right)\dot{r}_{1}\\
- & +\frac{d}{d\rho_{2}}\left(\frac{d\nu}{d\rho_{1}}e_{1}+\frac{d\nu}{d\rho_{2}}e_{2}+\frac{d\nu}{d\rho_{3}}e_{3}\right)\dot{r}_{2}\\
- & +\frac{d}{d\rho_{3}}\left(\frac{d\nu}{d\rho_{1}}e_{1}+\frac{d\nu}{d\rho_{2}}e_{2}+\frac{d\nu}{d\rho_{3}}e_{3}\right)\dot{r}_{3}
-\end{align*}
-
-\end_inset
-
-
-\begin_inset Formula 
-\begin{align*}
-\frac{dg}{d\lambda} & =\frac{dg}{d\rho_{1}}\dot{r}_{1}\\
- & +\frac{dg}{d\rho_{2}}\dot{r}_{2}\\
- & +\frac{dg}{d\rho_{3}}\dot{r}_{3}
-\end{align*}
-
-\end_inset
-
-
-\end_layout
-
-\end_inset
-
-
-\begin_inset Formula 
-\begin{align*}
-\dot{g} & =\frac{dg}{d\rho_{1}}\dot{r}_{1}+\frac{dg}{d\rho_{2}}\dot{r}_{2}+\frac{dg}{d\rho_{3}}\dot{r}_{3}
-\end{align*}
-
-\end_inset
-
-
-\begin_inset Formula 
-\[
-\dot{g}=\frac{dg}{d\rho_{1}}\left(\dot{r}\cdot e_{1}\right)+\frac{dg}{d\rho_{2}}\left(\dot{r}\cdot e_{2}\right)+\frac{dg}{d\rho_{3}}\left(\dot{r}\cdot e_{3}\right)
-\]
-
-\end_inset
-
-
-\begin_inset Formula 
-\begin{align*}
-\frac{dg}{d\lambda} & =\left(\frac{d^{2}\nu}{d\rho_{1}d\rho_{1}}e_{1}+\frac{d^{2}\nu}{d\rho_{1}d\rho_{2}}e_{2}+\frac{d^{2}\nu}{d\rho_{1}d\rho_{3}}e_{3}\right)\left(\dot{r}\cdot e_{1}\right)\\
- & +\left(\frac{d^{2}\nu}{d\rho_{2}d\rho_{1}}e_{1}+\frac{d^{2}\nu}{d\rho_{2}d\rho_{2}}e_{2}+\frac{d^{2}\nu}{d\rho_{2}d\rho_{3}}e_{3}\right)\left(\dot{r}\cdot e_{2}\right)\\
- & +\left(\frac{d^{2}\nu}{d\rho_{3}d\rho_{1}}e_{1}+\frac{d^{2}\nu}{d\rho_{3}d\rho_{2}}e_{2}+\frac{d^{2}\nu}{d\rho_{3}d\rho_{3}}e_{3}\right)\left(\dot{r}\cdot e_{3}\right)
-\end{align*}
-
-\end_inset
-
-In matrix form, the Hessian of 
-\begin_inset Formula $g$
-\end_inset
-
-, may be defined as the (3x3) matrix
-\begin_inset Formula 
-\[
-\left(\mathrm{H}_{g}\right)_{ij}\equiv\frac{\partial^{2}\nu}{\partial\rho_{i}\partial\rho_{j}}
-\]
-
-\end_inset
-
- The derivative, 
-\begin_inset Formula $\dot{g}$
-\end_inset
-
-, may be expressed as
-\begin_inset Formula 
-\[
-\dot{g}=\mathrm{H}_{g}\left[\sum\left(\dot{r}\cdot e_{k}\right)e_{k}\right]
-\]
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-Substitute the above in order to express the refraction invariant as,
-\begin_inset Formula 
-\[
-\nabla\nu\cdot\dot{r}\left(\dot{r}\wedge g\right)+\nu\left(\ddot{r}\wedge g\right)+\nu\left(\dot{r}\wedge\left(\frac{dg}{d\rho_{1}}\dot{r}_{1}+\frac{dg}{d\rho_{2}}\dot{r}_{2}+\frac{dg}{d\rho_{3}}\dot{r}_{3}\right)\right)=0
-\]
-
-\end_inset
-
-Multiply from by 
-\begin_inset Formula $\nu^{-1}$
-\end_inset
-
-,
-\begin_inset Formula 
-\[
-\ddot{r}\wedge g+\frac{\nabla\nu}{\nu}\cdot\dot{r}\left(\dot{r}\wedge g\right)+\left(\dot{r}\wedge\frac{dg}{d\rho_{1}}\right)\dot{r}_{1}+\left(\dot{r}\wedge\frac{dg}{d\rho_{2}}\right)\dot{r}_{2}+\left(\dot{r}\wedge\frac{dg}{d\rho_{3}}\right)\dot{r}_{3}=0
-\]
-
-\end_inset
-
-
-\begin_inset Formula 
-\[
-\ddot{r}\wedge g+\frac{\nabla\nu}{\nu}\cdot\dot{r}\left(\dot{r}\wedge g\right)+\left(\dot{r}\wedge\frac{\partial g}{\partial\rho_{1}}\right)\dot{r}_{1}+\left(\dot{r}\wedge\frac{\partial g}{\partial\rho_{2}}\right)\dot{r}_{2}+\left(\dot{r}\wedge\frac{\partial g}{\partial\rho_{3}}\right)\dot{r}_{3}=0
-\]
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-This is a second order, nonlinear, differential equation expressing changes
- to position, 
-\begin_inset Formula $r$
-\end_inset
-
-, as a function of path length evolution parameter, 
-\begin_inset Formula $\lambda$
-\end_inset
-
-.
-\end_layout
-
-\begin_layout Standard
-This should be a necessary condition, however, it is unclear if it is a
- sufficient condition.
-\end_layout
-
-\begin_layout Standard
-In terms of the index field Hessian matrix,
-\begin_inset Formula 
-\[
-\ddot{r}\wedge g+\frac{\nabla\nu}{\nu}\cdot\dot{r}\left(\dot{r}\wedge g\right)+\dot{r}\wedge\left(\mathrm{H}_{g}\left[\sum\left(\dot{r}\cdot e_{k}\right)e_{k}\right]\right)=0
-\]
-
-\end_inset
-
-
-\begin_inset Formula 
-\[
-\left(\mathrm{H}_{g}\right)_{ij}\equiv\frac{\partial^{2}\nu}{\partial\rho_{i}\partial\rho_{j}}
-\]
-
-\end_inset
-
-Apparently, the first two terms control the curvature and propagation direction
- in the plane of the index gradient while the last term (involving a matrix-vect
-or multiplication) introduces a torsion influence capable of changing direction
- of the plane of propagation.
-\end_layout
-
-\begin_layout Subsection
-Special Case
-\end_layout
-
-\begin_layout Standard
-\begin_inset Note Note
-status open
-
-\begin_layout Plain Layout
-TODO
-\end_layout
-
-\end_inset
-
-/TBD - Tentative and Probably Wrong
-\end_layout
-
-\begin_layout Standard
-Consider a plane stratified atmosphere.
- In this case, the only gradient term that survives is, 
-\begin_inset Formula $\nabla\nu=\frac{\partial\nu}{\partial\rho_{3}}e_{3}$
-\end_inset
-
-.
- And for 
-\begin_inset Formula $\mathrm{H}_{g}$
-\end_inset
-
-, only the 
-\begin_inset Formula $\frac{d^{2}\nu}{d\rho_{3}d\rho_{3}}$
-\end_inset
-
- term survives, so that
-\begin_inset Formula 
-\[
-\ddot{r}\wedge\frac{\partial\nu}{\partial\rho_{3}}e_{3}+\frac{1}{\nu}\frac{\partial\nu}{\partial\rho_{3}}e_{3}\cdot\dot{r}\left(\dot{r}\wedge\frac{\partial\nu}{\partial\rho_{3}}e_{3}\right)+\dot{r}\wedge\left(\frac{\partial^{2}\nu}{\partial\rho_{3}\partial\rho_{3}}\left(\dot{r}\cdot e_{3}\right)e_{3}\right)=0
-\]
-
-\end_inset
-
-
-\begin_inset Formula 
-\[
-\frac{\partial\nu}{\partial\rho_{3}}\left(\ddot{r}\wedge e_{3}\right)+\frac{1}{\nu}\left(\frac{\partial\nu}{\partial\rho_{3}}\right)^{2}\left(\dot{r}\cdot e_{3}\right)\left(\dot{r}\wedge e_{3}\right)+\frac{\partial^{2}\nu}{\partial\rho_{3}\partial\rho_{3}}\left(\dot{r}\cdot e_{3}\right)\left(\dot{r}\wedge e_{3}\right)=0
-\]
-
-\end_inset
-
-
-\begin_inset Formula 
-\[
-\frac{\partial\nu}{\partial\rho_{3}}\left(\ddot{r}\wedge e_{3}\right)+\left[\frac{1}{\nu}\left(\frac{\partial\nu}{\partial\rho_{3}}\right)^{2}+\frac{\partial^{2}\nu}{\partial\rho_{3}\partial\rho_{3}}\right]\left(\dot{r}\cdot e_{3}\right)\left(\dot{r}\wedge e_{3}\right)=0
-\]
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Section
-Atmosphere Model Example
-\end_layout
-
-\begin_layout Standard
-Consider if the index of refraction (IoR) field, 
-\begin_inset Formula $\nu$
-\end_inset
-
-, is an exponential function of distance from a center of spherical symmetry
-\begin_inset Note Comment
-status collapsed
-
-\begin_layout Plain Layout
-(TODO/TBD - or might use spherical polar coordinate system - along with
- updated expression for the gradient, but in any case...).
-\end_layout
-
-\end_inset
-
- I.e.
- let 
-\begin_inset Formula 
-\[
-\nu=\alpha e^{-\beta\left|r\right|}
-\]
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-The IoR field may be expressed with respect to a Cartesian coordinate system
- as
-\begin_inset Formula 
-\[
-\nu=\alpha\exp\left(-\beta\sqrt{\rho_{1}^{2}+\rho_{2}^{2}+\rho_{3}^{2}}\right)
-\]
-
-\end_inset
-
-In this Cartesian frame, the gradient is easily computed as
-\begin_inset Formula 
-\begin{align*}
-g=\nabla\nu=\sum_{k}\partial_{k}\nu & =\sum\alpha\exp\left(-\beta\left|r\right|\right)\left(-\beta\frac{1}{2}\frac{1}{\left|r\right|}2\rho_{k}\right)e_{k}\\
- & =-\alpha\beta\frac{e^{-\beta\left|r\right|}}{\left|r\right|}\sum\rho_{k}e_{k}\\
- & =-\alpha\beta\frac{e^{-\beta\left|r\right|}}{\left|r\right|}r
-\end{align*}
-
-\end_inset
-
-Although a Cartesian frame was assumed to demonstrate computation of the
- gradient, the resulting expression on the last line is coordinate system
- independent, so that, in general
-\begin_inset Formula 
-\begin{align*}
-g=\nabla\nu & =-\alpha\beta\nu\frac{r}{\left|r\right|}\\
- & =-\alpha\beta\nu\hat{r}
-\end{align*}
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-The associated (coordinate system independent) gradient magnitude is
-\begin_inset Note Comment
-status collapsed
-
-\begin_layout Plain Layout
-\begin_inset Formula 
-\begin{align*}
-\left|g\right|=\sqrt{g^{2}} & =\sqrt{\left(-\frac{\alpha\beta}{\left|r\right|}\nu\sum\rho_{k}e_{k}\right)\left(-\frac{\alpha\beta}{\left|r\right|}\nu\sum\rho_{k}e_{k}\right)}\\
- & =\frac{\alpha\beta}{\left|r\right|}\nu\sqrt{\left(\sum\rho_{k}e_{k}\right)\left(\sum\rho_{k}e_{k}\right)}\\
- & =\frac{\alpha\beta}{\left|r\right|}\nu\sqrt{rr}\\
- & =\frac{\alpha\beta}{\left|r\right|}\nu\left|r\right|\\
- & =\alpha\beta\nu
-\end{align*}
-
-\end_inset
-
-
-\end_layout
-
-\end_inset
-
-
-\begin_inset Formula 
-\begin{align*}
-\left|g\right|=\sqrt{g^{2}} & =\sqrt{\left(-\alpha\beta\nu\hat{r}\right)\left(-\alpha\beta\nu\hat{r}\right)}\\
- & =\alpha\beta\nu\sqrt{\hat{r}^{2}}\\
- & =\alpha\beta\nu
-\end{align*}
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-The associated (coordinate system independent) gradient unit direction is
-\begin_inset Note Comment
-status collapsed
-
-\begin_layout Plain Layout
-\begin_inset Formula 
-\begin{align*}
-u=\frac{g}{\left|g\right|} & =\frac{-\frac{\alpha\beta}{\left|r\right|}\nu\sum\rho_{k}e_{k}}{\sqrt{\left(-\frac{\alpha\beta}{\left|r\right|}\nu\sum\rho_{k}e_{k}\right)^{2}}}\\
- & =\frac{-\sum\rho_{k}e_{k}}{\sqrt{\left(\sum\rho_{k}e_{k}\right)^{2}}}\\
- & =\frac{-r}{\left|r\right|}\\
- & =-\hat{r}
-\end{align*}
-
-\end_inset
-
-
-\end_layout
-
-\end_inset
-
-
-\begin_inset Formula 
-\begin{align*}
-u=\frac{g}{\left|g\right|} & =\frac{-\alpha\beta\nu\hat{r}}{\alpha\beta\nu}\\
- & =-\hat{r}
-\end{align*}
-
-\end_inset
-
-I.e.
- for the radially symmetric index of refraction field (decreasing with distance
- from center), the gradient is aligned radially inward as expected.
-\end_layout
-
-\begin_layout Subsection
-Determining the Exponential Model Parameters
-\end_layout
-
-\begin_layout Standard
-Assume a (radially symmetric) exponential atmospheric index of refraction
- model of the form
-\begin_inset Formula 
-\[
-\nu\left(r\right)=\alpha e^{-\beta\left|r\right|}=e^{\ln\alpha-\beta\left|r\right|}
-\]
-
-\end_inset
-
-along with known/desired boundary conditions
-\begin_inset Formula 
-\begin{align*}
-\nu\left(r=r_{0}\right) & =\nu_{0}\\
-\nu\left(r=r_{1}\right) & =\nu_{1}
-\end{align*}
-
-\end_inset
-
-for which it is desired to determine values for the free parameters, 
-\begin_inset Formula $\alpha$
-\end_inset
-
- and 
-\begin_inset Formula $\beta$
-\end_inset
-
-.
-\end_layout
-
-\begin_layout Subsubsection
-Boundary Conditions
-\end_layout
-
-\begin_layout Standard
-Utilize the boundary conditions to form a pair of simultaneous equations,
-\begin_inset Formula 
-\[
-\alpha e^{-\beta\sqrt{r_{0}^{2}}}=\nu_{0}
-\]
-
-\end_inset
-
-
-\begin_inset Formula 
-\[
-\alpha e^{-\beta\sqrt{r_{1}^{2}}}=\nu_{1}
-\]
-
-\end_inset
-
-the solution of which provides the desired model parameter values.
-\end_layout
-
-\begin_layout Subsubsection
-Solution Approach
-\end_layout
-
-\begin_layout Standard
-To develop a solution, divide the first equation by the second to obtain
-\begin_inset Formula 
-\[
-e^{\beta\left(\sqrt{r_{1}^{2}}-\sqrt{r_{0}^{2}}\right)}=\frac{\nu_{0}}{\nu_{1}}
-\]
-
-\end_inset
-
-At this point, taking logarithms of both sides, allows solving for 
-\begin_inset Formula $\beta$
-\end_inset
-
-, assuming 
-\begin_inset Formula $\left|r_{1}\right|\ne\left|r_{0}\right|$
-\end_inset
-
-, via
-\begin_inset Note Comment
-status collapsed
-
-\begin_layout Plain Layout
-\begin_inset Formula 
-\[
-\beta=\left(\ln\frac{\nu_{0}}{\nu_{1}}\right)\left(\sqrt{r_{1}^{2}}-\sqrt{r_{0}^{2}}\right)^{-1}
-\]
-
-\end_inset
-
-
-\end_layout
-
-\end_inset
-
-
-\begin_inset Formula 
-\[
-\beta=\frac{\ln\nu_{0}-\ln\nu_{1}}{\sqrt{r_{1}^{2}}-\sqrt{r_{0}^{2}}}
-\]
-
-\end_inset
-
-To determine complete the solution, insert this expression for 
-\begin_inset Formula $\beta$
-\end_inset
-
- into either of the boundary conditions to determine for 
-\begin_inset Formula $\alpha$
-\end_inset
-
-.
- I.e.
-\begin_inset Formula 
-\[
-\alpha=\nu_{0}\exp\left(\beta\sqrt{r_{0}^{2}}\right)=\nu_{0}\exp\left(\frac{\ln\nu_{0}-\ln\nu_{1}}{\sqrt{r_{1}^{2}}-\sqrt{r_{0}^{2}}}\sqrt{r_{0}^{2}}\right)
-\]
-
-\end_inset
-
-or
-\begin_inset Formula 
-\[
-\alpha=\nu_{1}\exp\left(\beta\sqrt{r_{1}^{2}}\right)=\nu_{1}\exp\left(\frac{\ln\nu_{0}-\ln\nu_{1}}{\sqrt{r_{1}^{2}}-\sqrt{r_{0}^{2}}}\sqrt{r_{1}^{2}}\right)
-\]
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-The two solutions for 
-\begin_inset Formula $\alpha$
-\end_inset
-
- may also be expressed
-\begin_inset Note Comment
-status collapsed
-
-\begin_layout Plain Layout
-as
-\begin_inset Formula 
-\[
-\alpha=\nu_{0}\exp\left(\ln\frac{\nu_{0}}{\nu_{1}}\frac{\left|r_{0}\right|}{\left|r_{1}\right|-\left|r_{0}\right|}\right)
-\]
-
-\end_inset
-
-
-\begin_inset Formula 
-\[
-\alpha=\nu_{1}\exp\left(\ln\frac{\nu_{0}}{\nu_{1}}\frac{\left|r_{1}\right|}{\left|r_{1}\right|-\left|r_{0}\right|}\right)
-\]
-
-\end_inset
-
-or,
-\end_layout
-
-\end_inset
-
- in terms of 
-\begin_inset Formula $\ln\alpha$
-\end_inset
-
-, as
-\begin_inset Formula 
-\[
-\ln\alpha=\ln\nu_{0}+\frac{\left|r_{0}\right|}{\left|r_{1}\right|-\left|r_{0}\right|}\ln\frac{\nu_{0}}{\nu_{1}}
-\]
-
-\end_inset
-
-
-\begin_inset Formula 
-\[
-\ln\alpha=\ln\nu_{1}+\frac{\left|r_{1}\right|}{\left|r_{1}\right|-\left|r_{0}\right|}\ln\frac{\nu_{0}}{\nu_{1}}
-\]
-
-\end_inset
-
-
-\begin_inset Note Comment
-status collapsed
-
-\begin_layout Plain Layout
-Or as
-\begin_inset Formula 
-\begin{align*}
-\ln\alpha & =\ln\nu_{0}+\frac{\left|r_{0}\right|}{\left|r_{1}\right|-\left|r_{0}\right|}\ln\nu_{0}-\frac{\left|r_{0}\right|}{\left|r_{1}\right|-\left|r_{0}\right|}\ln\nu_{1}\\
- & =\left(1+\frac{\left|r_{0}\right|}{\left|r_{1}\right|-\left|r_{0}\right|}\right)\ln\nu_{0}-\frac{\left|r_{0}\right|}{\left|r_{1}\right|-\left|r_{0}\right|}\ln\nu_{1}
-\end{align*}
-
-\end_inset
-
-
-\begin_inset Formula 
-\begin{align*}
-\ln\alpha & =\left(1+\frac{\left|r_{0}\right|}{\left|r_{1}\right|-\left|r_{0}\right|}\right)\ln\nu_{0}-\left(\frac{\left|r_{0}\right|}{\left|r_{1}\right|-\left|r_{0}\right|}\right)\ln\nu_{1}
-\end{align*}
-
-\end_inset
-
-and
-\begin_inset Formula 
-\begin{align*}
-\ln\alpha & =\ln\nu_{1}+\frac{\left|r_{1}\right|}{\left|r_{1}\right|-\left|r_{0}\right|}\ln\nu_{0}-\frac{\left|r_{1}\right|}{\left|r_{1}\right|-\left|r_{0}\right|}\ln\nu_{1}\\
- & =\frac{\left|r_{1}\right|}{\left|r_{1}\right|-\left|r_{0}\right|}\ln\nu_{0}+\left(1-\frac{\left|r_{1}\right|}{\left|r_{1}\right|-\left|r_{0}\right|}\right)\ln\nu_{1}
-\end{align*}
-
-\end_inset
-
-
-\begin_inset Formula 
-\begin{align*}
-\ln\alpha & =\left(\frac{\left|r_{1}\right|}{\left|r_{1}\right|-\left|r_{0}\right|}\right)\ln\nu_{0}+\left(1-\frac{\left|r_{1}\right|}{\left|r_{1}\right|-\left|r_{0}\right|}\right)\ln\nu_{1}
-\end{align*}
-
-\end_inset
-
-
-\end_layout
-
-\end_inset
-
-both of which are equivalent to
-\begin_inset Formula 
-\begin{align*}
-\ln\alpha & =\left(\frac{\left|r_{1}\right|}{\left|r_{1}\right|-\left|r_{0}\right|}\right)\ln\nu_{0}-\left(\frac{\left|r_{0}\right|}{\left|r_{1}\right|-\left|r_{0}\right|}\right)\ln\nu_{1}
-\end{align*}
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Subsubsection
-Complete Refraction Model
-\end_layout
-
-\begin_layout Standard
-Overall, the spherically symmetric exponential model satisfying the desired
- boundary values is
-\begin_inset Formula 
-\begin{align*}
-\nu\left(r\right) & =e^{\ln\alpha-\beta\left|r\right|}\\
-\ln\alpha & =\left(\frac{\left|r_{1}\right|}{\left|r_{1}\right|-\left|r_{0}\right|}\right)\ln\nu_{0}-\left(\frac{\left|r_{0}\right|}{\left|r_{1}\right|-\left|r_{0}\right|}\right)\ln\nu_{1}\\
-\beta & =\frac{\ln\nu_{0}-\ln\nu_{1}}{\left|r_{1}\right|-\left|r_{0}\right|}
-\end{align*}
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-\begin_inset CommandInset bibtex
-LatexCommand bibtex
-btprint "btPrintCited"
-bibfiles "Papers"
-
-\end_inset
-
-
 \end_layout
 
 \end_body
