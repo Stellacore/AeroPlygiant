@@ -26,6 +26,56 @@ namespace ray
 {
 	using namespace engabra::g3;
 
+	//! Characterization of ray path tangent interacting at step boundary.
+	enum DirChange
+	{
+		  Null      //!< Unset
+		, Unaltered //!< Tangent dir unchanged (no gradient)
+		, Converged //!< Tangent dir refracted toward gradient (into dense)
+		, Diverged  //!< Tangent dir refracted away from gradient (into sparse)
+		, Reflected //!< Tangent dir reflected from boundary (total internal)
+
+	}; // DirChange
+
+	inline
+	DirChange
+	reverseChange
+		( DirChange const & fwdChange
+		)
+	{
+		DirChange revChange{ fwdChange }; // Null, Unaltered, Reflected cases
+		if (Converged == fwdChange)
+		{
+			revChange = Diverged;
+		}
+		else
+		if (Diverged == fwdChange)
+		{
+			revChange = Converged;
+		}
+		return revChange;
+	}
+
+
+	inline
+	std::string
+	nameFor
+		( DirChange const & change
+		)
+	{
+		std::string name("Unknown");
+		switch (change)
+		{
+			case Unaltered: name = "Unaltered"; break;
+			case Converged: name = "Converged"; break;
+			case Diverged:  name = "Diverged";  break;
+			case Reflected: name = "Reflected"; break;
+			default: name = "Null"; break;
+		}
+		return name;
+	}
+
+
 	//! Data relevant to an individual node
 	struct Node
 	{
@@ -34,6 +84,7 @@ namespace ray
 		Vector const theCurrLoc;
 		double const theNextNu;
 		Vector const theNextTan;
+		DirChange const theDirChange;
 
 		//! Descriptive information about this instance
 		inline
@@ -57,6 +108,8 @@ namespace ray
 			oss << io::fixed(theNextNu, 3u, 6u);
 			oss << " tan ";
 			oss << io::fixed(theNextTan, 3u, 6u);
+			oss << " chng ";
+			oss << nameFor(theDirChange);
 			return oss.str();
 		}
 
@@ -81,10 +134,12 @@ namespace ray
 			oss << " theNextNu: " << io::fixed(theNextNu, 8u, 6u);
 			oss << '\n';
 			oss << "theNextTan: " << io::fixed(theNextTan, 8u, 6u);
+			oss << '\n';
+			oss << "theDirChange" << nameFor(theDirChange);
 			return oss.str();
 		}
 
-		//! Node associated with reversing direction of evolution
+		//! Node associated with reversing direction of propagation
 		inline
 		Node
 		reversed
@@ -96,40 +151,31 @@ namespace ray
 				,  theCurrLoc
 				,  thePrevNu
 				, -thePrevTan
+				,  reverseChange(theDirChange)
 				};
 		}
 
 	}; // Node
 
-	//! Characterization of ray path tangent interacting at step boundary.
-	enum NodeChange
-	{
-		  Unaltered //!< Tangent dir unchanged (no gradient)
-		, Converged //!< Tangent dir refracted toward gradient (into dense)
-		, Diverged  //!< Tangent dir refracted away from gradient (into sparse)
-		, Reflected //!< Tangent dir reflected from boundary (total internal)
-
-	}; // NodeChange
-
 	//! Update tangent direction across single (idealized) interface boundary.
 	inline
-	std::pair<Vector, NodeChange>
+	std::pair<Vector, DirChange>
 	nextTangentDir
 		( Vector const & tDirPrev //!< Must be unit length
 		, double const & nuPrev
-		, Vector const & gCurr
+		, Vector const & gCurr // Must be non-zero (to be invertable
 		, double const & nuNext
 		, env::IndexVolume const * const & ptMedia
 		)
 	{
 		// default to unaltered
-		std::pair<Vector, NodeChange> tanDirChange{ tDirPrev, Unaltered };
+		std::pair<Vector, DirChange> tanDirChange{ tDirPrev, Unaltered };
 		Vector & tDirNext = tanDirChange.first;
-		NodeChange & tChange = tanDirChange.second;
+		DirChange & tChange = tanDirChange.second;
 		//
-		static double const tol
-			{ std::sqrt(std::numeric_limits<double>::epsilon()) };
-		if (! nearlyEquals(gCurr, zero<Vector>(), tol)) // tangent dir changes
+		//static double const tol
+		//	{ std::sqrt(std::numeric_limits<double>::epsilon()) };
+		//if (! nearlyEquals(gCurr, zero<Vector>(), tol)) // tangent dir changes
 		{
 			double const gCurrSq{ magSq(gCurr) };
 			Vector const gCurrInv{ (1./gCurrSq) * gCurr };
@@ -177,67 +223,128 @@ namespace ray
 
 	private:
 
+		struct Step
+		{
+			double theNextNu;
+			Vector theNextTan;
+			DirChange theChange;
+
+		}; // Step
+
 		//! Estimate next tangent based on local object refraction
 		inline
-		Vector
-		nextTangent
+		Step
+		nextStep
 			( Vector const & tPrev //!< Must be unit length
+			, double const & nuPrev
 			, Vector const & rCurr
-			, double * const & ptrNuNext = nullptr
 			) const
 		{
-			Vector tNext{ tPrev }; // implicit - needs iteration
-
-			// incomming state is fixed
-			double const nuPrev
-				{ thePtMedia->nuValue(rCurr - .5*theStepDist*tPrev) };
-			Vector const gCurr{ thePtMedia->nuGradient(rCurr) };
-
-			// iterate on exiting path
-			double nuNext{ null<double>() }; // return value if requested
-			double difSq{ 2. };
-			static double const tol{ std::numeric_limits<double>::epsilon() };
-			std::size_t numLoop{ 0u };
-			constexpr std::size_t maxLoop{ 10u };
-//TODO does this converge?
-//std::cout << "---- looping\n";
-			while ((tol < difSq) && (numLoop++ < maxLoop))
+			double nuNext{ null<double>() };
+			Vector tNext{ tPrev }; // iteratively evolved from here
+			DirChange change{ Null };
+			//
+			// Check if there's anything to compute (vs unaltered propagation)
+			Vector const gCurr{ thePtMedia->nuGradient(rCurr, theStepDist) };
+			double const gMag{ magnitude(gCurr) };
+			static double const gTol // enough to unitize and invert gCurr
+				{ std::sqrt(std::numeric_limits<double>::epsilon()) };
+std::ostringstream oss;
+oss << "gCurr: " << gCurr;
+			if (! (gTol < gMag)) // unaltered
 			{
-				// update refraction index to midpoint of predicted next
-				// interval (along evolving next tangent direction).
-				nuNext = thePtMedia->nuValue(rCurr + .5*theStepDist*tNext);
-				std::pair<Vector, NodeChange> const tDirChange
-					{ nextTangentDir
-						(tPrev, nuPrev, gCurr, nuNext, thePtMedia)
-					};
-				Vector const & tTemp = tDirChange.first;
+oss << " PassThrough";
+				// location at which to evaluate nuNext (iteratively refined)
+				Vector const qNext{ rCurr + .5*theStepDist*tNext };
+
+				// update estimated forward next refraction index value
+				// (which should be same as previous)
+				nuNext = thePtMedia->nuValue(qNext);
+
+				// update tangent direction
+				tNext = tPrev; // default initialized
+
+				// update boundary action
+				change = Unaltered; // default initialized
+			}
+			else
+			// if (gTol < gMag) // ray path (tangent direction) changes
+			{
+				bool isReflection{ false }; // used to exit early 
+				//
+				// iterate on determination of exit media IoR
+				// (ref Refraction.lyx doc)
+				//
+				// location at which to evaluate nuNext (iteratively refined)
+				Vector qNext{ rCurr + .5*theStepDist*tNext };
+				//
+				// tolerance until epsilon < difSq (sqrt(eps)<|dif|)
+				static double const tolDifSq
+					{ std::numeric_limits<double>::epsilon() };
+				double difSq{ 2.*tolDifSq }; // large value to force first loop
+				constexpr std::size_t maxLoop{ 10u }; // avoid infinite loop
+				std::size_t numLoop{ 0u };
+				bool doLoop{ true };
+				while ((tolDifSq < difSq) && (numLoop++ < maxLoop) && doLoop)
+				{
+					// update IoR evaluation location
+//std::cout << "tNext: " << io::fixed(tNext) << std::endl;
+//std::cout << "gCurr: " << io::fixed(gCurr) << std::endl;
+					if (! isReflection)
+					{
+oss << " Refraction ";
+						// update refraction index to midpoint of predicted next
+						// interval (along evolving next tangent direction).
+						qNext = rCurr + .5*theStepDist*tNext;
+					}
+					else
+					// if (isReflection) // perfect reflection
+					{
+oss << " REFLECTION ";
+						Vector const gDir{ direction(gCurr) };
+						qNext = rCurr + .5*theStepDist*gDir;
+						// No need to iterate further for perfect reflection
+						doLoop = false; // exit after updating next ray step
+					}
+
+					// update estimated forward next refraction index value
+					nuNext = thePtMedia->nuValue(qNext);
+
+					// update tangent direction
+					std::pair<Vector, DirChange> const tDirChange
+						{ nextTangentDir
+							(tPrev, nuPrev, gCurr, nuNext, thePtMedia)
+						};
+					isReflection = (Reflected == tDirChange.second);
+
+					// evaluate convergence of tangent direction
+					Vector const & tResult = tDirChange.first;
+					difSq = magSq(tResult - tNext);
+
+					// update tangent direction
+					tNext = tResult;
+					change = tDirChange.second;
+
+				} // while loop on refraction index estimation
 
 /*
-Vector const rPrev{ rCurr - .5*theStepDist*tPrev };
-Vector const rNext{ rCurr + .5*theStepDist*tNext };
+if (0u < numLoop)
+{
 std::cout
-	<< "  rPrev: " << io::fixed(rPrev, 1u, 9u)
-	<< "  rCurr: " << io::fixed(rCurr, 1u, 9u)
-	<< "  rNext: " << io::fixed(rNext, 1u, 9u)
-	<< "  tTemp: " << io::fixed(tTemp, 1u, 9u)
-	<< std::endl;
+	<< "-- numLoop: " << numLoop
+	<< "  at: " << rCurr
+	<< '\n';
+}
 */
 
-				// evaluate convergence of tangent direction
-				difSq = magSq(tTemp - tNext);
+			} // significant gCurr magnitude
 
-				// candidate return value (if convergence test passes)
-				tNext = tTemp;
-			}
-//std::cout << "-- numLoop: " << numLoop << '\n';
+oss << " nuPrev: " << io::fixed(nuPrev, 3u, 3u);
+oss << " nuNext: " << io::fixed(nuNext, 3u, 3u);
+oss << " tNext: " << tNext;
+//std::cout << oss.str() << std::endl;
 
-			// set for use in consumer code (if requested)
-			if (ptrNuNext)
-			{
-				*ptrNuNext = nuNext;
-			}
-
-			return tNext;
+			return Step{ nuNext, tNext, change };
 		}
 
 		//! Predicted next location stepsize units along tangent from rVec
@@ -282,30 +389,37 @@ std::cout
 				// start with initial conditions
 				Vector tPrev{ direction(tBeg) };
 				Vector rCurr{ rBeg };
-				double nuPrev{ null<double>() };
+
+				// incident media IoR
+				double nuPrev
+					{ thePtMedia->nuValue(rBeg - .5*theStepDist*tBeg) };
 
 				// propagate until path approximate reaches requested length
 				while (ptConsumer->size() < ptConsumer->capacity())
 				{
-					// propagate ray through next step
-					double nuNext{ null<double>() };
-					Vector const tNext{ nextTangent(tPrev, rCurr, &nuNext) };
+					// determine propagation change at this step
+					Step const stepNext{ nextStep(tPrev, nuPrev, rCurr) };
+					Vector const & tNext = stepNext.theNextTan;
+					double const & nuNext = stepNext.theNextNu;
+					DirChange const & change = stepNext.theChange;
+
+					// propagate ray to next node location
 					Vector const rNext{ nextLocation(rCurr, tNext) };
 
-					// Provide intermediate info to consumer
+					// give consumer opportunity to record node data
 					ptConsumer->emplace_back
-						(Node{ tPrev, nuPrev, rCurr, nuNext, tNext });
+						(Node{ tPrev, nuPrev, rCurr, nuNext, tNext, change });
 
 					// update state for next node
 					tPrev = tNext;
 					rCurr = rNext;
 					nuPrev = nuNext;
 				}
-std::cout << "\n####\n#### done tracing\n####\n";
+//std::cout << "\n####\n#### done tracing\n####\n";
 			}
 		}
 
-/*TODO*/
+/*TODO - unused*/
 		//! \brief Return nodes in a std::vector structure.
 		inline
 		std::vector<Node>
