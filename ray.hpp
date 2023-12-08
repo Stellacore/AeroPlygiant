@@ -464,6 +464,28 @@ std::cout << "nodes.size; " << nodes.size() << std::endl;
 
 	}; // Propagator
 
+	/*! \brief Data representing initial boundary values for a ray(curve).
+	 *
+	 */
+	struct Start
+	{
+		Vector const theTanDir{}; //!< Incident tangent direction (unitary)
+		Vector const thePntLoc{}; //!< Point of incidence for tangent dir
+
+		//! Create an instance ensuring tangent dir is unitary.
+		static
+		Start
+		from
+			( Vector const & anyTan
+			, Vector const & loc
+			)
+		{
+			return { direction(anyTan), loc };
+		}
+
+	}; // Start
+
+
 	/*! \brief Store path information suitable for later visualization.
 	 *
 	 * Basic methods are compatible with those of std::vector.
