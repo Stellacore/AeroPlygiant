@@ -44,7 +44,7 @@ namespace save
 			, double const & saveStepSize
 				//!< Save node if path exceeds this distance from previous save
 			)
-			: theBegTan{ beginTangent }
+			: theBegTan{ direction(beginTangent) }
 			, theBegLoc{ beginLocation }
 			, theStopLoc{ stopNearTo }
 			, theSaveDelta{ saveStepSize }
@@ -135,8 +135,13 @@ namespace save
 		{
 //std::cout << node.infoBrief() << '\n';
 			updateNearDists(node);
-			double const distFromSave
-				{ magnitude(node.theCurrLoc - theNodes.back().theCurrLoc) };
+			double distFromSave{ 0. };
+			if (! theNodes.empty())
+			{
+				Vector const pathDelta
+					{ node.theCurrLoc - theNodes.back().theCurrLoc };
+				distFromSave = magnitude(pathDelta);
+			}
 
 			bool const isFirstStep{ theNodes.empty() };
 			bool const pastStepSize{ ! (distFromSave < theSaveDelta) };
