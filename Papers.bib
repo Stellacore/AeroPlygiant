@@ -20,6 +20,53 @@
 	abstract = {},
 }
 
+@article{Ciddor:FormulaIoR,
+	title = {Refractive index of air: new equations for the visible and near infrared.},
+	author = {Philip E. Ciddor},
+	journal = {Applied Optics},
+	year = {1996},
+	month = {03},
+	issue = {9},
+	volume = {35},
+	pages = {1566-1573},
+	doi = {10.1364/AO.35.001566},
+	url = {https://opg.optica.org/ao/abstract.cfm?uri=ao-35-9-1566},
+	urldate = {2023-12-08},
+	abstract = {The precision of modern length interferometry and geodetic surveying far exceeds the accuracy, which is ultimately limited by the inadequacy of currently used equations for the refractive index of the atmosphere. I have critically reviewed recent research at the National Physical Laboratory, the International Bureau of Weights and Measures, and elsewhere that has led to revised formulas and data for the dispersion and density of the major components of the atmosphere. I have combined selected formulas from these sources to yield a set of equations that match recently reported measurements to within the experimental error, and that are expected to be reliable over very wide ranges of atmospheric parameters and wavelength.},
+}
+
+@misc{NCAR:cisl_rda_ds083.3,
+	author = "{National Centers for Environmental Prediction, National Weather Service, NOAA, U.S. Department of Commerce}",
+	title = {NCEP GDAS/FNL 0.25 Degree Global Tropospheric Analyses and Forecast Grids},
+	publisher  = {Research Data Archive at the National Center for Atmospheric Research, Computational and Information Systems Laboratory},
+	address = {Boulder CO},
+	year  = {2015},
+	url = {https://doi.org/10.5065/D65Q4T4Z},
+	urldate = {2023-12-08},
+}
+
+@article{gyer1996:AtmRefraction,
+	title = {Methods for Computing Photogrammetric Refraction Corrections for Vertical and Oblique Photographs},
+	author = {Maurice S. Gyer},
+	journal = {Photogrammetric Engineering \& Remote Sensing},
+	year = {1996},
+	month = {March},
+	pages = {301-310},
+	url = {https://www.asprs.org/wp-content/uploads/pers/1996journal/mar/1996_mar_301-310.pdf},
+	urldate = {2023-12-08},
+	abstract = { Photogrammetric refraction computation methods for high oblique aerial photographs are derived from Snell's law for rays in a spherically stratified atmosphere. The methods, based on numerically integrating the refraction integrals, are applicable for zenith angles between 0 and 90 degrees. The atmospheric index of refraction is determined from atmospheric models of pressure and temperature. The models may be adjusted to reflect local pressure and temperature data when available. Standard aircraff pressurization procedures are used to evaluate the pressurized camera compartment refraction. Expressions are derived for the corrections to the image coordinates of photographs with arbitrary obliquity.  The effects of diffrent atmospheric models, geographic location, time of year, and large zenith angles are illustrated in the form of numerical tables and graphs. The results are applicable to determining the ground coordinates of points im- aged with high oblique aerial surveillance cameras. A byproduct of the theory is a unified treatment of atmospheric refraction for arbitrary zenith angles.},
+}
+
+
+@misc{nauenberg2016:atmospheric,
+	title = {Atmospheric Refraction},
+	author = {Michael Nauenberg},
+	year = {2016},
+	eprint = {1609.08921},
+	archivePrefix = {arXiv},
+	primaryClass = {physics.ao-ph},
+}
+
 @inproceedings{Nishidate:RefractionMetricTensor,
 	author = {Nishidate, Yohei},
 	year = {2013},
@@ -30,21 +77,36 @@
 	journal = {Optics InfoBase Conference Papers},
 	doi = {10.1364/AOPT.2013.JW2A.4},
 	url = {https://www.researchgate.net/publication/263783157_A_generalized_ray_equation_and_its_solutions_for_ray-tracing_in_anisotropic_inhomogeneous_media},
-	urldate = [2023-11-28}
+	urldate = {2023-11-28}
 }
 
-@article{REN2019163055,
-title = {Solving the differential equation of light rays in Cartesian coordinates},
-journal = {Optik},
-volume = {194},
-pages = {163055},
-year = {2019},
-issn = {0030-4026},
-doi = {https://doi.org/10.1016/j.ijleo.2019.163055},
-url = {https://www.sciencedirect.com/science/article/pii/S0030402619309325},
-author = {Xiaoli Ren and Jihong Wang and Ge Ren and Jia Zhai and Yufeng Tan and Xinxin Yang},
-keywords = {Differential equation of the light rays, Ray tracing, Custom functions, Cartesian coordinates},
-abstract = {This paper presents a method for solving the differential equation of light rays. We define functions which represent Cartesian coordinates and take the arc length as the independent variable. Then the ray equation can be transformed to convenient pattern by these defined functions. This proposed method avoids the complex transformation and interpolation in traditional techniques. So the coordinate value can be directly solved using the computational software. The solution procedure has been demonstrated by a ray tracing simulation in an axial gradient refractive-index media. And the computer code can be developed. Comparing with the analytical solution shows that the error of the proposed method is small.}
+@Article{Peng:SpatioTemporalGlobal,
+	author = {Peng, Xiaohong and Huang, Wenwen and Li, Xiaoyan and Yang, Lin and Chen, Fansheng},
+	title = {A Spatiotemporal Atmospheric Refraction Correction Method for Improving the Geolocation Accuracy of High-Resolution Remote Sensing Images},
+	journal = {Remote Sensing},
+	year = {2022},
+	volume = {14},
+	number = {21},
+	url = {https://www.mdpi.com/2072-4292/14/21/5344},
+	urldate = {2023-12-08},
+	issn = {2072-4292},
+	doi = {10.3390/rs14215344},
+	abstract = {Atmospheric refraction is one of the most significant factors that affect the geolocation accuracy of high-resolution remote sensing images. However, most of the current atmospheric refraction correction methods based on empirical data neglect the spatiotemporal variation of pressure, temperature, and humidity of the atmosphere, inevitably resulting in poor geometric positioning accuracy. Therefore, in terms of the problems mentioned above, this study proposed a spatiotemporal atmospheric refraction correction method (SARCM) based on global measured data to avoid the uncertainty of traditional empirical models. Initially, the atmosphere was stratified into 42 layers according to their pressure property, and each layer was divided into 1,042,560 grid cells with intervals of 0.25 longitude and 0.25 latitude. Then, the atmospheric refractive index of each grid in the imaging region was accurately calculated using the high-precision Ciddor formula, and the result was interpolated using three splines. Subsequently, according to the rigorous geometric positioning model, the line-of-sight of each pixel and the viewing zenith angle outside the atmosphere in WGS84 were derived to provide input for atmospheric refraction correction. Finally, the coordinates of the ground control points were corrected with the calculated atmospheric refractive index and Snell’s law. The experimental results showed that the proposed SARCM could effectively improve the positioning accuracy of the image with a large viewing zenith angle, and especially, the improvement percentage for a viewing zenith angle of 34.2426° in the x-direction was 99.5\%. Moreover, the atmospheric refraction correction result of the SARCM was better than that of the primary state-of-the-art methods.},
+}
+
+
+@article{Ren2019:RefractDiffEqs,
+	title = {Solving the differential equation of light rays in Cartesian coordinates},
+	journal = {Optik},
+	volume = {194},
+	pages = {163055},
+	year = {2019},
+	issn = {0030-4026},
+	doi = {10.1016/j.ijleo.2019.163055},
+	url = {https://www.sciencedirect.com/science/article/pii/S0030402619309325},
+	author = {Xiaoli Ren and Jihong Wang and Ge Ren and Jia Zhai and Yufeng Tan and Xinxin Yang},
+	keywords = {Differential equation of the light rays, Ray tracing, Custom functions, Cartesian coordinates},
+	abstract = {This paper presents a method for solving the differential equation of light rays. We define functions which represent Cartesian coordinates and take the arc length as the independent variable. Then the ray equation can be transformed to convenient pattern by these defined functions. This proposed method avoids the complex transformation and interpolation in traditional techniques. So the coordinate value can be directly solved using the computational software. The solution procedure has been demonstrated by a ray tracing simulation in an axial gradient refractive-index media. And the computer code can be developed. Comparing with the analytical solution shows that the error of the proposed method is small.}
 }
 
 
@@ -53,41 +115,19 @@ abstract = {This paper presents a method for solving the differential equation o
 	title = {Differential Form of Snell's Law},
 	author = { Jeremy Tatum },
 	journal = { LibreTexts - Physics},
-	year = {},
-	month = {},
-	subtitle = {},
-	issuetitle = {},
-	issue = {},
-	series = {},
-	volume = {},
-	number = {},
-	pages = {},
-	issn = {},
-	doi = {},
 	url = { https://phys.libretexts.org/Bookshelves/Optics/Geometric_Optics_(Tatum)/01%3A_Reflection_and_Refraction/1.08%3A_Differential_Form_of_Snell's_Law },
 	urldate = {2023-11-26},
 	abstract = {},
 }
 
-%	note = {For Earth atmosphere - e.g. astronomy applications},
-@article{Young:AstroRefraction,
-	title = {Deriving the Differential Equation for Refraction},
-	author = { Andrew T. Young },
-	journal = { San Diego State University Web Site },
-	year = {},
-	month = {},
-	subtitle = {},
-	issuetitle = {},
-	issue = {},
-	series = {},
-	volume = {},
-	number = {},
-	pages = {},
-	issn = {},
-	doi = {},
-	url = { https://aty.sdsu.edu/explain/atmos_refr/invariant.html https://aty.sdsu.edu/explain/atmos_refr/diff_eq.html https://aty.sdsu.edu/explain/atmos_refr/integrate.html },
-	urldate = {2023-11-26},
-	abstract = {},
+@article{Vermeer2019OnTA:Refraction,
+	title={On the Atmospheric Refraction in Aerial Photogrammetry},
+	author={Martin Vermeer and Petri R{\"o}nnholm},
+	journal={The Photogrammetric Journal of Finland},
+	year={2019},
+	doi={10.17690/019262.1},
+	url={https://api.semanticscholar.org/CorpusID:204270653},
+	abstract = {We present an alternative, and possibly more intuitive, method for deriving the equation for correcting the atmospheric effect in near-vertical aerial images. For near-vertical images a horizontally stratiﬁed atmospheric model is assumed to be sufﬁcient because the amount of error at the image plane is relatively small. Our derivation utilises Snell’s law and models the apparent uplift of a terrain point due refraction along the path from the ground object to the image. We show the approximate equivalence with older results in the literature, especially for aerial mapping ﬂight heights under 7 km.},
 }
 
 @article{Xingyu:SurveyMultiModalMethods,
@@ -99,9 +139,19 @@ abstract = {This paper presents a method for solving the differential equation o
 	number = {},
 	month = {9},
 	pages = {22-71},
-	doi = {doi:10.1016/j.inffus.2021.02.012},
+	doi = {10.1016/j.inffus.2021.02.012},
 	url = {https://sci-hub.hkvisa.net/10.1016/j.inffus.2021.02.012},
 	urldate = {2023-10-25},
 	abstract = {Multimodal image matching, which refers to identifying and then corresponding the same or similar structure/content from two or more images that are of significant modalities or nonlinear appearance difference, is a fundamental and critical problem in a wide range of applications, including medical, remote sensing and computer vision. An increasing number and diversity of methods have been proposed over the past decades, particularly in this deep learning era, due to the challenges in eliminating modality variance and geometrical deformation that intrinsically exist in multimodal image matching. However, a comprehensive review and analysis of traditional and recent trainable methods and their applications in different research fields are lacking. To this end and in this survey, we first introduce two general frameworks, saying area- and feature-based, in terms of their core components, taxonomy, and procedure details. Second, we provide a comprehensive review of multimodal image matching methods from handcrafted to deep methods for each research field according to their imaging nature, including medical, remote sensing and computer vision. Extensive experimental comparisons of interest point detection, description and matching, and image registration are performed on various datasets containing common types of multimodal image pairs that we collected and annotated. Finally, we briefly introduce and analyze several typical applications to reveal the significance of multimodal image matching and provide insightful discussions and conclusions to these multimodal image matching approaches, and simultaneously deliver their future trends for researchers and engineers in related research areas to achieve further breakthroughs.},
+}
+
+%	note = {For Earth atmosphere - e.g. astronomy applications},
+@article{Young:AstroRefraction,
+	title = {Deriving the Differential Equation for Refraction},
+	author = { Andrew T. Young },
+	journal = { San Diego State University Web Site },
+	url = { https://aty.sdsu.edu/explain/atmos_refr/invariant.html https://aty.sdsu.edu/explain/atmos_refr/diff_eq.html https://aty.sdsu.edu/explain/atmos_refr/integrate.html },
+	urldate = {2023-11-26},
+	abstract = {},
 }
 
