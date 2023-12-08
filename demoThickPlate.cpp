@@ -59,10 +59,8 @@ main
 	Vector const stopNear{ 10., 10., 10. };
 
 	// interact with data consumer
-Vector const & tBeg = start.theTanDir;
-Vector const & rBeg = start.thePntLoc;
-	ray::Path path(tBeg, rBeg, stopNear, saveStepDist);
-	prop.traceNodes(path.theBegTan, path.theBegLoc, &path);
+	ray::Path path(start, stopNear, saveStepDist);
+	prop.traceNodes(path.theStart, &path);
 
 	// show path info
 	for (ray::Node const & node : path.theNodes)

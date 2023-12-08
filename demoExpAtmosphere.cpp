@@ -84,7 +84,7 @@ main
 	{
 		ray::Propagator const prop{ &atm, delta };
 		std::vector<ray::Node> const fwdNodes
-			{ prop.nodePath(tBeg, rBeg, nominalLength) };
+			{ prop.nodePath(ray::Start::from(tBeg, rBeg), nominalLength) };
 		std::cout << " delta: " << engabra::g3::io::fixed(delta, 7u, 6u) << " ";
 		std::cout << nodeInfo(fwdNodes.back(), fwdNodes.size());
 	}

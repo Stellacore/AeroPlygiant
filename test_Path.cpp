@@ -74,6 +74,7 @@ main
 	Vector const tBeg{ 5., 5., 5. };
 	Vector const rBeg{ 0., 0., 0.  };
 	Vector const stopNear{ 10., 10., 10. };
+	ray::Start const start{ ray::Start::from(tBeg, rBeg) };
 
 	// configuration
 //	constexpr double propStepDist{ 1./4096. }; // integration step size
@@ -84,8 +85,8 @@ constexpr double propStepDist{ 1./128. }; // integration step size
 	ray::Propagator const prop{ &media, propStepDist };
 
 	// interact with data consumer
-	ray::Path path(tBeg, rBeg, stopNear, saveStepDist);
-	prop.traceNodes(path.theBegTan, path.theBegLoc, &path);
+	ray::Path path(start, stopNear, saveStepDist);
+	prop.traceNodes(path.theStart, &path);
 
 	// show path info
 	constexpr bool showIt{ true };

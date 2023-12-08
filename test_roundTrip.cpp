@@ -41,7 +41,7 @@ main
 	// trace ray forward
 	std::vector<ray::Node> fwdNodes;
 	fwdNodes.reserve(10u * 1024u); // size determines how much tracing
-	prop.traceNodes(tFwdBeg, rFwdBeg, &fwdNodes);
+	prop.traceNodes(ray::Start::from(tFwdBeg, rFwdBeg), &fwdNodes);
 
 	// get last node in forward pass
 	ray::Node const & lastNode = fwdNodes.back();
@@ -51,7 +51,7 @@ main
 	// trace ray in reverse direction
 	std::vector<ray::Node> revNodes;
 	revNodes.reserve(fwdNodes.size());
-	prop.traceNodes(tRevBeg, rRevBeg, &revNodes);
+	prop.traceNodes(ray::Start::from(tRevBeg, rRevBeg), &revNodes);
 
 	ray::Node const & endNode = revNodes.back();
 	Vector const & tExp = tFwdBeg;

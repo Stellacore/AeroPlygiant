@@ -30,6 +30,28 @@ namespace ray
 {
 	using namespace engabra::g3;
 
+	/*! \brief Data representing initial boundary values for a ray(curve).
+	 *
+	 */
+	struct Start
+	{
+		Vector const theTanDir{}; //!< Incident tangent direction (unitary)
+		Vector const thePntLoc{}; //!< Point of incidence for tangent dir
+
+		//! Create an instance ensuring tangent dir is unitary.
+		static
+		Start
+		from
+			( Vector const & anyTan
+			, Vector const & loc
+			)
+		{
+			return { direction(anyTan), loc };
+		}
+
+	}; // Start
+
+
 	//! Characterization of ray path tangent interacting at step boundary.
 	enum DirChange
 	{
@@ -386,18 +408,19 @@ oss << " tNext: " << tNext;
 		inline
 		void
 		traceNodes
-			( Vector const & tBeg
-			, Vector const & rBeg
+			( Start const & start
 			, Consumer * const & ptConsumer
 			) const
 		{
 			if (isValid())
 			{
 				// start with initial conditions
-				Vector tPrev{ direction(tBeg) };
-				Vector rCurr{ rBeg };
+				Vector tPrev{ start.theTanDir };
+				Vector rCurr{ start.thePntLoc };
 
 				// incident media IoR
+				Vector const & tBeg = start.theTanDir;
+				Vector const & rBeg = start.thePntLoc;
 				double nuPrev
 					{ thePtMedia->nuValue(rBeg - .5*theStepDist*tBeg) };
 
@@ -431,8 +454,7 @@ oss << " tNext: " << tNext;
 		inline
 		std::vector<Node>
 		nodePath
-			( Vector const & tBeg
-			, Vector const & rBeg
+			( Start const & start
 			, double const & nominalLength
 			) const
 		{
@@ -454,7 +476,7 @@ oss << " tNext: " << tNext;
 				std::size_t const useSize{ nomSize / stride + 10u };
 				nodes.reserve(useSize);
 
-				traceNodes(tBeg, rBeg, &nodes);
+				traceNodes(start, &nodes);
 std::cout << "nodes.size; " << nodes.size() << std::endl;
 			}
 
@@ -464,27 +486,6 @@ std::cout << "nodes.size; " << nodes.size() << std::endl;
 
 	}; // Propagator
 
-	/*! \brief Data representing initial boundary values for a ray(curve).
-	 *
-	 */
-	struct Start
-	{
-		Vector const theTanDir{}; //!< Incident tangent direction (unitary)
-		Vector const thePntLoc{}; //!< Point of incidence for tangent dir
-
-		//! Create an instance ensuring tangent dir is unitary.
-		static
-		Start
-		from
-			( Vector const & anyTan
-			, Vector const & loc
-			)
-		{
-			return { direction(anyTan), loc };
-		}
-
-	}; // Start
-
 
 	/*! \brief Store path information suitable for later visualization.
 	 *
@@ -493,8 +494,7 @@ std::cout << "nodes.size; " << nodes.size() << std::endl;
 	 */
 	struct Path
 	{
-		Vector const theBegTan{ null<Vector>() };
-		Vector const theBegLoc{ null<Vector>() };
+		Start const theStart{};
 		Vector const theStopLoc{ null<Vector>() };
 		double const theSaveDelta{ null<double>() };
 		std::vector<ray::Node> theNodes{};
@@ -505,24 +505,21 @@ std::cout << "nodes.size; " << nodes.size() << std::endl;
 		inline
 		explicit
 		Path
-			( Vector const & beginTangent
-				//!< Initial incident direction of propagation
-			, Vector const & beginLocation
-				//!< Point at which incident ray starts path
+			( Start const & startWith
+				//!< Initial direction and start point for propagation
 			, Vector const & stopNearTo
 				//!< Stop tracing with path stops getting closer to this
 			, double const & saveStepSize
 				//!< Save node if path exceeds this distance from previous save
 			)
-			: theBegTan{ direction(beginTangent) }
-			, theBegLoc{ beginLocation }
+			: theStart{ startWith }
 			, theStopLoc{ stopNearTo }
 			, theSaveDelta{ saveStepSize }
 			, thePrevNearDist{ null<double>() }
-			, theCurrNearDist{ magnitude(theStopLoc - theBegLoc) }
+			, theCurrNearDist{ magnitude(theStopLoc - theStart.thePntLoc) }
 		{
 			// estimate distance (as if straight line)
-			double const nomDist{ magnitude(stopNearTo - beginLocation) };
+			double const nomDist{ magnitude(stopNearTo - theStart.thePntLoc) };
 			constexpr double padFactor{ 9./8. }; // about 12% extra
 			double const dubSize{ padFactor * nomDist / theSaveDelta };
 			std::size_t const nomSize{ static_cast<std::size_t>(dubSize) };
