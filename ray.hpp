@@ -169,10 +169,10 @@ namespace ray
 	std::pair<Vector, DirChange>
 	nextTangentDir
 		( Vector const & tDirPrev //!< Must be unit length
-		, double const & nuPrev
-		, Vector const & gCurr // Must be non-zero (to be invertable
-		, double const & nuNext
-		, env::IndexVolume const * const & ptMedia
+		, double const & nuPrev //!< Incoming IoR
+		, Vector const & gCurr //! Must be non-zero (to be invertable
+		, double const & nuNext //!< Exiting IoR
+		, env::IndexVolume const * const & ptMedia //!< Refraction media
 		)
 	{
 		// default to unaltered
