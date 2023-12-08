@@ -5,7 +5,11 @@
 #ifndef Refraction_env_INCL_
 #define Refraction_env_INCL_
 
-//! \file Environment configuration parameters (related to Refraction)
+/*! \file
+ *
+ * \brief Environment configuration parameters (related to Refraction)
+ *
+ */
 
 
 #include <Engabra>

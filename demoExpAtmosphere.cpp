@@ -3,7 +3,11 @@
 //
 
 
-//! \file Atmospheric Refraction Example.
+/*! \file
+ *
+ * \brief Atmospheric Refraction Example.
+ *
+ */
 
 
 #include "env.hpp"

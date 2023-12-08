@@ -3,7 +3,11 @@
 //
 
 
-//! \file Simple ray tracing example to test results gathering/save.
+/*! \file
+ * 
+ * \brief Simple ray tracing example to test results gathering/save.
+ *
+ */
 
 
 #include "tst.hpp"

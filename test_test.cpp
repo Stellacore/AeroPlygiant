@@ -3,7 +3,11 @@
 //
 
 
-//! \file Example unit testing template
+/*! \file
+ *
+ * \brief Example unit testing template
+ *
+ */
 
 
 #include "tst.hpp"

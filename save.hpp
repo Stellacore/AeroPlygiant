@@ -5,12 +5,18 @@
 #ifndef Refraction_save_INCL_
 #define Refraction_save_INCL_
 
-//! \file Environment configuration parameters (related to Refraction)
+/*! \file
+ *
+ * \brief Environment configuration parameters (related to Refraction)
+ *
+ */
 
 
 #include "ray.hpp"
 
 
+/*! \brief Classes and functions for recording and saving propagated path data.
+ */
 namespace save
 {
 

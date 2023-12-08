@@ -3,7 +3,11 @@
 //
 
 
-//! \file Utilities that support testing
+/*! \file
+ *
+ * \brief Utilities that support testing
+ *
+ */
 
 
 #include <iostream>
@@ -11,6 +15,8 @@
 #include <string>
 
 
+/*! \brief Functions and data that support project testing.
+ */
 namespace tst
 {
 	//! CTest/CMake main program return conventions

@@ -3,7 +3,11 @@
 //
 
 
-//! \file Atmospheric Refraction Example - round trip ray tracing
+/*! \file
+ *
+ * \brief Atmospheric Refraction Example - round trip ray tracing
+ *
+ */
 
 
 #include "env.hpp"

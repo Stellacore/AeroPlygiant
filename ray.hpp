@@ -5,7 +5,11 @@
 #ifndef Refraction_ray_INCL_
 #define Refraction_ray_INCL_
 
-//! \file Ray propagation simulation functions.
+/*! \file
+ *
+ * \brief Ray propagation simulation functions.
+ *
+ */
 
 
 #include "env.hpp"

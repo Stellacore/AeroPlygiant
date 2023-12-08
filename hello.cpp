@@ -2,6 +2,11 @@
 // Copyright (c) 2023 Stellacore Corporation. All rights reserved.
 //
 
+/*! \file
+ *
+ * \brief Trivial 'helloWorld' style program to verify build environment.
+ *
+ */
 
 #include <Engabra>
 
