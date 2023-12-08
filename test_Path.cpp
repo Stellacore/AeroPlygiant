@@ -63,10 +63,12 @@ main
 	using namespace engabra::g3;
 
 	tst::Slab const media
-		( 4.   // xBeg
+		( e1   // 'x' direction
+		, 4.   // xBeg
 		, 6.   // xEnd
+		, 1.0  // nu before
 		, 1.5  // nu inside
-		, 1.0  // nu outside
+		, 1.0  // nu after
 		);
 	// tst:showMedia(media);
 

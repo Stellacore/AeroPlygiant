@@ -31,25 +31,31 @@ namespace tst
 	 */
 	struct Slab : public env::IndexVolume
 	{
-		double const theBegX{ null<double>() };
-		double const theEndX{ null<double>() };
-		double const theNuInside{ null<double>() };
-		double const theNuOutside{ null<double>() };
+		Vector const theNormDir{ null<Vector>() };
+		double const theBegDot{ null<double>() };
+		double const theEndDot{ null<double>() };
+		double const theNuPrev{ null<double>() };
+		double const theNuCurr{ null<double>() };
+		double const theNuNext{ null<double>() };
 
 		//! Value constructor
 		inline
 		explicit
 		Slab
-			( double const & begX
-			, double const & endX
-			, double const & nuInside = 1.5
-			, double const & nuOutside = 1.
+			( Vector const & normDir
+			, double const & begDot
+			, double const & endDot
+			, double const & nuPrev = 1.
+			, double const & nuCurr = 1.5
+			, double const & nuNext = 1.
 			)
 			: IndexVolume{}
-			, theBegX{ begX }
-			, theEndX{ endX }
-			, theNuInside{ nuInside }
-			, theNuOutside{ nuOutside }
+			, theNormDir{ direction(normDir) }
+			, theBegDot{ begDot }
+			, theEndDot{ endDot }
+			, theNuPrev{ nuPrev }
+			, theNuCurr{ nuCurr }
+			, theNuNext{ nuNext }
 		{
 		}
 
@@ -62,11 +68,21 @@ namespace tst
 			( Vector const & rVec
 			) const
 		{
-			double nu{ theNuOutside };
-			double const & valX = rVec[0];
-			if ((theBegX < valX) && (valX < theEndX))
+			double nu{ null<double>() };
+			double const valDot{ (rVec * theNormDir).theSca[0] };
+			if (valDot < theBegDot)
 			{
-				nu = theNuInside;
+				nu = theNuPrev;
+			}
+			else
+			if ((theBegDot < valDot) && (valDot < theEndDot))
+			{
+				nu = theNuCurr;
+			}
+			else
+			if (theEndDot < valDot)
+			{
+				nu = theNuNext;
 			}
 			return nu;
 		}
