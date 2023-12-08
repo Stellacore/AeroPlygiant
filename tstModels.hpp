@@ -291,28 +291,6 @@ namespace tst
 			return { scale * Vector{ dNu1, dNu2, dNu3 } };
 		}
 
-		//! Sampling of atm.nuValue() values
-		inline
-		std::vector<double>
-		nuProfile
-			( double const & delta
-			, double const & rBeg = env::sEarth.theRadGround
-			, double const & rEnd = env::sEarth.theRadSpace
-			) const
-		{
-			std::vector<double> nus;
-			double const dSteps{ (rEnd - rBeg) / delta };
-			std::size_t const numSamps{ static_cast<std::size_t>(dSteps) +2u };
-			nus.reserve(numSamps);
-			for (double rad{rBeg} ; rad < rEnd ; rad += delta)
-			{
-				// evaluate in arbitrary direction (here e3)
-				double const nu{ nuValue(rad * e3) };
-				nus.emplace_back(nu);
-			}
-			return nus;
-		}
-
 	}; // AtmModel
 
 
