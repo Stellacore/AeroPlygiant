@@ -72,6 +72,8 @@ endforeach(mainProg)
 
 set(testProgs
 
+	test_test
+
 	test_roundTrip
 	test_Path
 

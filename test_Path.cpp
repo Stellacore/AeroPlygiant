@@ -6,6 +6,8 @@
 //! \file Simple ray tracing example to test results gathering/save.
 
 
+#include "tst.hpp"
+
 #include "env.hpp"
 #include "ray.hpp"
 #include "save.hpp"
@@ -16,42 +18,12 @@
 #include <sstream>
 
 
-namespace tst
-{
-
-	/*! CMake/CTest compatible exit code based on condition (! msg.empty())
-	 *
-	 * If message string is empty, return success
-	 */
-	inline
-	int
-	result
-		( std::string const & msg
-		)
-	{
-		int istat{ 1 };
-		if (msg.empty())
-		{
-			istat = 0;
-		}
-		else
-		{
-			std::cerr << msg << '\n';
-		}
-		return istat;
-	}
-
-} // [tst]
-
 
 namespace tst
 {
 	using namespace engabra::g3;
 
 	/*! \brief Simple example of a spherical shape with constant index.
-	 *
-	 * NOTE: acts as a black hole - attracts ray paths into a circular orbit!
-	 *
 	 */
 	struct Sphere : public env::IndexVolume
 	{
@@ -100,13 +72,13 @@ namespace tst
 			return nu;
 		}
 
-
-		//! Gradient (approximation) of Index of refraction at location rVec
+		//! Override Gradient (approximation) with analytical expression
 		inline
 		virtual
 		Vector
 		nuGradient
 			( Vector const & rVec
+			, double const & //
 			) const
 		{
 			Vector grad{ zero<Vector>() };
@@ -120,8 +92,6 @@ namespace tst
 			}
 			return grad;
 		}
-
-
 
 	}; // IndexVolume
 
@@ -205,15 +175,14 @@ main
 
 	using namespace engabra::g3;
 
-/*
 	// construct test sphere object
 	tst::Sphere const media
-		( Vector{ 5., 5., 5. }
-		, 2. // radius
-		, 1.5 // nu center
+		( Vector{ 5., 5.25, 5.125 }
+		, 4. // radius
+		, 1.1 // nu center
 		, 1.0 // nu edge
 		);
-*/
+/*
 
 	tst::Slab const media
 		( 4.   // xBeg
@@ -221,16 +190,18 @@ main
 		, 1.5  // nu inside
 		, 1.0  // nu outside
 		);
-//	tst:showMedia(media);
+	// tst:showMedia(media);
+*/
 
 	// path specification
-	Vector const tBeg{ 1., 1., 1. };
+	Vector const tBeg{ 5., 5., 5. };
 	Vector const rBeg{ 0., 0., 0.  };
 	Vector const stopNear{ 10., 10., 10. };
 
 	// configuration
-	constexpr double propStepDist{ 1./4096 }; // integration step size
-	constexpr double saveStepDist{ 1./8. }; // save this often
+//	constexpr double propStepDist{ 1./4096. }; // integration step size
+constexpr double propStepDist{ 1./128. }; // integration step size
+	constexpr double saveStepDist{ 1./128. }; // save this often
 
 	// create tracer
 	ray::Propagator const prop{ &media, propStepDist };
@@ -240,15 +211,15 @@ main
 	prop.traceNodes(path.theBegTan, path.theBegLoc, &path);
 
 	// show path info
-//	constexpr bool showIt{ true };
-	constexpr bool showIt{ false };
+	constexpr bool showIt{ true };
+//	constexpr bool showIt{ false };
 	if (showIt)
 	{
-		std::cout << "path.size: " << path.theNodes.size() << std::endl;
 		for (ray::Node const & node : path.theNodes)
 		{
 			std::cout << node.infoBrief() << std::endl;
 		}
+		std::cout << "path.size: " << path.theNodes.size() << std::endl;
 	}
 
 	// check that path contains data
@@ -291,6 +262,6 @@ main
 		}
 	}
 
-	return tst::result(oss.str());
+	return tst::finish(oss.str());
 }
 
