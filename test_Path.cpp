@@ -62,15 +62,6 @@ main
 
 	using namespace engabra::g3;
 
-	// construct test sphere object
-	tst::Sphere const media
-		( Vector{ 5., 5.25, 5.125 }
-		, 4. // radius
-		, 1.1 // nu center
-		, 1.0 // nu edge
-		);
-/*
-
 	tst::Slab const media
 		( 4.   // xBeg
 		, 6.   // xEnd
@@ -78,7 +69,6 @@ main
 		, 1.0  // nu outside
 		);
 	// tst:showMedia(media);
-*/
 
 	// path specification
 	Vector const tBeg{ 5., 5., 5. };
