@@ -3,6 +3,10 @@
 //
 
 
+#ifndef Refraction_tst_INCL_
+#define Refraction_tst_INCL_
+
+
 /*! \file
  *
  * \brief Utilities that support testing
@@ -62,4 +66,6 @@ namespace tst
 	}
 
 } // [tst]
+
+#endif // Refraction_tst_INCL_
 
