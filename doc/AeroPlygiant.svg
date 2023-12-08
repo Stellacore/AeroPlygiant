@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   width="56.779018mm"
+   height="27.711369mm"
+   viewBox="0 0 214.59786 104.73588"
+   version="1.1"
+   id="svg5"
+   sodipodi:docname="AeroPlygiant.svg"
+   inkscape:version="1.1.2 (0a00cf5339, 2022-02-04)"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <sodipodi:namedview
+     id="namedview7"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:pageshadow="2"
+     inkscape:pageopacity="0.0"
+     inkscape:pagecheckerboard="false"
+     inkscape:document-units="px"
+     showgrid="false"
+     inkscape:zoom="1.2674481"
+     inkscape:cx="405.53928"
+     inkscape:cy="197.64123"
+     inkscape:window-width="1920"
+     inkscape:window-height="1011"
+     inkscape:window-x="0"
+     inkscape:window-y="0"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="layer1"
+     fit-margin-top="0"
+     fit-margin-left="0"
+     fit-margin-right="0"
+     fit-margin-bottom="0"
+     scale-x="1" />
+  <defs
+     id="defs2" />
+  <g
+     inkscape:label="Layer 1"
+     inkscape:groupmode="layer"
+     id="layer1"
+     transform="translate(2.0782019,-194.33454)">
+    <g
+       id="g163471">
+      <text
+         xml:space="preserve"
+         style="font-size:105.833px;line-height:1.25;font-family:aakar;-inkscape-font-specification:aakar;stroke-width:0.264583"
+         x="-1.179232"
+         y="281.34613"
+         id="text6010"><tspan
+           sodipodi:role="line"
+           id="tspan6008"
+           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:105.833px;font-family:MathJax_Caligraphic;-inkscape-font-specification:MathJax_Caligraphic;fill:#000000;fill-opacity:0.5;stroke-width:0.264583"
+           x="-1.179232"
+           y="281.34613">A</tspan></text>
+      <text
+         xml:space="preserve"
+         style="font-size:39.7564px;line-height:1.25;font-family:aakar;-inkscape-font-specification:aakar;stroke-width:0.397564"
+         x="48.308262"
+         y="333.98267"
+         id="text37584"
+         transform="scale(1.5026041,0.66551129)"><tspan
+           sodipodi:role="line"
+           id="tspan37582"
+           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:39.7564px;font-family:MathJax_Math;-inkscape-font-specification:MathJax_Math;fill:#000000;fill-opacity:0.5;stroke-width:0.397564"
+           x="48.308262"
+           y="333.98267">ERO</tspan></text>
+      <text
+         xml:space="preserve"
+         style="font-size:70.5556px;line-height:1.25;font-family:aakar;-inkscape-font-specification:aakar;stroke-width:0.264583"
+         x="84.320068"
+         y="286.60486"
+         id="text53680"><tspan
+           sodipodi:role="line"
+           id="tspan53678"
+           style="font-size:70.5556px;stroke-width:0.264583"
+           x="84.320068"
+           y="286.60486">P</tspan></text>
+      <text
+         xml:space="preserve"
+         style="font-size:26.4583px;line-height:1.25;font-family:aakar;-inkscape-font-specification:aakar;stroke-width:0.264583"
+         x="116.1291"
+         y="286.60443"
+         id="text55994"><tspan
+           sodipodi:role="line"
+           id="tspan55992"
+           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:26.4583px;font-family:MathJax_Script;-inkscape-font-specification:MathJax_Script;stroke-width:0.264583"
+           x="116.1291"
+           y="286.60443">lygiant</tspan></text>
+      <path
+         style="fill:none;stroke:#000000;stroke-width:0.765;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+         d="m 79.559012,231.24508 c 0,0 42.985558,-1.78713 86.185488,12.31642 38.44104,12.54991 40.73669,20.95355 40.73669,20.95355"
+         id="path161746"
+         sodipodi:nodetypes="csc" />
+    </g>
+    <rect
+       id="rect162493"
+       width="214.33328"
+       height="104.4713"
+       x="-1.9459105"
+       y="194.46683"
+       style="fill:none;stroke:#000000;stroke-width:0.264583;stroke-opacity:1"
+       ry="10.955247" />
+  </g>
+</svg>

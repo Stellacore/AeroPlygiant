@@ -4,7 +4,7 @@
 
 cmake_minimum_required(VERSION 3.13)
 
-set(aProjName "Refraction")
+set(aProjName "AeroPlygiant")
 set(aProjVersion "0.1.0") # Set this based on features, updates and patches
 set(aProjLib "${aProjName}Lib")
 
@@ -34,6 +34,11 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 find_package(engabra REQUIRED NO_MODULE)
 message(engabra Found: ${engabra_FOUND})
 message(engabra Version: ${engabra_VERSION})
+
+# ===
+# === Documentation
+# ===
+add_subdirectory(doc) # project reference documentation
 
 # ===
 # === Library
