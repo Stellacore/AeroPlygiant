@@ -15,19 +15,63 @@
 
 
 #include "env.hpp"
-// #include "ray.hpp"
-// #include "save.hpp"
 
 #include <Engabra>
-
-// #include <iostream>
-// #include <sstream>
 
 
 
 namespace tst
 {
 	using namespace engabra::g3;
+
+	/*! \brief Thick slab of constant index of refraction
+	 *
+	 * Classic "thick plate" refraction model
+	 *
+	 */
+	struct Slab : public env::IndexVolume
+	{
+		double const theBegX{ null<double>() };
+		double const theEndX{ null<double>() };
+		double const theNuInside{ null<double>() };
+		double const theNuOutside{ null<double>() };
+
+		//! Value constructor
+		inline
+		explicit
+		Slab
+			( double const & begX
+			, double const & endX
+			, double const & nuInside = 1.5
+			, double const & nuOutside = 1.
+			)
+			: IndexVolume{}
+			, theBegX{ begX }
+			, theEndX{ endX }
+			, theNuInside{ nuInside }
+			, theNuOutside{ nuOutside }
+		{
+		}
+
+
+		//! \brief Index of refraction value at vector location rVec.
+		inline
+		virtual
+		double
+		nuValue
+			( Vector const & rVec
+			) const
+		{
+			double nu{ theNuOutside };
+			double const & valX = rVec[0];
+			if ((theBegX < valX) && (valX < theEndX))
+			{
+				nu = theNuInside;
+			}
+			return nu;
+		}
+
+	}; // Slab
 
 	/*! \brief Simple example of a spherical shape with constant index.
 	 */
@@ -102,50 +146,159 @@ namespace tst
 	}; // IndexVolume
 
 
-	//! \brief Thick slab of constant index of refraction
-	struct Slab : public env::IndexVolume
+	//! Atmospheric model : nu = alpha*exp(-beta*radius)
+	struct AtmModel : public env::IndexVolume
 	{
-		double const theBegX{ null<double>() };
-		double const theEndX{ null<double>() };
-		double const theNuInside{ null<double>() };
-		double const theNuOutside{ null<double>() };
-
-		//! Value constructor
+		//! Classic exponential decay model
 		inline
-		explicit
-		Slab
-			( double const & begX
-			, double const & endX
-			, double const & nuInside = 1.5
-			, double const & nuOutside = 1.
+		static
+		double
+		expValue
+			( double const & amp
+			, double const & scale
+			, double const & radius
 			)
-			: IndexVolume{}
-			, theBegX{ begX }
-			, theEndX{ endX }
-			, theNuInside{ nuInside }
-			, theNuOutside{ nuOutside }
 		{
+			return amp * std::exp(-scale * radius);
+		}
+
+		//! Exponential decay constant
+		inline
+		static
+		double
+		beta
+			( double const & v1
+			, double const & v2
+			, double const & r1
+			, double const & r2
+			)
+		{
+			return { log(v1 / v2) / (r2 - r1) };
+		}
+
+		//! Exponential decay magnitude
+		inline
+		static
+		double
+		alpha
+			( double const & v1
+			, double const & v2
+			, double const & r1
+			, double const & r2
+			)
+		{
+			double const bNeg{ - beta(v1, v2, r1, r2) };
+			return
+				{ (v1 + v2) / (std::exp(bNeg * r1) + std::exp(bNeg * r2)) };
 		}
 
 
-		//! \brief Index of refraction value at vector location rVec.
+		double const theRadGround{ null<double>() };
+		double const theRadSpace{ null<double>() };
+		double const theAlpha{ null<double>() };
+		double const theBeta{ null<double>() };
+
+		//! Construct an invalid instance
 		inline
+		AtmModel
+			()
+			: IndexVolume{}
+			, theAlpha{ null<double>() }
+			, theBeta{ null<double>() }
+		{
+		}
+
+		//! Construct model to match environment constants
+		inline
+		AtmModel
+			( env::Planet const & planet
+			)
+			: theRadGround{ planet.theRadGround }
+			, theRadSpace{ planet.theRadSpace }
+			, theAlpha
+				{ alpha
+					( planet.theNuGround
+					, planet.theNuSpace
+					, theRadGround
+					, theRadSpace
+					)
+				}
+			, theBeta
+				{ beta
+					( planet.theNuGround
+					, planet.theNuSpace
+					, theRadGround
+					, theRadSpace
+					)
+				}
+		{ }
+
+		//! Thickness of atmosphere
+		inline
+		double
+		thickness
+			() const
+		{
+			return theRadSpace - theRadGround;
+		}
+
+		//! Index of refraction value at vector location rVec
 		virtual
+		inline
 		double
 		nuValue
 			( Vector const & rVec
 			) const
 		{
-			double nu{ theNuOutside };
-			double const & valX = rVec[0];
-			if ((theBegX < valX) && (valX < theEndX))
-			{
-				nu = theNuInside;
-			}
-			return nu;
+			double const rMag{ magnitude(rVec) };
+			return expValue(theAlpha, theBeta, rMag);
 		}
 
-	}; // Slab
+		//! Gradient (approximation) of Index of refraction at location rVec
+		virtual
+		inline
+		Vector
+		nuGradient
+			( Vector const & rVec
+			) const
+		{
+			double const mag{ magnitude(rVec) };
+			double const del
+				{ mag * std::sqrt(std::numeric_limits<double>::epsilon()) };
+			double const dNu1
+				{ nuValue(rVec + del * e1) - nuValue(rVec - del * e1) };
+			double const dNu2
+				{ nuValue(rVec + del * e2) - nuValue(rVec - del * e2) };
+			double const dNu3
+				{ nuValue(rVec + del * e3) - nuValue(rVec - del * e3) };
+			double const scale{ 1. / (2. * del) };
+			return { scale * Vector{ dNu1, dNu2, dNu3 } };
+		}
+
+		//! Sampling of atm.nuValue() values
+		inline
+		std::vector<double>
+		nuProfile
+			( double const & delta
+			, double const & rBeg = env::sEarth.theRadGround
+			, double const & rEnd = env::sEarth.theRadSpace
+			) const
+		{
+			std::vector<double> nus;
+			double const dSteps{ (rEnd - rBeg) / delta };
+			std::size_t const numSamps{ static_cast<std::size_t>(dSteps) +2u };
+			nus.reserve(numSamps);
+			for (double rad{rBeg} ; rad < rEnd ; rad += delta)
+			{
+				// evaluate in arbitrary direction (here e3)
+				double const nu{ nuValue(rad * e3) };
+				nus.emplace_back(nu);
+			}
+			return nus;
+		}
+
+	}; // AtmModel
+
 
 } // [tst]
 

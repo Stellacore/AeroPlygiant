@@ -13,6 +13,8 @@
 #include "env.hpp"
 #include "ray.hpp"
 
+#include "tstModels.hpp"
+
 #include <Engabra>
 #include <vector>
 
@@ -66,7 +68,7 @@ int
 main
 	()
 {
-	env::AtmModel const atm(env::sEarth);
+	tst::AtmModel const atm(env::sEarth);
 
 	// initial conditions
 	engabra::g3::Vector const tBeg

@@ -12,6 +12,7 @@
 
 #include "env.hpp"
 #include "ray.hpp"
+#include "tstModels.hpp"
 
 #include <Engabra>
 #include <vector>
@@ -25,7 +26,7 @@ main
 {
 	int istat{ 1 }; // default to failure
 
-	env::AtmModel const atm(env::sEarth);
+	tst::AtmModel const atm(env::sEarth);
 
 	// initial conditions
 	using namespace engabra::g3;
