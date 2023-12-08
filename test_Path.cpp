@@ -15,7 +15,7 @@
 
 #include "env.hpp"
 #include "ray.hpp"
-#include "save.hpp"
+//#include "save.hpp"
 
 #include <Engabra>
 
@@ -51,7 +51,7 @@ namespace tst
 } // [tst]
 
 
-/*! \brief Simple ray trace example with which to check save::Path
+/*! \brief Simple ray trace example with which to check ray::Path
  */
 int
 main
@@ -84,7 +84,7 @@ constexpr double propStepDist{ 1./128. }; // integration step size
 	ray::Propagator const prop{ &media, propStepDist };
 
 	// interact with data consumer
-	save::Path path(tBeg, rBeg, stopNear, saveStepDist);
+	ray::Path path(tBeg, rBeg, stopNear, saveStepDist);
 	prop.traceNodes(path.theBegTan, path.theBegLoc, &path);
 
 	// show path info
