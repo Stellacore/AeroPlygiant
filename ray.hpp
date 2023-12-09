@@ -248,45 +248,53 @@ namespace ray
 		, env::IndexVolume const * const & ptMedia //!< Refraction media
 		)
 	{
-		// default to unaltered
+		// default case is an unaltered ray
 		std::pair<Vector, DirChange> tanDirChange{ tDirPrev, Unaltered };
 		Vector & tDirNext = tanDirChange.first;
 		DirChange & tChange = tanDirChange.second;
 		//
-		// compute refraction bivector
-		// note that magnitude is order of |gCurr|
-		BiVector const currB{ (nuPrev/nuNext) * (tDirPrev*gCurr).theBiv };
-		//
-		// note that sq(bivector) = -magSq(bivector)
-		double const gCurrSq{ magSq(gCurr) };
-		double const radicand{ gCurrSq - magSq(currB) };
-		//
-		// use current conditions to select computation option
-		//
-		Vector const gCurrInv{ (1./gCurrSq) * gCurr };
-		if (radicand < 0.) // total internal reflection
+		// check for stop condition
+		if (! engabra::g3::isValid(nuPrev))
 		{
-			// reflect tangent from interface plane (dual to gCurr)
-			tDirNext = -(gCurr * tDirPrev * gCurrInv).theVec;
-			tChange = Reflected;
+			tChange = Stopped;
 		}
 		else
 		{
-			double const rootXi{ std::sqrt(radicand) };
-			if (nuPrev < nuNext) // propagating into more dense media
+			// compute refraction bivector
+			// note that magnitude is order of |gCurr|
+			BiVector const currB{ (nuPrev/nuNext) * (tDirPrev*gCurr).theBiv };
+			//
+			// note that sq(bivector) = -magSq(bivector)
+			double const gCurrSq{ magSq(gCurr) };
+			double const radicand{ gCurrSq - magSq(currB) };
+			//
+			// use current conditions to select computation option
+			//
+			Vector const gCurrInv{ (1./gCurrSq) * gCurr };
+			if (radicand < 0.) // total internal reflection
 			{
-				Spinor const spin{  rootXi, currB };
-				tDirNext = (spin * gCurrInv).theVec;
-				tChange = Converged;
+				// reflect tangent from interface plane (dual to gCurr)
+				tDirNext = -(gCurr * tDirPrev * gCurrInv).theVec;
+				tChange = Reflected;
 			}
 			else
-			if (nuNext < nuPrev) // propagating into less dense media
 			{
-				Spinor const spin{ -rootXi, currB };
-				tDirNext = (spin * gCurrInv).theVec;
-				tChange = Diverged;
+				double const rootXi{ std::sqrt(radicand) };
+				if (nuPrev < nuNext) // propagating into more dense media
+				{
+					Spinor const spin{  rootXi, currB };
+					tDirNext = (spin * gCurrInv).theVec;
+					tChange = Converged;
+				}
+				else
+				if (nuNext < nuPrev) // propagating into less dense media
+				{
+					Spinor const spin{ -rootXi, currB };
+					tDirNext = (spin * gCurrInv).theVec;
+					tChange = Diverged;
+				}
+				// (nuNext == nuPrev) // same as default (gCurr == 0)
 			}
-			// (nuNext == nuPrev) // same as default (gCurr == 0)
 		}
 		//
 		return tanDirChange;
@@ -392,6 +400,14 @@ oss << " REFLECTION ";
 						{ nextTangentDir
 							(tPrev, nuPrev, gCurr, nuNext, thePtMedia)
 						};
+
+					// check for stop condition
+					if (Stopped == tDirChange.second)
+					{
+						break;
+					}
+
+					// note reflection condition for next loop iteration
 					isReflection = (Reflected == tDirChange.second);
 
 					// evaluate convergence of tangent direction
@@ -403,16 +419,6 @@ oss << " REFLECTION ";
 					change = tDirChange.second;
 
 				} // while loop on refraction index estimation
-
-/*
-if (0u < numLoop)
-{
-std::cout
-	<< "-- numLoop: " << numLoop
-	<< "  at: " << rCurr
-	<< '\n';
-}
-*/
 
 			} // significant gCurr magnitude
 
