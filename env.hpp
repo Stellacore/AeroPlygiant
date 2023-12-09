@@ -138,9 +138,17 @@ namespace env
 		 * By default, the index volume (IoR field) is active everywhere.
 		 * E.g. ray propagation will never hit an edge
 		 */
-		ActiveVolume const theActive{ sAllSpace };
+		ActiveVolume const theVolume{ sAllSpace };
 
-		//! \brief Index of Refraction value, or null if outside theActive.
+		inline
+		explicit
+		IndexVolume
+			( ActiveVolume const & volume = sAllSpace
+			)
+			: theVolume{ volume }
+		{ }
+
+		//! \brief Index of Refraction value, or null if outside theVolume.
 		inline
 		double
 		qualifiedNuValue
@@ -148,7 +156,7 @@ namespace env
 			) const
 		{
 			double nu{ null<double>() }; // default to stop condition
-			if (theActive.contains(rVec))
+			if (theVolume.contains(rVec))
 			{
 				nu = nuValue(rVec);
 			}
