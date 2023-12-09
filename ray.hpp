@@ -206,15 +206,17 @@ namespace ray
 		//	{ std::sqrt(std::numeric_limits<double>::epsilon()) };
 		//if (! nearlyEquals(gCurr, zero<Vector>(), tol)) // tangent dir changes
 		{
-			double const gCurrSq{ magSq(gCurr) };
-			Vector const gCurrInv{ (1./gCurrSq) * gCurr };
 			// compute refraction bivector
+			// note that magnitude is order of |gCurr|
 			BiVector const currB{ (nuPrev/nuNext) * (tDirPrev*gCurr).theBiv };
+			//
 			// note that sq(bivector) = -magSq(bivector)
+			double const gCurrSq{ magSq(gCurr) };
 			double const radicand{ gCurrSq - magSq(currB) };
 			//
 			// use current conditions to select computation option
 			//
+			Vector const gCurrInv{ (1./gCurrSq) * gCurr };
 			if (radicand < 0.) // total internal reflection
 			{
 				// reflect tangent from interface plane (dual to gCurr)
@@ -277,7 +279,7 @@ namespace ray
 			Vector const gCurr{ thePtMedia->nuGradient(rCurr, theStepDist) };
 			double const gMag{ magnitude(gCurr) };
 			static double const gTol // enough to unitize and invert gCurr
-				{ std::sqrt(std::numeric_limits<double>::epsilon()) };
+				{ std::numeric_limits<double>::min() };
 std::ostringstream oss;
 oss << "gCurr: " << gCurr;
 			if (! (gTol < gMag)) // unaltered
