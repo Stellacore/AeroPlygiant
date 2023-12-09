@@ -48,6 +48,7 @@ main
 	std::ostringstream oss; // test message string
 
 	tst::AtmModel const atm(env::sEarth);
+	std::size_t const pathSize{ 8u };
 
 	// initial conditions
 	using namespace engabra::g3;
@@ -64,8 +65,15 @@ Vector const stopNear{ null<Vector>() };
 	// trace ray forward
 	double const saveStepDist{ 0.100 }; // meters
 	ray::Path fwdPath(fwdStart, stopNear, saveStepDist);
-	fwdPath.reserve(10u * 1024u);
+	fwdPath.reserve(pathSize);
 	prop.tracePath(&fwdPath);
+
+std::cout << fwdPath.infoString("fwdPath") << std::endl;
+for (ray::Node const & node : fwdPath.theNodes)
+{
+	std::cout << "    node: " << node.infoBrief() << '\n';
+}
+std::cout << "fwdPath.size: " << fwdPath.theNodes.size() << std::endl;
 
 	if (fwdPath.theNodes.empty())
 	{
@@ -77,19 +85,36 @@ Vector const stopNear{ null<Vector>() };
 
 		// get last node in forward pass
 		ray::Node const & lastNode = fwdPath.theNodes.back();
+
+		ray::Node const revNode{ lastNode.reversed() };
+
 		Vector const & tRevBeg = -lastNode.theNextTan;
 		Vector const & rRevBeg =  lastNode.theCurrLoc;
 
-		ray::Node const & endNode = fwdPath.theNodes.back();
-		Vector const & tExp = tFwdBeg;
-		Vector const & rExp = rFwdBeg;
-		Vector const & tGot = -endNode.theNextTan; // reverse for test compare
-		Vector const & rGot =  endNode.theCurrLoc;;
+std::cout << '\n';
+std::cout << "lastNode: " << lastNode.infoBrief() << '\n';
+std::cout << " revNode: " <<  revNode.infoBrief() << '\n';
+std::cout << '\n';
 
 		// trace ray in reverse direction
 		ray::Start const revStart{ ray::Start::from(tRevBeg, rRevBeg) };
 		ray::Path revPath(revStart, stopNear, saveStepDist);
+		revPath.reserve(pathSize);
 		prop.tracePath(&revPath);
+
+std::cout << revPath.infoString("revPath") << std::endl;
+for (ray::Node const & node : revPath.theNodes)
+{
+	std::cout << "    node: " << node.infoBrief() << '\n';
+}
+std::cout << "revPath.size: " << revPath.theNodes.size() << std::endl;
+
+		ray::Node const & revEndNode = revPath.theNodes.back();
+
+		Vector const & tExp = tFwdBeg;
+		Vector const & rExp = rFwdBeg;
+		Vector const & tGot = -revEndNode.theNextTan;
+		Vector const & rGot =  revEndNode.theCurrLoc;;
 
 		double const tol
 			{ magnitude(rExp) * std::numeric_limits<double>::epsilon() };

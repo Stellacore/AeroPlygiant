@@ -167,12 +167,16 @@ Vector const stopLoc{ 2. * e1 };
 		aPath.reserve(20u);
 		prop.tracePath(&aPath);
 
-		std::cout << aPath.infoString("aPath") << std::endl;
-		for (ray::Node const & node : aPath.theNodes)
+		constexpr bool showIt{ false };
+		if (showIt)
 		{
-			std::cout << node.infoBrief() << std::endl;
+			std::cout << aPath.infoString("aPath") << std::endl;
+			for (ray::Node const & node : aPath.theNodes)
+			{
+				std::cout << node.infoBrief() << std::endl;
+			}
+			std::cout << "aPath.size: " << aPath.theNodes.size() << std::endl;
 		}
-		std::cout << "aPath.size: " << aPath.theNodes.size() << std::endl;
 
 		if (1 < aPath.size())
 		{
