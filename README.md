@@ -24,7 +24,7 @@ refraction effects such as those encountered in airborne (and spaceborne)
 remote sensing and terrestrial surveying applications.
 
 
-## Uses and Applications
+## Applications
 
 In its current form, AeroPlygiant is primarily a development toolbox
 with which specific questions can be investigated by custom coding
@@ -59,6 +59,63 @@ Technical/math modeling notes are contained in the document
 [Lyx document processor](https://www.lyx.org/).
 This project document, along with the associated \ref Papers.bib 
 bibliography file provide references to various works on refraction.
+
+
+## General Use
+
+TODO - incorporate these steps into example program e.g. demoAeroPlygiant.cpp
+
+In general creating a custom ray path involves the following.
+
+* Define a refractive environment:
+
+	* Derive a class from env::IndexVolume that provides the
+	index of refraction values through a volume of space. E.g.
+
+		TODO
+
+	* In general, also derive a class from env::ActiveVolume that
+	specifies the region of interest (such that ray propagation
+	terminates at boundaries of the active volume). E.g.
+
+		TODO
+
+	* Construct an instance of the refractive media volume. E.g.
+
+		tst::Slab const opticalMedium(....);
+
+* Configure initial ray path boundary conditions:
+
+	* Construct a ray::Start object to define the incident tangent
+	direction and an initial point on the ray path. e.g.
+
+		ray::Start const start{ ray::Start::from(tanBeg, locBeg) };
+
+	* Construct a ray::Propagator instance. E.g.
+
+		ray::Propagator const prop{ &opticalMedium, propStepDist };
+
+* Use the ray::Propagator to trace as many rays as desired:
+
+	* Construct a ray::Path instance that will hold the traced
+	path information (as a collection of ray::Node instance that
+	are saved every delta-length along the path). E.g.
+
+		ray::Path aPath(start, saveDeltaDistance);
+
+	* Use the ray::Propagator to trace as many paths as desired. E.g.
+
+		prop.traceNodes(&aPath);
+
+* Retrieve path data:
+
+	* Retrieve desired data from ray::Path archive of ray::Node
+	instances. E.g.
+
+		for (ray::Node const & node : aPath.theNodes)
+		{
+			std::cout << node.infoBrief() << std::endl;
+		}
 
 
 ## Project Development Environment
