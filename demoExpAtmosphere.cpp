@@ -5,7 +5,7 @@
 
 /*! \file
  *
- * \brief Atmospheric Refraction Example.
+ * \brief Atmospheric refraction example using an exponential model.
  *
  */
 
@@ -23,6 +23,7 @@ namespace
 {
 	using namespace engabra::g3;
 
+/*
 	//! Put current position and tangent values to stream
 	std::string
 	inline
@@ -54,6 +55,7 @@ namespace
 		return nodeStateInfo
 			(node.thePrevTan, node.theCurrLoc, node.theNextTan, ndx);
 	}
+*/
 
 } // [anon]
 
@@ -69,24 +71,40 @@ main
 	()
 {
 	tst::AtmModel const atm(env::sEarth);
+	// std::cout << atm.infoString("atm") << std::endl;
+
+	// math/algebra foundation
+	using namespace engabra::g3; // for basis vectors, e1,e2,...
+
+	// location on Earth
+	double const & groundRad = env::sEarth.theRadGround;
+	Vector const stopNear{ groundRad * e3 };
 
 	// initial conditions
-	engabra::g3::Vector const tBeg
-		{ engabra::g3::direction(engabra::g3::e1 + engabra::g3::e3) };
-	engabra::g3::Vector const rBeg
-		{ env::sEarth.theRadGround * engabra::g3::e3 };
+	ray::Start const start
+		{ ray::Start::from
+			( -e3 + .5*e1  // down looking and about 30-deg to the side
+			, (groundRad + 9144.)*e3 // about 30k feet altitude
+			)
+		};
 
-	// ray tracing parameters
-	double const nominalLength{ atm.thickness() };
+	// ray propgation parms
+	constexpr double propStepDist{  10. }; // integration step size
+	constexpr double saveStepDist{ 100. }; // save this often
 
-	// trace ray with various step sizes
-	for (double delta{100000.} ; .001 < delta ; delta /=10.)
+	// path propagation setup
+	ray::Propagator const prop{ &atm, propStepDist };
+	ray::Path path(start, stopNear, saveStepDist);
+
+	// perform path propagation
+	prop.traceNodes(path.theStart, &path);
+
+	// report results
+	for (ray::Node const & node : path.theNodes)
 	{
-		ray::Propagator const prop{ &atm, delta };
-		std::vector<ray::Node> const fwdNodes
-			{ prop.nodePath(ray::Start::from(tBeg, rBeg), nominalLength) };
-		std::cout << " delta: " << engabra::g3::io::fixed(delta, 7u, 6u) << " ";
-		std::cout << nodeInfo(fwdNodes.back(), fwdNodes.size());
+		std::cout << node.infoBrief() << std::endl;
 	}
+
+	std::cout << path.infoCurvature() << '\n';
 }
 
