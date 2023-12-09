@@ -1,0 +1,30 @@
+# The file from which the CITATION.cff was copied
+# was generated with cffinit.
+# Visit https://bit.ly/cffinit to generate yours today!
+
+cff-version: 1.2.0
+title: AeroPlygiant - Atmospheric refraction simulation and analysis
+message: >-
+  If you use this software, please cite it using the
+  metadata from this file.
+type: software
+authors:
+  - given-names: Dave
+    family-names: Knopp
+    affiliation: Stellacore Corporation
+repository-code: 'https://github.com/Stellacore/AeroPlygiant'
+abstract: >-
+
+AeroPlygiant is a C++ development environment for investigating
+general optical refraction behavior associated with arbitrarily complex
+atmospheric refraction conditions.
+
+keywords:
+  - Atmospheric Refraction
+  - 3D Refraction Model
+  - Surveying
+  - Remote Sensing
+
+license: MIT
+version: PreRelease
+date-released: '2023-12-12'
