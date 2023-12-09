@@ -140,6 +140,7 @@ namespace env
 		 */
 		ActiveVolume const theVolume{ sAllSpace };
 
+		//! \brief Construct media IoR volume (clipped by ActiveVolume)
 		inline
 		explicit
 		IndexVolume
