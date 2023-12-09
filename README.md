@@ -3,7 +3,7 @@
 
 ## Project Info
 
-AeroPlygiant is a C++ development environment for investigating
+AeroPlygiant is a C++ development toolset for investigating
 general optical refraction behavior associated with arbitrarily complex
 three-dimensional (3D) atmospheric refraction conditions.
 
@@ -15,12 +15,12 @@ meaning "refraction".
 
 Pronunciation is somewhat up for grabs. Recommended is "air-o" 
 followed by ["pluh-g-yant"](https://www.howtopronounce.com/welsh/plygiant)
-(in Welsh) or maybe something like "ply-ge-ant" (in English).
+(in Welsh) or perhaps something like "ply-ge-ant" (in English).
 
 ### Purpose
 
 AeroPlygiant supports analysis and simulation of basic atmospheric
-refraction effects that are encountered in airborne (and spaceborne)
+refraction effects such as those encountered in airborne (and spaceborne)
 remote sensing and terrestrial surveying applications.
 
 
@@ -28,16 +28,15 @@ remote sensing and terrestrial surveying applications.
 
 In its current form, AeroPlygiant is primarily a development toolbox
 with which specific questions can be investigated by custom coding
-something to answer the question at hand. Notwithstanding, some of the
-demonstration programs may be generally useful as command line utility
-applications. E.g.
+something easily using the available classes. Notwithstanding, some of the
+demonstration programs may be generally useful more or less as-is. E.g.
 
 * demoExpAtmosphere - program to simulate refracting ray path from
 an airborne sensor platform using nominal (very)simplified exponential
 decay model for Earth atmospheric index of refraction.
 
 * demoThickPlate - program with which to evaluate refraction path
-through a classic optical "thick plate">
+through a classic optical "thick plate".
 
 
 ## Features
@@ -112,6 +111,10 @@ names and included options as appropriate for local system).
 	$ cmake --build . --target all -j `nproc`
 	$ # -- Run library unit tests
 	$ ctest -j `nproc`
+
+Reference documentation is then available via
+
+	$ <favoriteBrowser> <someBuildDir>/doc/html/index.html
 
 ### Installation
 
