@@ -80,8 +80,9 @@ set(testProgs
 
 	test_test
 
-	test_roundTrip
+	test_IndexVolume
 	test_Path
+	test_roundTrip
 
 	)
 
