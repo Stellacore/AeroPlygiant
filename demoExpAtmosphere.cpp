@@ -117,7 +117,7 @@ main
 	ray::Path path(start, stopNear, saveStepDist);
 
 	// perform path propagation
-	prop.traceNodes(path.theStart, &path);
+	prop.tracePath(&path);
 
 	// report results
 	for (ray::Node const & node : path.theNodes)

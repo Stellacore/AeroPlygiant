@@ -107,7 +107,7 @@ constexpr double propStepDist{ 1./128. }; // integration step size
 
 	// interact with data consumer
 	ray::Path path(start, stopNear, saveStepDist);
-	prop.traceNodes(path.theStart, &path);
+	prop.tracePath(&path);
 
 	// show path info
 	constexpr bool showIt{ true };

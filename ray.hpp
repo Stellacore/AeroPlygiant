@@ -58,7 +58,21 @@ namespace ray
 		Vector const theTanDir{}; //!< Incident tangent direction (unitary)
 		Vector const thePntLoc{}; //!< Point of incidence for tangent dir
 
+/*
+		//! Construct instance (with unitized tangent direction)
+		inline
+		explicit
+		Start // Start::
+			( Vector const & anyTan
+			, Vector const & loc
+			)
+			: theTanDir{ direction(anyTan), loc }
+			, thePntLoc{ loc }
+		{ }
+*/
+
 		//! Create an instance ensuring tangent dir is unitary.
+		inline
 		static
 		Start
 		from // Start::
@@ -85,7 +99,7 @@ namespace ray
 				<< "dir: " << theTanDir
 				<< ' '
 				<< "loc: " << thePntLoc
-				<< '\n';
+				;
 			return oss.str();
 		}
 
@@ -344,7 +358,7 @@ oss << " PassThrough";
 
 				// update estimated forward next refraction index value
 				// (which should be same as previous)
-				nuNext = thePtMedia->nuValue(qNext);
+				nuNext = thePtMedia->qualifiedNuValue(qNext);
 
 				// update tangent direction
 				tNext = tPrev; // default initialized
@@ -393,7 +407,7 @@ oss << " REFLECTION ";
 					}
 
 					// update estimated forward next refraction index value
-					nuNext = thePtMedia->nuValue(qNext);
+					nuNext = thePtMedia->qualifiedNuValue(qNext);
 
 					// update tangent direction
 					std::pair<Vector, DirChange> const tDirChange
@@ -467,24 +481,25 @@ oss << " tNext: " << tNext;
 		template <typename Consumer>
 		inline
 		void
-		traceNodes // Propagator::
-			( Start const & start
-			, Consumer * const & ptConsumer
+		tracePath // Propagator::
+			( Consumer * const & ptConsumer
 			) const
 		{
-			if (isValid())
+			if (isValid() && ptConsumer)
 			{
+				Vector const & tBeg = ptConsumer->theStart.theTanDir;
+				Vector const & rBeg = ptConsumer->theStart.thePntLoc;
+
 				// start with initial conditions
-				Vector tPrev{ start.theTanDir };
-				Vector rCurr{ start.thePntLoc };
+				Vector tPrev{ tBeg };
+				Vector rCurr{ rBeg };
 
 				// incident media IoR
-				Vector const & tBeg = start.theTanDir;
-				Vector const & rBeg = start.thePntLoc;
-				double nuPrev
-					{ thePtMedia->nuValue(rBeg - .5*theStepDist*tBeg) };
+				Vector const rPrev{ (rBeg - .5*theStepDist*tBeg) };
+				double nuPrev{ thePtMedia->qualifiedNuValue(rPrev) };
 
 				// propagate until path approximate reaches requested length
+				// or encounteres a NaN value for index of refraction
 				while (ptConsumer->size() < ptConsumer->capacity())
 				{
 					// determine propagation change at this step
@@ -503,8 +518,9 @@ oss << " tNext: " << tNext;
 					Vector const rNext{ nextLocation(rCurr, tNext) };
 
 					// give consumer opportunity to record node data
-					ptConsumer->emplace_back
-						(Node{ tPrev, nuPrev, rCurr, nuNext, tNext, change });
+					Node const nextNode
+						{ tPrev, nuPrev, rCurr, nuNext, tNext, change };
+					ptConsumer->emplace_back(nextNode);
 
 					// update state for next node
 					tPrev = tNext;
@@ -576,14 +592,19 @@ oss << " tNext: " << tNext;
 			, theStopLoc{ stopNearTo }
 			, theSaveDelta{ saveStepSize }
 			, thePrevNearDist{ null<double>() }
-			, theCurrNearDist{ magnitude(theStopLoc - theStart.thePntLoc) }
+			, theCurrNearDist{ 1.e10 }
 		{
 			// estimate distance (as if straight line)
-			double const nomDist{ magnitude(stopNearTo - theStart.thePntLoc) };
-			constexpr double padFactor{ 9./8. }; // about 12% extra
-			double const dubSize{ padFactor * nomDist / theSaveDelta };
-			std::size_t const nomSize{ static_cast<std::size_t>(dubSize) };
-			theNodes.reserve(nomSize);
+			if (engabra::g3::isValid(theStopLoc))
+			{
+				theCurrNearDist = magnitude(theStopLoc - theStart.thePntLoc);
+				double const nomDist
+					{ magnitude(theStopLoc - theStart.thePntLoc) };
+				constexpr double padFactor{ 9./8. }; // about 12% extra
+				double const dubSize{ padFactor * nomDist / theSaveDelta };
+				std::size_t const nomSize{ static_cast<std::size_t>(dubSize) };
+				theNodes.reserve(nomSize);
+			}
 		}
 
 		//! Indicate how much this instance currently *has* stored.
@@ -593,6 +614,20 @@ oss << " tNext: " << tNext;
 			() const
 		{
 			return theNodes.size();
+		}
+
+		/*! \brief Set maximum capacity.
+		 * 
+		 * This value controls termination for cases where the
+		 * media has valid IoR value for long (or infinite) distances.
+		 */
+		inline
+		void
+		reserve
+			( std::size_t const & maxNodeSize
+			)
+		{
+			theNodes.reserve(maxNodeSize);
 		}
 
 		//! Indicate how much this instance *can* store.

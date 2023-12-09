@@ -63,7 +63,7 @@ namespace
 		inline
 		TestVolume
 			()
-			: IndexVolume(env::sAllSpace)
+			: IndexVolume(env::sPtAllSpace)
 		{ }
 
 		inline

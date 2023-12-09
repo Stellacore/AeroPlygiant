@@ -105,7 +105,7 @@ In general creating a custom ray path involves the following.
 
 	* Use the ray::Propagator to trace as many paths as desired. E.g.
 
-		prop.traceNodes(&aPath);
+		prop.tracePath(&aPath);
 
 * Retrieve path data:
 

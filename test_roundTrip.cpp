@@ -45,61 +45,76 @@ int
 main
 	()
 {
+	std::ostringstream oss; // test message string
+
 	tst::AtmModel const atm(env::sEarth);
 
 	// initial conditions
 	using namespace engabra::g3;
 	Vector const tFwdBeg{ direction(e1 + e3) };
 	Vector const rFwdBeg{ env::sEarth.theRadGround * e3 };
+	ray::Start const fwdStart{ ray::Start::from(tFwdBeg, rFwdBeg) };
+
+Vector const stopNear{ null<Vector>() };
 
 	// ray tracing parameters
-	double const delta{ 0.100 }; // meters
-	double const nomDist{ atm.thickness() };
-	ray::Propagator const prop{ &atm, delta };
+	double const propStepDist{ 0.100 }; // meters
+	ray::Propagator const prop{ &atm, propStepDist };
 
 	// trace ray forward
-	std::vector<ray::Node> fwdNodes;
-	fwdNodes.reserve(10u * 1024u); // size determines how much tracing
-	prop.traceNodes(ray::Start::from(tFwdBeg, rFwdBeg), &fwdNodes);
+	double const saveStepDist{ 0.100 }; // meters
+	ray::Path fwdPath(fwdStart, stopNear, saveStepDist);
+	fwdPath.reserve(10u * 1024u);
+	prop.tracePath(&fwdPath);
 
-	// get last node in forward pass
-	ray::Node const & lastNode = fwdNodes.back();
-	Vector const & tRevBeg = -lastNode.theNextTan;
-	Vector const & rRevBeg =  lastNode.theCurrLoc;
-
-	// trace ray in reverse direction
-	std::vector<ray::Node> revNodes;
-	revNodes.reserve(fwdNodes.size());
-	prop.traceNodes(ray::Start::from(tRevBeg, rRevBeg), &revNodes);
-
-	ray::Node const & endNode = revNodes.back();
-	Vector const & tExp = tFwdBeg;
-	Vector const & rExp = rFwdBeg;
-	Vector const & tGot = -endNode.theNextTan; // reverse for test compare
-	Vector const & rGot =  endNode.theCurrLoc;;
-
-	std::ostringstream oss;
-	double const tol
-		{ magnitude(rExp) * std::numeric_limits<double>::epsilon() };
-	if (! nearlyEquals(tExp, tGot, tol))
+	if (fwdPath.theNodes.empty())
 	{
-		oss << "Failure of tangent round trip test\n";
-		oss << "tExp: "  << tExp << '\n';
-		oss << "tGot: "  << tGot << '\n';
+		oss << "Failure of forward path size test\n";
 	}
-	if (! nearlyEquals(rExp, rGot, tol))
+	else
 	{
-		oss << "Failure of location round trip test\n";
-		oss << "rExp: "  << rExp << '\n';
-		oss << "rGot: "  << rGot << '\n';
+		// for testing, compare forward nodes to those with reverse path (next)
+
+		// get last node in forward pass
+		ray::Node const & lastNode = fwdPath.theNodes.back();
+		Vector const & tRevBeg = -lastNode.theNextTan;
+		Vector const & rRevBeg =  lastNode.theCurrLoc;
+
+		ray::Node const & endNode = fwdPath.theNodes.back();
+		Vector const & tExp = tFwdBeg;
+		Vector const & rExp = rFwdBeg;
+		Vector const & tGot = -endNode.theNextTan; // reverse for test compare
+		Vector const & rGot =  endNode.theCurrLoc;;
+
+		// trace ray in reverse direction
+		ray::Start const revStart{ ray::Start::from(tRevBeg, rRevBeg) };
+		ray::Path revPath(revStart, stopNear, saveStepDist);
+		prop.tracePath(&revPath);
+
+		double const tol
+			{ magnitude(rExp) * std::numeric_limits<double>::epsilon() };
+		if (! nearlyEquals(tExp, tGot, tol))
+		{
+			oss << "Failure of tangent round trip test\n";
+			oss << "tExp: "  << tExp << '\n';
+			oss << "tGot: "  << tGot << '\n';
+		}
+		if (! nearlyEquals(rExp, rGot, tol))
+		{
+			oss << "Failure of location round trip test\n";
+			oss << "rExp: "  << rExp << '\n';
+			oss << "rGot: "  << rGot << '\n';
+		}
 	}
 
 	if (! oss.str().empty())
 	{
-		std::cerr << " delta: " << io::fixed(delta, 7u, 6u) << '\n';
-		std::cerr << oss.str() << '\n';
+		std::cerr << " propStepDist: "
+			<< io::fixed(propStepDist, 7u, 6u) << '\n';
+		std::cerr << " saveStepDist: "
+			<< io::fixed(saveStepDist, 7u, 6u) << '\n';
 	}
 
-	return tst::finish(oss.str());
+	return tst::finish(oss);
 }
 

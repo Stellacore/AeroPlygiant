@@ -55,6 +55,14 @@ namespace
 	//! Simple test volume
 	struct UnitBox : public env::ActiveVolume
 	{
+		explicit
+		UnitBox
+			()
+			: ActiveVolume("UnitBox")
+		{ }
+
+		//! Create box with unit dimensions
+		inline
 		virtual
 		bool
 		contains
@@ -70,12 +78,15 @@ namespace
 
 	}; // UnitBox
 
+	static std::shared_ptr<env::ActiveVolume>
+		const sPtUnitBox{ std::make_shared<UnitBox>() };
+
 	// Construct media (providing values outside active volume)
 	struct AirCube : public env::IndexVolume
 	{
 		AirCube
 			()
-			: IndexVolume(UnitBox{})
+			: IndexVolume(sPtUnitBox)
 		{}
 
 		//! Active volume should restrict use of indices
@@ -94,6 +105,40 @@ namespace
 
 	//! Check ray propagation through a small uniform volume
 	void
+	testBox
+		( std::ostream & oss
+		)
+	{
+		UnitBox const box;
+		std::vector<Vector> const inLocs
+			{ Vector{ 0., 0., 0. } // start corner is in
+			, Vector{ .5, .5, .5 } // interior point is in
+			};
+		std::vector<Vector> const outLocs
+			{ Vector{ 1., 1., 1. } // end corner is out
+			, Vector{-.5,-.5,-.5 } // exterior point is out
+			, Vector{1.5,1.5,1.5 } // exterior point is out
+			};
+		for (Vector const & inLoc : inLocs)
+		{
+			if (! box.contains(inLoc))
+			{
+				oss << "Failure of inloc test\n";
+				oss << "inLoc: " << inLoc << '\n';
+			}
+		}
+		for (Vector const & outLoc : outLocs)
+		{
+			if (  box.contains(outLoc))
+			{
+				oss << "Failure of outloc test\n";
+				oss << "outLoc: " << outLoc << '\n';
+			}
+		}
+	}
+
+	//! Check ray propagation through a small uniform volume
+	void
 	test0
 		( std::ostream & oss
 		)
@@ -106,17 +151,22 @@ namespace
 		AirCube const opticalMedia; // cube of 'air' (nu=1.000271)
 
 		// configure propagator
-		constexpr double propStepSize{ 1./16. };
+		constexpr double propStepSize{ 1./8. };
 		ray::Propagator const prop{ &opticalMedia, propStepSize };
 
 		// configure the ray(s) for propagation
-		// start ray heading in +x direction, starting at x=-.5
-		ray::Start const start{ ray::Start::from(e1, -.5*e1 ) };
+		// start ray heading in +x direction, starting at x=0.
+		ray::Start const start{ ray::Start::from(e1, zero<Vector>() ) };
 
 		// trace the ray(s)
 		constexpr double saveDeltaDistance{ 1./8. };
-		ray::Path aPath(start, 2.*e1, saveDeltaDistance);
-		prop.traceNodes(start, &aPath);
+Vector const stopLoc{ 2. * e1 };
+//Vector const stopLoc{ zero<Vector>() };
+//Vector const stopLoc{ null<Vector>() };
+		ray::Path aPath(start, stopLoc, saveDeltaDistance);
+		prop.tracePath(&aPath);
+
+		std::cout << aPath.infoString("aPath") << std::endl;
 
 oss << "Failure\n";
 	}
@@ -131,6 +181,7 @@ main
 {
 	std::ostringstream oss;
 
+	testBox(oss);
 	test0(oss);
 
 	return tst::finish(oss);

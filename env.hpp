@@ -35,8 +35,9 @@
 #include <Engabra>
 
 #include <iostream>
-#include <string>
+#include <memory>
 #include <sstream>
+#include <string>
 #include <vector>
 
 
@@ -104,6 +105,16 @@ namespace env
 	 */
 	struct ActiveVolume
 	{
+		std::string theName{};
+
+		//! Construct a named instance
+		explicit
+		ActiveVolume
+			( std::string const & name = "ActiveVolume"
+			)
+			: theName{ name }
+		{ }
+
 		//! Overload to define shape of volume (true: inside, false: outside)
 		inline
 		virtual
@@ -112,13 +123,15 @@ namespace env
 			( Vector const & rVec
 			) const
 		{
+std::cout << "ActiveVolume::contains" << std::endl;
 			return true;
 		}
 
 	}; // ActiveVolume
 
 	//! An active volume w/o limits
-	static ActiveVolume const sAllSpace{};
+	static std::shared_ptr<ActiveVolume> const sPtAllSpace
+		{ std::make_shared<ActiveVolume>("sAllSpace") };
 
 	/*! \brief Interface specification for refractive media volume
 	 *
@@ -138,18 +151,18 @@ namespace env
 		 * By default, the index volume (IoR field) is active everywhere.
 		 * E.g. ray propagation will never hit an edge
 		 */
-		ActiveVolume const theVolume{ sAllSpace };
+		std::shared_ptr<ActiveVolume> const thePtVolume{};
 
 		//! \brief Construct media IoR volume (clipped by ActiveVolume)
 		inline
 		explicit
 		IndexVolume
-			( ActiveVolume const & volume = sAllSpace
+			( std::shared_ptr<ActiveVolume> const & ptVolume = sPtAllSpace
 			)
-			: theVolume{ volume }
+			: thePtVolume{ ptVolume }
 		{ }
 
-		//! \brief Index of Refraction value, or null if outside theVolume.
+		//! \brief Index of Refraction value, or null if outside thePtVolume.
 		inline
 		double
 		qualifiedNuValue
@@ -157,10 +170,16 @@ namespace env
 			) const
 		{
 			double nu{ null<double>() }; // default to stop condition
-			if (theVolume.contains(rVec))
+			if (thePtVolume->contains(rVec))
 			{
 				nu = nuValue(rVec);
 			}
+std::cout
+	<< "Volume: " << thePtVolume->theName
+	<< "  testing rVec: " << rVec
+	<< "  nu: " << nu
+	<< std::endl;
+
 			return nu;
 		}
 
