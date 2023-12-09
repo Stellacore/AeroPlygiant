@@ -24,6 +24,7 @@ namespace tst
 {
 	using namespace engabra::g3;
 
+
 	/*! \brief Thick slab of constant index of refraction
 	 *
 	 * Classic "thick plate" refraction model
@@ -88,6 +89,7 @@ namespace tst
 		}
 
 	}; // Slab
+
 
 	/*! \brief Simple example of a spherical shape with constant index.
 	 */
@@ -162,91 +164,144 @@ namespace tst
 	}; // IndexVolume
 
 
-	//! Atmospheric model : nu = alpha*exp(-beta*radius)
-	struct AtmModel : public env::IndexVolume
+	//! \brief An exponential decay function that matches boundary values.
+	struct ExpDecay
 	{
-		//! Classic exponential decay model
-		inline
-		static
-		double
-		expValue
-			( double const & amp
-			, double const & scale
-			, double const & radius
-			)
-		{
-			return amp * std::exp(-scale * radius);
-		}
-
-		//! Exponential decay constant
+		//! Decay constant - matching v0(r0) and v1(r1)
 		inline
 		static
 		double
 		beta
-			( double const & v1
-			, double const & v2
+			( double const & v0
+			, double const & v1
+			, double const & r0
 			, double const & r1
-			, double const & r2
 			)
 		{
-			return { log(v1 / v2) / (r2 - r1) };
+			return { log(v0 / v1) / (r1 - r0) };
 		}
 
-		//! Exponential decay magnitude
+		//! Amplitude factor - matching v0(r0) and v1(r1)
+		inline
+		static
+		double
+		lnAlpha
+			( double const & v0
+			, double const & v1
+			, double const & r0
+			, double const & r1
+			)
+		{
+			double const frac{ 1. / (r1 - r0) };
+			return (r1 * frac * std::log(v0) - r0 * frac * std::log(v1));
+		}
+
+		//! Amplitude factor - matching v0(r0) and v1(r1)
 		inline
 		static
 		double
 		alpha
-			( double const & v1
-			, double const & v2
+			( double const & v0
+			, double const & v1
+			, double const & r0
 			, double const & r1
-			, double const & r2
 			)
 		{
-			double const bNeg{ - beta(v1, v2, r1, r2) };
-			return
-				{ (v1 + v2) / (std::exp(bNeg * r1) + std::exp(bNeg * r2)) };
+			return std::exp(lnAlpha(v0, v1, r0, r1));
+		}
+
+		double const theAlpha{ null<double>() }; //!< Amplitude factor
+		double const theBeta{ null<double>() }; //!< Decay constant (mag)
+
+		//! Construct default null instance.
+		ExpDecay
+			()
+			: theAlpha{ null<double>() }
+			, theBeta{ null<double>() }
+		{ }
+
+		/*! \brief An exponential decay function matching boundary values.
+		 *
+		 * The resulting function (via the value() method) provides a
+		 * value that decays exponentially as:
+		 * \arg value = alpha * exp(-beta * rad)
+		 *
+		 * with:
+		 * \arg v0 = value(r0)
+		 * \arg v1 = value(r1)
+		 */
+		explicit
+		ExpDecay
+			( double const & v0
+			, double const & v1
+			, double const & r0
+			, double const & r1
+			)
+			: theAlpha{ alpha(v0, v1, r0, r1) }
+			, theBeta{ beta(v0, v1, r0, r1) }
+		{ }
+
+		//! Classic exponential decay model
+		inline
+		double
+		operator()
+			( double const & radius
+			) const
+		{
+			return theAlpha * std::exp(-theBeta * radius);
+		}
+
+		//! Descriptive information about this instance.
+		std::string
+		infoString
+			( std::string const & title = {}
+			) const
+		{
+			std::ostringstream oss;
+			if (! title.empty())
+			{
+				oss << title << '\n';
+			}
+			oss << "theAlpha: " << io::fixed(theAlpha)
+				<< " "
+				<< "theBeta: " << io::fixed(theBeta)
+				;
+			return oss.str();
 		}
 
 
-		double const theRadGround{ null<double>() };
-		double const theRadSpace{ null<double>() };
-		double const theAlpha{ null<double>() };
-		double const theBeta{ null<double>() };
+	}; // ExpDecay
+
+
+	//! Atmospheric model : nu = alpha*exp(-beta*radius)
+	struct AtmModel : public env::IndexVolume
+	{
+		std::pair<double, double> const the_v0r0{}; //!< 1st boundary loc/val
+		std::pair<double, double> const the_v1r1{}; //!< 2nd boundary loc/val
+		ExpDecay const theNuFunc{};
 
 		//! Construct an invalid instance
 		inline
 		AtmModel
 			()
 			: IndexVolume{}
-			, theAlpha{ null<double>() }
-			, theBeta{ null<double>() }
-		{
-		}
+			, theNuFunc{}
+		{ }
 
 		//! Construct model to match environment constants
 		inline
 		AtmModel
 			( env::Planet const & planet
 			)
-			: theRadGround{ planet.theRadGround }
-			, theRadSpace{ planet.theRadSpace }
-			, theAlpha
-				{ alpha
-					( planet.theNuGround
-					, planet.theNuSpace
-					, theRadGround
-					, theRadSpace
-					)
-				}
-			, theBeta
-				{ beta
-					( planet.theNuGround
-					, planet.theNuSpace
-					, theRadGround
-					, theRadSpace
-					)
-				}
+			: IndexVolume{}
+			, the_v0r0{ planet.theNuGround, planet.theRadGround }
+			, the_v1r1{ planet.theNuSpace, planet.theRadSpace }
+			, theNuFunc
+				( the_v0r0.first
+				, the_v1r1.first
+				, the_v0r0.second
+				, the_v1r1.second
+				)
 		{ }
 
 		//! Thickness of atmosphere
@@ -255,8 +310,9 @@ namespace tst
 		thickness
 			() const
 		{
-			return theRadSpace - theRadGround;
+			return (the_v1r1.second - the_v0r0.second);
 		}
+
 
 		//! Index of refraction value at vector location rVec
 		virtual
@@ -267,7 +323,33 @@ namespace tst
 			) const
 		{
 			double const rMag{ magnitude(rVec) };
-			return expValue(theAlpha, theBeta, rMag);
+			return theNuFunc(rMag);
+		}
+
+		//! Descriptive information about this instance.
+		std::string
+		infoString
+			( std::string const & title = {}
+			) const
+		{
+			std::ostringstream oss;
+			if (! title.empty())
+			{
+				oss << title << '\n';
+			}
+
+			oss << "v0: " << io::fixed(the_v0r0.first)
+				<< " "
+				<< "at r0: " << io::fixed(the_v0r0.second)
+				;
+			oss << '\n';
+			oss << "v1: " << io::fixed(the_v1r1.first)
+				<< " "
+				<< "at r1: " << io::fixed(the_v1r1.second)
+				;
+			oss << '\n';
+			oss << theNuFunc.infoString();
+			return oss.str();
 		}
 
 	}; // AtmModel
