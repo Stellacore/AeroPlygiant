@@ -202,45 +202,40 @@ namespace ray
 		Vector & tDirNext = tanDirChange.first;
 		DirChange & tChange = tanDirChange.second;
 		//
-		//static double const tol
-		//	{ std::sqrt(std::numeric_limits<double>::epsilon()) };
-		//if (! nearlyEquals(gCurr, zero<Vector>(), tol)) // tangent dir changes
+		// compute refraction bivector
+		// note that magnitude is order of |gCurr|
+		BiVector const currB{ (nuPrev/nuNext) * (tDirPrev*gCurr).theBiv };
+		//
+		// note that sq(bivector) = -magSq(bivector)
+		double const gCurrSq{ magSq(gCurr) };
+		double const radicand{ gCurrSq - magSq(currB) };
+		//
+		// use current conditions to select computation option
+		//
+		Vector const gCurrInv{ (1./gCurrSq) * gCurr };
+		if (radicand < 0.) // total internal reflection
 		{
-			// compute refraction bivector
-			// note that magnitude is order of |gCurr|
-			BiVector const currB{ (nuPrev/nuNext) * (tDirPrev*gCurr).theBiv };
-			//
-			// note that sq(bivector) = -magSq(bivector)
-			double const gCurrSq{ magSq(gCurr) };
-			double const radicand{ gCurrSq - magSq(currB) };
-			//
-			// use current conditions to select computation option
-			//
-			Vector const gCurrInv{ (1./gCurrSq) * gCurr };
-			if (radicand < 0.) // total internal reflection
+			// reflect tangent from interface plane (dual to gCurr)
+			tDirNext = -(gCurr * tDirPrev * gCurrInv).theVec;
+			tChange = Reflected;
+		}
+		else
+		{
+			double const rootXi{ std::sqrt(radicand) };
+			if (nuPrev < nuNext) // propagating into more dense media
 			{
-				// reflect tangent from interface plane (dual to gCurr)
-				tDirNext = -(gCurr * tDirPrev * gCurrInv).theVec;
-				tChange = Reflected;
+				Spinor const spin{  rootXi, currB };
+				tDirNext = (spin * gCurrInv).theVec;
+				tChange = Converged;
 			}
 			else
+			if (nuNext < nuPrev) // propagating into less dense media
 			{
-				double const rootXi{ std::sqrt(radicand) };
-				if (nuPrev < nuNext) // propagating into more dense media
-				{
-					Spinor const spin{  rootXi, currB };
-					tDirNext = (spin * gCurrInv).theVec;
-					tChange = Converged;
-				}
-				else
-				if (nuNext < nuPrev) // propagating into less dense media
-				{
-					Spinor const spin{ -rootXi, currB };
-					tDirNext = (spin * gCurrInv).theVec;
-					tChange = Diverged;
-				}
-				// (nuNext == nuPrev) // same as default (gCurr == 0)
+				Spinor const spin{ -rootXi, currB };
+				tDirNext = (spin * gCurrInv).theVec;
+				tChange = Diverged;
 			}
+			// (nuNext == nuPrev) // same as default (gCurr == 0)
 		}
 		//
 		return tanDirChange;
