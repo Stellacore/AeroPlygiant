@@ -82,6 +82,7 @@ set(testProgs
 
 	test_IndexVolume
 	test_Path
+	test_Propagator
 	test_roundTrip
 
 	)
