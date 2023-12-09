@@ -490,19 +490,48 @@ oss << " tNext: " << tNext;
 	}; // Propagator
 
 
-	/*! \brief Store path information suitable for later visualization.
+	/*! \brief Consumer of dynamically generated path information.
 	 *
-	 * Basic methods are compatible with those of std::vector.
+	 * Monitors path propagation progress in order to determine
+	 * when to stop propagation computations. Intermediate results
+	 * are archived (into theNodes) along the way.
+	 *
+	 * After consuming propagation data, theNodes collection, provides
+	 * a representation of the overall curved (polygonal) propagation
+	 * path.
+	 *
+	 * Provides methods that are compatible with those of std::vector.
+	 * The capacity() is originally set based on nominal distance from
+	 * the theStart location. After which capacity() is reported larger
+	 * than the size() while the ray is closing on theStopLoc. When the
+	 * ray begins opening distance to theStopLoc, the capacity() is
+	 * set to zero (which forces the Propagator to stop.
+	 *
+	 * TODO - need a smarter way to control propagation length (or at
+	 *        least a better way to implement the idea).
+	 *
+	 * TODO - Factor shape/info reporting (wrappers to use collection of Nodes)
 	 *
 	 */
 	struct Path
 	{
+		//! Starting boundary condition (direction and location) for the ray
 		Start const theStart{};
+		//! Point used for estimating path size used for Propagation
 		Vector const theStopLoc{ null<Vector>() };
+		//! Increment specifying how often to archive path data in theNodes.
 		double const theSaveDelta{ null<double>() };
+		//! Archived path information (approximately every theSaveDelta units)
 		std::vector<ray::Node> theNodes{};
+
+	private:
+
+		//! Tracking value (how close to theStopLoc on previous emplace_back()
 		double thePrevNearDist{ null<double>() };
+		//! Tracking value (how close to theStopLoc currently)
 		double theCurrNearDist{ null<double>() };
+
+	public:
 
 		//! Construct storage based on nominal distance between points
 		inline
@@ -612,10 +641,10 @@ oss << " tNext: " << tNext;
 			oss << "theSaveDelta: " << theSaveDelta;
 			oss << '\n';
 			oss << "theNodes.size(): " << theNodes.size();
-			oss << '\n';
-			oss << "thePrevNearDist: " << io::fixed(thePrevNearDist);
-			oss << '\n';
-			oss << "theCurrNearDist: " << io::fixed(theCurrNearDist);
+		//	oss << '\n';
+		//	oss << "thePrevNearDist: " << io::fixed(thePrevNearDist);
+		//	oss << '\n';
+		//	oss << "theCurrNearDist: " << io::fixed(theCurrNearDist);
 
 			return oss.str();
 		}
@@ -623,7 +652,7 @@ oss << " tNext: " << tNext;
 		//! First node in path (or null if not present)
 		inline
 		Node
-		begNode
+		begNode // Path::
 			() const
 		{
 			if (! theNodes.empty())
@@ -636,7 +665,7 @@ oss << " tNext: " << tNext;
 		//! Last node in path (or null if not present)
 		inline
 		Node
-		endNode
+		endNode // Path::
 			() const
 		{
 			if (! theNodes.empty())
@@ -649,7 +678,7 @@ oss << " tNext: " << tNext;
 		//! Direction (of tangent) at first node
 		inline
 		Vector
-		begDirection
+		begDirection // Path::
 			() const
 		{
 			return begNode().thePrevTan;
@@ -658,7 +687,7 @@ oss << " tNext: " << tNext;
 		//! Direction (of tangent) at last node
 		inline
 		Vector
-		endDirection
+		endDirection // Path::
 			() const
 		{
 			return endNode().theNextTan;
@@ -667,7 +696,7 @@ oss << " tNext: " << tNext;
 		//! Direction of direct path (from first location to end location)
 		inline
 		Vector
-		netDirection
+		netDirection // Path::
 			() const
 		{
 			Vector dir{ null<Vector>() };
@@ -684,7 +713,7 @@ oss << " tNext: " << tNext;
 		//! Directed angle between fromVec and intoVec
 		inline
 		BiVector
-		angleFromInto
+		angleFromInto // Path::
 			( Vector const & fromVec
 			, Vector const & intoVec
 			) const
@@ -702,7 +731,7 @@ oss << " tNext: " << tNext;
 		//! Angle from netDirection() toward begin tangent
 		inline
 		BiVector
-		begDeviation
+		begDeviation // Path::
 			() const
 		{
 			return angleFromInto(netDirection(), begDirection());
@@ -711,7 +740,7 @@ oss << " tNext: " << tNext;
 		//! Angle from netDirection() toward end tangent
 		inline
 		BiVector
-		endDeviation
+		endDeviation // Path::
 			() const
 		{
 			return angleFromInto(netDirection(), endDirection());
@@ -720,7 +749,7 @@ oss << " tNext: " << tNext;
 		//! Angle from begDir toward endDir
 		inline
 		BiVector
-		totalDeviation
+		totalDeviation // Path::
 			() const
 		{
 			return angleFromInto(begDirection(), endDirection());
@@ -729,7 +758,7 @@ oss << " tNext: " << tNext;
 		//! Summary of overall path info
 		inline
 		std::string
-		infoCurvature
+		infoCurvature // Path::
 			() const
 		{
 			std::ostringstream oss;
@@ -748,7 +777,7 @@ oss << " tNext: " << tNext;
 		//! Summary of overall path info
 		inline
 		std::string
-		infoShape
+		infoShape // Path::
 			() const
 		{
 			std::ostringstream oss;
@@ -787,6 +816,7 @@ oss << " tNext: " << tNext;
 		}
 
 		//! Distance (cord length - NOT along ray) to stop request point
+		inline
 		double
 		distanceFromStop // Path::
 			( ray::Node const & node
@@ -796,6 +826,7 @@ oss << " tNext: " << tNext;
 		}
 
 		//! Keep track of Previous and Current nearest distances
+		inline
 		void
 		updateNearDists // Path::
 			( ray::Node const & currNode
