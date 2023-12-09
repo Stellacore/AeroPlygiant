@@ -41,7 +41,7 @@ namespace ray
 		//! Create an instance ensuring tangent dir is unitary.
 		static
 		Start
-		from
+		from // Start::
 			( Vector const & anyTan
 			, Vector const & loc
 			)
@@ -49,8 +49,27 @@ namespace ray
 			return { direction(anyTan), loc };
 		}
 
-	}; // Start
+		//! Descriptive information about this instance
+		inline
+		std::string
+		infoString // Start::
+			( std::string const & title = {}
+			) const
+		{
+			std::ostringstream oss;
+			if (! title.empty())
+			{
+				oss << title << " ";
+			}
+			oss
+				<< "dir: " << theTanDir
+				<< ' '
+				<< "loc: " << thePntLoc
+				<< '\n';
+			return oss.str();
+		}
 
+	}; // Start
 
 	//! Characterization of ray path tangent interacting at step boundary.
 	enum DirChange
@@ -115,7 +134,7 @@ namespace ray
 		//! Descriptive information about this instance
 		inline
 		std::string
-		infoBrief
+		infoBrief // Node::
 			( std::string const & title = {}
 			, std::size_t const & precisionVec = 6u
 			, std::size_t const & precisionNu = 6u
@@ -145,7 +164,7 @@ namespace ray
 		//! Descriptive information about this instance
 		inline
 		std::string
-		infoString
+		infoString // Node::
 			( std::string const & title = {}
 			) const
 		{
@@ -171,7 +190,7 @@ namespace ray
 		//! Node associated with reversing direction of propagation
 		inline
 		Node
-		reversed
+		reversed // Node::
 			() const
 		{
 			return Node
@@ -185,6 +204,7 @@ namespace ray
 		}
 
 	}; // Node
+
 
 	//! Update tangent direction across single (idealized) interface boundary.
 	inline
@@ -249,7 +269,7 @@ namespace ray
 
 	private:
 
-		struct Step
+		struct Step // Propagator::
 		{
 			double theNextNu;
 			Vector theNextTan;
@@ -260,7 +280,7 @@ namespace ray
 		//! Estimate next tangent based on local object refraction
 		inline
 		Step
-		nextStep
+		nextStep // Propagator::
 			( Vector const & tPrev //!< Must be unit length
 			, double const & nuPrev
 			, Vector const & rCurr
@@ -376,7 +396,7 @@ oss << " tNext: " << tNext;
 		//! Predicted next location stepsize units along tangent from rVec
 		inline
 		Vector
-		nextLocation
+		nextLocation // Propagator::
 			( Vector const & rVec
 			, Vector const & tVec
 			) const
@@ -389,7 +409,7 @@ oss << " tNext: " << tNext;
 		//! True if this instance is valid
 		inline
 		bool
-		isValid
+		isValid // Propagator::
 			() const
 		{
 			return engabra::g3::isValid(theStepDist);
@@ -404,7 +424,7 @@ oss << " tNext: " << tNext;
 		template <typename Consumer>
 		inline
 		void
-		traceNodes
+		traceNodes // Propagator::
 			( Start const & start
 			, Consumer * const & ptConsumer
 			) const
@@ -466,7 +486,7 @@ oss << " tNext: " << tNext;
 		//! Construct storage based on nominal distance between points
 		inline
 		explicit
-		Path
+		Path // Path::
 			( Start const & startWith
 				//!< Initial direction and start point for propagation
 			, Vector const & stopNearTo
@@ -491,30 +511,16 @@ oss << " tNext: " << tNext;
 		//! Indicate how much this instance currently *has* stored.
 		inline
 		std::size_t
-		size
+		size // Path::
 			() const
 		{
 			return theNodes.size();
 		}
 
-		//! True when the nearest distance to stop point starts increasing
-		inline
-		bool
-		keepGoing
-			() const
-		{
-			bool keepGo{ true };
-			if (isValid(theCurrNearDist) && isValid(thePrevNearDist))
-			{
-				keepGo = ! (thePrevNearDist < theCurrNearDist);
-			}
-			return keepGo;
-		}
-
 		//! Indicate how much this instance *can* store.
 		inline
 		std::size_t
-		capacity
+		capacity // Path::
 			() const
 		{
 			std::size_t cap{ 0u }; // default is to stop
@@ -525,44 +531,13 @@ oss << " tNext: " << tNext;
 			return cap;
 		}
 
-		//! Archive this node in storage
-		inline
-		void
-		addNode
-			( ray::Node const & node
-			)
-		{
-			theNodes.emplace_back(node);
-		}
-
-		double
-		distanceFromStop
-			( ray::Node const & node
-			)
-		{
-			return magnitude(theStopLoc - node.theCurrLoc);
-		}
-
-		void
-		updateNearDists
-			( ray::Node const & currNode
-			)
-		{
-			// compute the current distance to stopping point
-			double const currDist{ distanceFromStop(currNode) };
-			// ping pong the buffers
-			thePrevNearDist = theCurrNearDist;
-			theCurrNearDist = currDist;
-		}
-
 		//! Process a node - determine if should be archived or not
 		inline
 		void
-		emplace_back
+		emplace_back // Path::
 			( ray::Node const & node
 			)
 		{
-//std::cout << node.infoBrief() << '\n';
 			updateNearDists(node);
 			double distFromSave{ 0. };
 			if (! theNodes.empty())
@@ -575,20 +550,21 @@ oss << " tNext: " << tNext;
 			bool const isFirstStep{ theNodes.empty() };
 			bool const pastStepSize{ ! (distFromSave < theSaveDelta) };
 			bool const aboutToStop{ ! keepGoing() };
-/*
-std::cout
-	<< "  thePrevNearDist: " << io::fixed(thePrevNearDist) << '\n'
-	<< "  theCurrNearDist: " << io::fixed(theCurrNearDist) << '\n'
-	<< "  theCurrLoc: " << io::fixed(node.theCurrLoc) << '\n'
-	<< "  theStopLoc: " << io::fixed(theStopLoc) << '\n'
-	<< "     distFromSave: " << io::fixed(distFromSave) << '\n'
-	<< "  T/F:isFirstStep: " << isFirstStep << '\n'
-	<< " T/F:pastStepSize: " << pastStepSize << '\n'
-	<< "  T/F:aboutToStop: " << aboutToStop << '\n'
-	<< "             size: " << size() << '\n'
-	<< "         capacity: " << capacity() << '\n'
-	;
-*/
+
+			/*
+			std::cout
+				<< "  thePrevNearDist: " << io::fixed(thePrevNearDist) << '\n'
+				<< "  theCurrNearDist: " << io::fixed(theCurrNearDist) << '\n'
+				<< "  theCurrLoc: " << io::fixed(node.theCurrLoc) << '\n'
+				<< "  theStopLoc: " << io::fixed(theStopLoc) << '\n'
+				<< "     distFromSave: " << io::fixed(distFromSave) << '\n'
+				<< "  T/F:isFirstStep: " << isFirstStep << '\n'
+				<< " T/F:pastStepSize: " << pastStepSize << '\n'
+				<< "  T/F:aboutToStop: " << aboutToStop << '\n'
+				<< "             size: " << size() << '\n'
+				<< "         capacity: " << capacity() << '\n'
+				;
+			*/
 
 			if (isFirstStep || pastStepSize || aboutToStop)
 			{
@@ -596,9 +572,255 @@ std::cout
 			}
 		}
 
+		//! Descriptive information about this instance
+		inline
+		std::string
+		infoString // Path::
+			( std::string const & title = {}
+			) const
+		{
+			std::ostringstream oss;
+			if (! title.empty())
+			{
+				oss << title << '\n';
+			}
+			oss << "theStart: " << theStart.infoString();
+			oss << '\n';
+			oss << "theStopLoc: " << theStopLoc;
+			oss << '\n';
+			oss << "theSaveDelta: " << theSaveDelta;
+			oss << '\n';
+			oss << "theNodes.size(): " << theNodes.size();
+			oss << '\n';
+			oss << "thePrevNearDist: " << io::fixed(thePrevNearDist);
+			oss << '\n';
+			oss << "theCurrNearDist: " << io::fixed(theCurrNearDist);
+
+			return oss.str();
+		}
+
+		//! First node in path (or null if not present)
+		inline
+		Node
+		begNode
+			() const
+		{
+			if (! theNodes.empty())
+			{
+				return theNodes.front();
+			}
+			return Node{};
+		}
+
+		//! Last node in path (or null if not present)
+		inline
+		Node
+		endNode
+			() const
+		{
+			if (! theNodes.empty())
+			{
+				return theNodes.back();
+			}
+			return Node{};
+		}
+
+		//! Direction (of tangent) at first node
+		inline
+		Vector
+		begDirection
+			() const
+		{
+			return begNode().thePrevTan;
+		}
+
+		//! Direction (of tangent) at last node
+		inline
+		Vector
+		endDirection
+			() const
+		{
+			return endNode().theNextTan;
+		}
+
+		//! Direction of direct path (from first location to end location)
+		inline
+		Vector
+		netDirection
+			() const
+		{
+			Vector dir{ null<Vector>() };
+			if (1u < theNodes.size())
+			{
+				Vector const netDiff
+					{ endNode().theCurrLoc - begNode().theCurrLoc };
+				dir = direction(netDiff);
+			}
+			
+				return dir;
+		}
+
+		//! Directed angle between fromVec and intoVec
+		inline
+		BiVector
+		angleFromInto
+			( Vector const & fromVec
+			, Vector const & intoVec
+			) const
+		{
+			BiVector angle{ null<BiVector>() };
+			if (1 < theNodes.size())
+			{
+				Spinor const expSpin(fromVec * intoVec);
+				Spinor const logSpin{ logG2(expSpin) };
+				angle = logSpin.theBiv;
+			}
+			return angle;
+		}
+
+		//! Angle from netDirection() toward begin tangent
+		inline
+		BiVector
+		begDeviation
+			() const
+		{
+			return angleFromInto(netDirection(), begDirection());
+		}
+
+		//! Angle from netDirection() toward end tangent
+		inline
+		BiVector
+		endDeviation
+			() const
+		{
+			return angleFromInto(netDirection(), endDirection());
+		}
+
+		//! Angle from begDir toward endDir
+		inline
+		BiVector
+		totalDeviation
+			() const
+		{
+			return angleFromInto(begDirection(), endDirection());
+		}
+
+		//! Summary of overall path info
+		inline
+		std::string
+		infoCurvature
+			() const
+		{
+			std::ostringstream oss;
+			oss << "begDirection: " << begDirection();
+			oss << '\n';
+			oss << "endDirection: " << endDirection();
+			oss << '\n';
+			oss << "  begDeviation: " << begDeviation();
+			oss << '\n';
+			oss << "  endDeviation: " << endDeviation();
+			oss << '\n';
+			oss << "totalDeviation: " << totalDeviation();
+			return oss.str();
+		}
+
+		//! Summary of overall path info
+		inline
+		std::string
+		infoShape
+			() const
+		{
+			std::ostringstream oss;
+			oss << "begNode: " << begNode().infoString();
+			oss << '\n';
+			oss << "endNode: " << endNode().infoString();
+			oss << '\n';
+			oss << infoCurvature() << '\n';
+			return oss.str();
+		}
+
+	private:
+
+		//! True when the nearest distance to stop point starts increasing
+		inline
+		bool
+		keepGoing // Path::
+			() const
+		{
+			bool keepGo{ true };
+			if (isValid(theCurrNearDist) && isValid(thePrevNearDist))
+			{
+				keepGo = ! (thePrevNearDist < theCurrNearDist);
+			}
+			return keepGo;
+		}
+
+		//! Archive this node in storage
+		inline
+		void
+		addNode // Path::
+			( ray::Node const & node
+			)
+		{
+			theNodes.emplace_back(node);
+		}
+
+		//! Distance (cord length - NOT along ray) to stop request point
+		double
+		distanceFromStop // Path::
+			( ray::Node const & node
+			)
+		{
+			return magnitude(theStopLoc - node.theCurrLoc);
+		}
+
+		//! Keep track of Previous and Current nearest distances
+		void
+		updateNearDists // Path::
+			( ray::Node const & currNode
+			)
+		{
+			// compute the current distance to stopping point
+			double const currDist{ distanceFromStop(currNode) };
+			// ping pong the buffers
+			thePrevNearDist = theCurrNearDist;
+			theCurrNearDist = currDist;
+		}
+	
 	}; // Path
 
 } // [ray]
+
+
+namespace
+{
+
+	//! Overload output for ray::Start
+	inline
+	std::ostream &
+	operator<<
+		( std::ostream & ostrm
+		, ray::Start const & start
+		)
+	{
+		ostrm << start.infoString();
+		return ostrm;
+	}
+
+	//! Overload output for ray::Node
+	inline
+	std::ostream &
+	operator<<
+		( std::ostream & ostrm
+		, ray::Node const & node
+		)
+	{
+		ostrm << node.infoString();
+		return ostrm;
+	}
+
+} // [anon]
+
 
 #endif // Refraction_ray_INCL_
 
