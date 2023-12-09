@@ -270,27 +270,6 @@ namespace tst
 			return expValue(theAlpha, theBeta, rMag);
 		}
 
-		//! Gradient (approximation) of Index of refraction at location rVec
-		virtual
-		inline
-		Vector
-		nuGradient
-			( Vector const & rVec
-			) const
-		{
-			double const mag{ magnitude(rVec) };
-			double const del
-				{ mag * std::sqrt(std::numeric_limits<double>::epsilon()) };
-			double const dNu1
-				{ nuValue(rVec + del * e1) - nuValue(rVec - del * e1) };
-			double const dNu2
-				{ nuValue(rVec + del * e2) - nuValue(rVec - del * e2) };
-			double const dNu3
-				{ nuValue(rVec + del * e3) - nuValue(rVec - del * e3) };
-			double const scale{ 1. / (2. * del) };
-			return { scale * Vector{ dNu1, dNu2, dNu3 } };
-		}
-
 	}; // AtmModel
 
 
