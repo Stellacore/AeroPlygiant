@@ -151,24 +151,49 @@ namespace
 		AirCube const opticalMedia; // cube of 'air' (nu=1.000271)
 
 		// configure propagator
-		constexpr double propStepSize{ 1./8. };
-		ray::Propagator const prop{ &opticalMedia, propStepSize };
+		constexpr double propStepDist{ 1./8. };
+		ray::Propagator const prop{ &opticalMedia, propStepDist };
 
 		// configure the ray(s) for propagation
 		// start ray heading in +x direction, starting at x=0.
+		// through UnitBox which ends at x<1.
 		ray::Start const start{ ray::Start::from(e1, zero<Vector>() ) };
+		Vector const expStopLoc{ e1 };
 
 		// trace the ray(s)
 		constexpr double saveDeltaDistance{ 1./8. };
 Vector const stopLoc{ 2. * e1 };
-//Vector const stopLoc{ zero<Vector>() };
-//Vector const stopLoc{ null<Vector>() };
 		ray::Path aPath(start, stopLoc, saveDeltaDistance);
+		aPath.reserve(20u);
 		prop.tracePath(&aPath);
 
 		std::cout << aPath.infoString("aPath") << std::endl;
+		for (ray::Node const & node : aPath.theNodes)
+		{
+			std::cout << node.infoBrief() << std::endl;
+		}
+		std::cout << "aPath.size: " << aPath.theNodes.size() << std::endl;
 
-oss << "Failure\n";
+		if (1 < aPath.size())
+		{
+			// check that end node is near the UnitBox edge
+			// i.e. should stop within (less or equal) one propagation step
+			Vector const & gotStopLoc = aPath.theNodes.back().theCurrLoc;
+			Vector const stopDiff{ gotStopLoc - expStopLoc };
+			double const stopStepDist{ magnitude(stopDiff) };
+
+			bool const withinStepDist{ ! (propStepDist < stopStepDist) };
+			if (! withinStepDist)
+			{
+				oss << "expStopLoc: " << expStopLoc << '\n';
+				oss << "gotStopLoc: " << gotStopLoc << '\n';
+				oss << "stopDiff: " << stopDiff << '\n';
+				oss << "stopStepDist: " << io::fixed(stopStepDist) << '\n';
+				oss << "propStepDist: " << io::fixed(propStepDist) << '\n';
+			}
+
+		}
+
 	}
 }
 
