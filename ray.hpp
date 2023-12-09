@@ -446,41 +446,6 @@ oss << " tNext: " << tNext;
 			}
 		}
 
-/*TODO - unused*/
-		//! \brief Return nodes in a std::vector structure.
-		inline
-		std::vector<Node>
-		nodePath
-			( Start const & start
-			, double const & nominalLength
-			) const
-		{
-			std::vector<Node> nodes;
-
-			if (isValid())
-			{
-				// estimate return structure size and allocate space
-				constexpr double padFactor{ 9./8. }; // about 12% extra
-				double const dubSize{ padFactor * nominalLength / theStepDist };
-				std::size_t const nomSize{ static_cast<std::size_t>(dubSize) };
-
-				std::size_t stride{ 1u };
-				std::size_t saveSize{ nomSize };
-				if (1000u < nomSize)
-				{
-					stride = nomSize / 1000u;
-				}
-				std::size_t const useSize{ nomSize / stride + 10u };
-				nodes.reserve(useSize);
-
-				traceNodes(start, &nodes);
-std::cout << "nodes.size; " << nodes.size() << std::endl;
-			}
-
-			return nodes;
-		}
-/*TODO*/
-
 	}; // Propagator
 
 
