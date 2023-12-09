@@ -123,7 +123,6 @@ namespace env
 			( Vector const & rVec
 			) const
 		{
-std::cout << "ActiveVolume::contains" << std::endl;
 			return true;
 		}
 
@@ -174,12 +173,6 @@ std::cout << "ActiveVolume::contains" << std::endl;
 			{
 				nu = nuValue(rVec);
 			}
-std::cout
-	<< "Volume: " << thePtVolume->theName
-	<< "  testing rVec: " << rVec
-	<< "  nu: " << nu
-	<< std::endl;
-
 			return nu;
 		}
 
