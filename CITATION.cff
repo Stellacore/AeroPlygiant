@@ -12,7 +12,7 @@ authors:
   - given-names: Dave
     family-names: Knopp
     affiliation: Stellacore Corporation
-repository-code: 'https://github.com/Stellacore/AeroPlygiant'
+repository-code: 'https://github.com/Stellacore-Corporation/AeroPlygiant.git'
 abstract: >-
 
 AeroPlygiant is a C++ development environment for investigating
