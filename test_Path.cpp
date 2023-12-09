@@ -77,7 +77,6 @@ int
 main
 	()
 {
-	int istat{ 1 }; // default to failure
 	std::ostringstream oss;
 
 	using namespace engabra::g3;

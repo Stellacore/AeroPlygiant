@@ -29,6 +29,7 @@
  *
  */
 
+#include "tst.hpp"
 
 #include "env.hpp"
 #include "ray.hpp"
@@ -44,8 +45,6 @@ int
 main
 	()
 {
-	int istat{ 1 }; // default to failure
-
 	tst::AtmModel const atm(env::sEarth);
 
 	// initial conditions
@@ -95,16 +94,12 @@ main
 		oss << "rGot: "  << rGot << '\n';
 	}
 
-	if (oss.str().empty())
-	{
-		istat = 0;
-	}
-	else
+	if (! oss.str().empty())
 	{
 		std::cerr << " delta: " << io::fixed(delta, 7u, 6u) << '\n';
 		std::cerr << oss.str() << '\n';
 	}
 
-	return istat;
+	return tst::finish(oss.str());
 }
 
