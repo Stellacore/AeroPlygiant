@@ -223,6 +223,19 @@ literal "false"
  without explanation - perhaps prior works provide more insight).
 \end_layout
 
+\begin_layout Paragraph
+Walter Bislin's Blog
+\end_layout
+
+\begin_layout Standard
+Informal, but perhaps worth a read...
+\end_layout
+
+\begin_layout Itemize
+http://walter.bislins.ch/bloge/index.asp?page=Deriving+Equations+for+Atmospheric+Re
+fraction
+\end_layout
+
 \begin_layout Subsubsection
 Astronomy - Specific Theory
 \end_layout
@@ -246,6 +259,22 @@ literal "false"
 
 .
  Describes deviations from long assumed temperature profile models.
+\end_layout
+
+\begin_layout Paragraph
+Michael E.
+ Thomas and Richard I.
+ Josef
+\end_layout
+
+\begin_layout Standard
+Practical equations for determining refraction deviation angle observed
+ at ground looking into space.
+\end_layout
+
+\begin_layout Itemize
+https://secwww.jhuapl.edu/techdigest/Content/techdigest/pdf/V17-N03/17-03-Thomas.pd
+f
 \end_layout
 
 \begin_layout Subsubsection
@@ -387,6 +416,19 @@ Index of Refraction Estimation
 \end_layout
 
 \begin_layout Paragraph
+Andrew T.
+ Young
+\end_layout
+
+\begin_layout Standard
+Inventory of formulae and methods used (recommends use of Ciddor)
+\end_layout
+
+\begin_layout Itemize
+https://aty.sdsu.edu/explain/atmos_refr/air_refr.html
+\end_layout
+
+\begin_layout Paragraph
 Ciddor
 \end_layout
 
@@ -418,6 +460,18 @@ https://pubmed.ncbi.nlm.nih.gov/18305787/
 
 \begin_layout Itemize
 https://pubmed.ncbi.nlm.nih.gov/12003222/
+\end_layout
+
+\begin_layout Paragraph
+NIST - Refractive Index of Air Calculator
+\end_layout
+
+\begin_layout Standard
+Engineering metrology tool box:
+\end_layout
+
+\begin_layout Itemize
+https://emtoolbox.nist.gov/Wavelength/Documentation.asp#EdlenorCiddor
 \end_layout
 
 \begin_layout Subsubsection
