@@ -23,7 +23,7 @@
 #include <vector>
 
 
-
+//! \brief Functions and data specific to each application (e.g. each demo).
 namespace app
 {
 	using namespace engabra::g3;

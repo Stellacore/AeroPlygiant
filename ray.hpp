@@ -74,7 +74,7 @@ namespace ray
 	//! Characterization of ray path tangent interacting at step boundary.
 	enum DirChange
 	{
-		  Null      //!< Unset
+		  Null      //!< Unset or unknown
 		, Unaltered //!< Tangent dir unchanged (no gradient)
 		, Converged //!< Tangent dir refracted toward gradient (into dense)
 		, Diverged  //!< Tangent dir refracted away from gradient (into sparse)
@@ -82,6 +82,7 @@ namespace ray
 
 	}; // DirChange
 
+	//! Enum value associated with a ray propagating in opposite direction
 	inline
 	DirChange
 	reverseChange
@@ -101,7 +102,7 @@ namespace ray
 		return revChange;
 	}
 
-
+	//! String to associate with each DirChange enum value.
 	inline
 	std::string
 	nameFor

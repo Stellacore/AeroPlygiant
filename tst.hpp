@@ -30,7 +30,7 @@ namespace tst
 		static constexpr int fail{ 1 }; //!< one or more test failures
 	};
 
-	/*! CMake/CTest compatible exit code based on condition (! msg.empty())
+	/*! \brief CMake/CTest compatible exit code based on (! msg.empty()).
 	 *
 	 * If message string is empty, return success.
 	 *
@@ -55,7 +55,7 @@ namespace tst
 		return istat;
 	}
 
-	//! Convenience version that calls finish(std::string const &)
+	//! Convenience version that calls finish(std::string const &).
 	inline
 	int
 	finish
