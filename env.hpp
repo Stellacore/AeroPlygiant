@@ -100,10 +100,25 @@ namespace env
 		, 6470.e3  // radiusSpace
 		};
 
-	//! Interface specification for refractive media volume
+	/*! \brief Interface specification for refractive media volume
+	 *
+	 * Represent the ray trace environment as a volume of refractive
+	 * index values. The value can vary arbitrarily in order to
+	 * simulate continuous changes in index of refraction or discrete
+	 * shapes.
+	 * 
+	 * \note the boundaries (of interest) are indicated by returning
+	 * a null value for refraction index from method nuValue().
+	 *
+	 */
 	struct IndexVolume
 	{
-		//! Index of refraction value at vector location rVec
+		/*! \brief Index of refraction value at vector location rVec.
+		 *
+	 	 * Note: return nuValue = null<double>() to indicate the edges
+		 * of the volume (boundaries at which ray tracing operations
+		 * should stop.
+		 */
 		inline
 		virtual
 		double
