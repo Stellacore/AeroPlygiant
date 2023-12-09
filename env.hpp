@@ -46,12 +46,25 @@ namespace env
 {
 	using namespace engabra::g3;
 
-	//! Data parameters for Planet atmosphere
+	/*! \brief Data parameters for spherical planet's atmosphere.
+	 *
+	 * Container for data describing useful for creating a simple
+	 * spherically symmetric index of refraction field (e.g. for
+	 * describing Earth atmospher models)
+	 *
+	 * The 'nu' naming refer to Index of Refraction (IoR) values.
+	 */
 	struct Planet
 	{
+
+		//! Index of refraction ('nu') at ground level.
 		double const theNuGround{ null<double>() };
+		//! Index of refraction ('nu') at edge of space
 		double const theNuSpace{ null<double>() };
+
+		//! Radius from planet center with IoR == theNuGround
 		double const theRadGround{ null<double>() };
+		//! Radius from planet center with IoR == theNuSpace
 		double const theRadSpace{ null<double>() };
 
 		//! Descriptive information about this instance
