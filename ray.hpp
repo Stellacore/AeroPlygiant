@@ -99,6 +99,8 @@ namespace ray
 		, Converged //!< Tangent dir refracted toward gradient (into dense)
 		, Diverged  //!< Tangent dir refracted away from gradient (into sparse)
 		, Reflected //!< Tangent dir reflected from boundary (total internal)
+		, Stopped   //!< Out of simulation domain
+		, Started   //!< Begin of ray
 
 	}; // DirChange
 
@@ -118,6 +120,14 @@ namespace ray
 		if (Diverged == fwdChange)
 		{
 			revChange = Converged;
+		}
+		if (Stopped == fwdChange)
+		{
+			revChange = Started;
+		}
+		if (Started == fwdChange)
+		{
+			revChange = Stopped;
 		}
 		return revChange;
 	}
@@ -411,6 +421,12 @@ oss << " nuNext: " << io::fixed(nuNext, 3u, 3u);
 oss << " tNext: " << tNext;
 //std::cout << oss.str() << std::endl;
 
+			// check for invalid media index volume (e.g. exit region)
+			if (! engabra::g3::isValid(nuNext))
+			{
+				change = Stopped;
+			}
+
 			return Step{ nuNext, tNext, change };
 		}
 
@@ -470,6 +486,12 @@ oss << " tNext: " << tNext;
 					Vector const & tNext = stepNext.theNextTan;
 					double const & nuNext = stepNext.theNextNu;
 					DirChange const & change = stepNext.theChange;
+
+					// check for ray termination condition
+					if (Stopped == change)
+					{
+						break;
+					}
 
 					// propagate ray to next node location
 					Vector const rNext{ nextLocation(rCurr, tNext) };
