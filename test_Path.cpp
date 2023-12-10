@@ -99,7 +99,7 @@ main
 	// path specification
 	Vector const tBeg{ 5., 5., 5. };
 	Vector const rBeg{ 0., 0., 0.  };
-	Vector const stopNear{ 10., 10., 10. };
+	Vector const approxEndLoc{ 10., 10., 10. };
 	ray::Start const start{ ray::Start::from(tBeg, rBeg) };
 
 	// configuration
@@ -111,9 +111,7 @@ constexpr double propStepDist{ 1./128. }; // integration step size
 	ray::Propagator const prop{ &media, propStepDist };
 
 	// interact with data consumer
-//	Vector const & approxEndLoc = stopNear;
-	ray::Path path(start, stopNear, saveStepDist, stopNear);
-std::cout << "path: " << path.infoString() << std::endl;
+	ray::Path path(start, saveStepDist, approxEndLoc);
 	prop.tracePath(&path);
 
 	// show path info

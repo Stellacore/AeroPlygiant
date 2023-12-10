@@ -152,6 +152,10 @@ main
 	using namespace aply;
 	using namespace engabra::g3;
 
+	std::shared_ptr<env::ActiveVolume> const ptVolume
+		{ std::make_shared<env::ActiveBox>
+			(zero<Vector>(), Vector{10., 10., 10.})
+		};
 	tst::Slab const media
 		( e3   // 'z' normal direction
 		, 4.5  // zBeg
@@ -159,6 +163,7 @@ main
 		, 1.0  // nu below
 		, 1.5  // nu inside
 		, 1.25  // nu above
+		, ptVolume // bounding volume
 		);
 	// tst:showMedia(media);
 
@@ -171,7 +176,6 @@ main
 
 	// path specification
 	Vector const station { 5., 5., 10. };
-	Vector const stopNear{ 5., 5., -5. };
 
 	// starting rays to trace
 	std::vector<ray::Start> const starts{ app::rayStarts(station) };
@@ -181,7 +185,7 @@ main
 	for (ray::Start const & start : starts)
 	{
 		// interact with data consumer
-		ray::Path path(start, stopNear, saveStepDist);
+		ray::Path path(start, saveStepDist);
 		prop.tracePath(&path);
 
 		// show path info

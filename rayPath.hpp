@@ -94,8 +94,6 @@ namespace ray
 		Path // Path::
 			( Start const & startWith
 				//!< Initial direction and start point for propagation
-			, Vector const & stopNearTo
-				//!< Stop tracing with path stops getting closer to this
 			, double const & saveStepSize
 				//!< Save node if path exceeds this distance from previous save
 			, Vector const & approxEndLoc = null<Vector>()

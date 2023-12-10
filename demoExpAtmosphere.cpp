@@ -101,7 +101,7 @@ main
 
 	// location on Earth
 	double const & groundRad = env::sEarth.theRadGround;
-	Vector const stopNear{ groundRad * e3 };
+	Vector const approxEndLoc{ groundRad * e3 };
 
 	// initial conditions
 	ray::Start const start
@@ -117,7 +117,7 @@ main
 
 	// path propagation setup
 	ray::Propagator const prop{ &atm, propStepDist };
-	ray::Path path(start, stopNear, saveStepDist);
+	ray::Path path(start, saveStepDist, approxEndLoc);
 
 	// perform path propagation
 	prop.tracePath(&path);

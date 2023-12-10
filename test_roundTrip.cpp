@@ -58,15 +58,13 @@ main
 	Vector const rFwdBeg{ env::sEarth.theRadGround * e3 };
 	ray::Start const fwdStart{ ray::Start::from(tFwdBeg, rFwdBeg) };
 
-Vector const stopNear{ null<Vector>() };
-
 	// ray tracing parameters
 	double const propStepDist{ 0.100 }; // meters
 	ray::Propagator const prop{ &atm, propStepDist };
 
 	// trace ray forward
 	double const saveStepDist{ 0.100 }; // meters
-	ray::Path fwdPath(fwdStart, stopNear, saveStepDist);
+	ray::Path fwdPath(fwdStart, saveStepDist);
 	fwdPath.reserve(pathSize);
 	prop.tracePath(&fwdPath);
 
@@ -104,7 +102,7 @@ std::cout << '\n';
 
 		// trace ray in reverse direction
 		ray::Start const revStart{ ray::Start::from(tRevBeg, rRevBeg) };
-		ray::Path revPath(revStart, stopNear, saveStepDist);
+		ray::Path revPath(revStart, saveStepDist);
 		revPath.reserve(pathSize);
 		prop.tracePath(&revPath);
 
