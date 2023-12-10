@@ -68,12 +68,14 @@ Vector const stopNear{ null<Vector>() };
 	fwdPath.reserve(pathSize);
 	prop.tracePath(&fwdPath);
 
+/*
 std::cout << fwdPath.infoString("fwdPath") << std::endl;
 for (ray::Node const & node : fwdPath.theNodes)
 {
 	std::cout << "    node: " << node.infoBrief() << '\n';
 }
 std::cout << "fwdPath.size: " << fwdPath.theNodes.size() << std::endl;
+*/
 
 	if (fwdPath.theNodes.empty())
 	{
@@ -91,10 +93,12 @@ std::cout << "fwdPath.size: " << fwdPath.theNodes.size() << std::endl;
 		Vector const & tRevBeg = -lastNode.theNextTan;
 		Vector const & rRevBeg =  lastNode.theCurrLoc;
 
+/*
 std::cout << '\n';
 std::cout << "lastNode: " << lastNode.infoBrief() << '\n';
 std::cout << " revNode: " <<  revNode.infoBrief() << '\n';
 std::cout << '\n';
+*/
 
 		// trace ray in reverse direction
 		ray::Start const revStart{ ray::Start::from(tRevBeg, rRevBeg) };
@@ -102,12 +106,14 @@ std::cout << '\n';
 		revPath.reserve(pathSize);
 		prop.tracePath(&revPath);
 
+/*
 std::cout << revPath.infoString("revPath") << std::endl;
 for (ray::Node const & node : revPath.theNodes)
 {
 	std::cout << "    node: " << node.infoBrief() << '\n';
 }
 std::cout << "revPath.size: " << revPath.theNodes.size() << std::endl;
+*/
 
 		ray::Node const & revEndNode = revPath.theNodes.back();
 
