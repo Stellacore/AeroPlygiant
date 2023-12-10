@@ -22,8 +22,8 @@
 // SOFTWARE.
 // 
 
-#ifndef aply_ray_INCL_
-#define aply_ray_INCL_
+#ifndef aply_ray_Start_INCL_
+#define aply_ray_Start_INCL_
 
 /*! \file
  *
@@ -32,53 +32,62 @@
  */
 
 
-#include "rayDirChange.hpp"
-#include "rayNode.hpp"
-#include "rayPath.hpp"
-#include "rayPathView.hpp"
-#include "rayPropagator.hpp"
-#include "rayStart.hpp"
+#include <Engabra>
 
-#include <iostream>
+#include <sstream>
+#include <string>
 
 
 /*! \brief Functions and classes for simulation of ray propagation
  */
 namespace ray
 {
+	using namespace engabra::g3;
+
+	/*! \brief Data representing initial boundary values for a ray(curve).
+	 *
+	 */
+	struct Start
+	{
+		Vector const theTanDir{}; //!< Incident tangent direction (unitary)
+		Vector const thePntLoc{}; //!< Point of incidence for tangent dir
+
+		//! Create an instance ensuring tangent dir is unitary.
+		inline
+		static
+		Start
+		from // Start::
+			( Vector const & anyTan
+			, Vector const & loc
+			)
+		{
+			return { direction(anyTan), loc };
+		}
+
+		//! Descriptive information about this instance
+		inline
+		std::string
+		infoString // Start::
+			( std::string const & title = {}
+			) const
+		{
+			std::ostringstream oss;
+			if (! title.empty())
+			{
+				oss << title << " ";
+			}
+			oss
+				<< "dir: " << theTanDir
+				<< ' '
+				<< "loc: " << thePntLoc
+				;
+			return oss.str();
+		}
+
+	}; // Start
 
 } // [ray]
 
 
-namespace
-{
-
-	//! Overload output for ray::Start
-	inline
-	std::ostream &
-	operator<<
-		( std::ostream & ostrm
-		, ray::Start const & start
-		)
-	{
-		ostrm << start.infoString();
-		return ostrm;
-	}
-
-	//! Overload output for ray::Node
-	inline
-	std::ostream &
-	operator<<
-		( std::ostream & ostrm
-		, ray::Node const & node
-		)
-	{
-		ostrm << node.infoString();
-		return ostrm;
-	}
-
-} // [anon]
-
-
-#endif // aply_ray_INCL_
+#endif // aply_ray_Start_INCL_
 
