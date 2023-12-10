@@ -249,15 +249,6 @@ namespace ray
 		, double const & nuNext //!< Exiting IoR
 		)
 	{
-
-std::ostringstream oss;
-oss << '\n';
-oss << "nextTangentDir\n";
-oss << "tDirPrev: " << tDirPrev << '\n';
-oss << "  nuPrev: " << nuPrev << '\n';
-oss << "   gCurr: " << gCurr << '\n';
-oss << "  nuNext: " << nuNext << '\n';
-
 		// default case is an unaltered ray
 		std::pair<Vector, DirChange> tanDirChange{ tDirPrev, Unaltered };
 		Vector & tDirNext = tanDirChange.first;
@@ -277,8 +268,6 @@ oss << "  nuNext: " << nuNext << '\n';
 			// note that sq(bivector) = -magSq(bivector)
 			double const gCurrSq{ magSq(gCurr) };
 			double const radicand{ gCurrSq - magSq(currB) };
-oss << "   currB: " << currB << '\n';
-oss << "radicand: " << radicand << '\n';
 			//
 			// use current conditions to select computation option
 			//
@@ -291,44 +280,13 @@ oss << "radicand: " << radicand << '\n';
 			}
 			else
 			{
-/*
-// TODO
-Current problem is that gCurr can be inconsistent
-with the other data.
-I.e. nuPrev and nuNext are relative to incomming tangent direction.
-At the same time, gCurr needs to point from nuLess toward nuMore
-Probably the product tDirPrev(dot)gCurr needs to be used
-instead of comparing the values of nuPrev and nuNext directly.
-*/
-double const tDotG{ (tDirPrev * gCurr).theSca[0] };
-if (0. < tDotG)
-{
-	// requires nuPrev < nuNext
-	if (! (nuPrev < nuNext)) // into more dense
-	{
-		std::cerr << "\n\n### Consistency Error - Pos tDotG\n\n" << std::endl;
-	//	assert(false);
-	}
-}
-if (tDotG < 0.)
-{
-	// requires nuNext < nuPrev
-	if (! (nuNext < nuPrev)) // into less dense
-	{
-		std::cerr << "\n\n### Consistency Error - Neg tDotG\n\n" << std::endl;
-	//	assert(false);
-	}
-}
-
-
 				double const rootXi{ std::sqrt(radicand) };
+				double const tDotG{ (tDirPrev * gCurr).theSca[0] };
 				if (tDotG < 0.) // propagating into less dense media
 				{
 					Spinor const spin{ -rootXi, currB };
 					tDirNext = (spin * gCurrInv).theVec;
 					tChange = Diverged;
-oss << "    spinA " << spin << '\n';
-oss << "tDirNextA " << tDirNext << '\n';
 				}
 				else
 				if (0. < tDotG) // propagating into more dense media
@@ -336,16 +294,10 @@ oss << "tDirNextA " << tDirNext << '\n';
 					Spinor const spin{  rootXi, currB };
 					tDirNext = (spin * gCurrInv).theVec;
 					tChange = Converged;
-oss << "    spinB " << spin << '\n';
-oss << "tDirNextB " << tDirNext << '\n';
 				}
 				// (nuNext == nuPrev) // same as default (gCurr == 0)
 			}
-oss << " tChange: " << nameFor(tChange) << '\n';
 		}
-oss << "tDirNext: " << tDirNext << '\n';
-std::cout << oss.str() << '\n';
-
 		//
 		return tanDirChange;
 	}
@@ -384,11 +336,8 @@ std::cout << oss.str() << '\n';
 			double const gMag{ magnitude(gCurr) };
 			static double const gTol // enough to unitize and invert gCurr
 				{ std::numeric_limits<double>::min() };
-std::ostringstream oss;
-oss << "gCurr: " << gCurr;
 			if (! (gTol < gMag)) // unaltered
 			{
-oss << " PassThrough";
 				// location at which to evaluate nuNext (iteratively refined)
 				Vector const qNext{ rCurr + .5*theStepDist*tNext };
 
@@ -423,11 +372,8 @@ oss << " PassThrough";
 				while ((tolDifSq < difSq) && (numLoop++ < maxLoop) && doLoop)
 				{
 					// update IoR evaluation location
-//std::cout << "tNext: " << io::fixed(tNext) << std::endl;
-//std::cout << "gCurr: " << io::fixed(gCurr) << std::endl;
 					if (! isReflection)
 					{
-oss << " Refraction ";
 						// update refraction index to midpoint of predicted next
 						// interval (along evolving next tangent direction).
 						qNext = rCurr + .5*theStepDist*tNext;
@@ -435,7 +381,6 @@ oss << " Refraction ";
 					else
 					// if (isReflection) // perfect reflection
 					{
-oss << " REFLECTION ";
 						Vector const gDir{ direction(gCurr) };
 						qNext = rCurr + .5*theStepDist*gDir;
 						// No need to iterate further for perfect reflection
@@ -469,11 +414,6 @@ oss << " REFLECTION ";
 				} // while loop on refraction index estimation
 
 			} // significant gCurr magnitude
-
-oss << " nuPrev: " << io::fixed(nuPrev, 3u, 3u);
-oss << " nuNext: " << io::fixed(nuNext, 3u, 3u);
-oss << " tNext: " << tNext;
-//std::cout << oss.str() << std::endl;
 
 			// check for invalid media index volume (e.g. exit region)
 			if (! engabra::g3::isValid(nuNext))
@@ -561,7 +501,6 @@ oss << " tNext: " << tNext;
 					rCurr = rNext;
 					nuPrev = nuNext;
 				}
-//std::cout << "\n####\n#### done tracing\n####\n";
 			}
 		}
 
