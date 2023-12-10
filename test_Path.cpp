@@ -81,6 +81,10 @@ main
 	using namespace aply;
 	using namespace engabra::g3;
 
+	std::shared_ptr<env::ActiveVolume> const ptVolume
+		{ std::make_shared<env::ActiveBox>
+			(zero<Vector>(), Vector{10., 10., 10.})
+		};
 	tst::Slab const media
 		( e1   // 'x' direction
 		, 4.   // xBeg
@@ -88,6 +92,7 @@ main
 		, 1.0  // nu before
 		, 1.5  // nu inside
 		, 1.0  // nu after
+		, ptVolume // a bounding box
 		);
 	// tst:showMedia(media);
 
