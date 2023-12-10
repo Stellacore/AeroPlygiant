@@ -45,6 +45,7 @@
 //! \brief Functions and data specific to each application (e.g. each demo).
 namespace app
 {
+	using namespace aply;
 	using namespace engabra::g3;
 
 	//! Generate a bundle of ray starting elements
@@ -148,6 +149,7 @@ main
 		return 1;
 	}
 
+	using namespace aply;
 	using namespace engabra::g3;
 
 	tst::Slab const media

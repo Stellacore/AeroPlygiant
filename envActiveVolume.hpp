@@ -22,87 +22,62 @@
 // SOFTWARE.
 // 
 
+#ifndef aply_env_ActiveVolume_INCL_
+#define aply_env_ActiveVolume_INCL_
 
 /*! \file
  *
- * \brief Unit test for class IndexVolume
+ * \brief Environment configuration parameters (related to Refraction)
  *
  */
 
 
-#include "tst.hpp"
+#include <Engabra>
 
-#include "env.hpp"
+#include <memory>
+#include <string>
 
 
-namespace
+
+namespace aply
 {
-	//! Test construction of IndexVolume with no argument
-	struct TestEmpty : public aply::env::IndexVolume
+namespace env
+{
+	using namespace engabra::g3;
+
+	/*! \brief Specify volume of space through which rays should be propagated.
+	 */
+	struct ActiveVolume
 	{
-		inline
-		TestEmpty
-			()
-			: IndexVolume()
+		std::string theName{};
+
+		//! Construct a named instance
+		explicit
+		ActiveVolume
+			( std::string const & name = "ActiveVolume"
+			)
+			: theName{ name }
 		{ }
 
+		//! Overload to define shape of volume (true: inside, false: outside)
 		inline
-		double
-		nuValue
-			( engabra::g3::Vector const & rVec
+		virtual
+		bool
+		contains
+			( Vector const & rVec
 			) const
 		{
-			return 1.;
+			return true;
 		}
 
-	}; // TestEmpty
+	}; // ActiveVolume
 
-	//! Test construction of IndexVolume with argument
-	struct TestVolume : public aply::env::IndexVolume
-	{
-		inline
-		TestVolume
-			()
-			: IndexVolume(aply::env::sPtAllSpace)
-		{ }
+	//! An active volume w/o limits
+	static std::shared_ptr<ActiveVolume> const sPtAllSpace
+		{ std::make_shared<ActiveVolume>("sAllSpace") };
 
-		inline
-		double
-		nuValue
-			( engabra::g3::Vector const & rVec
-			) const
-		{
-			return 1.;
-		}
+} // [env]
+} // [aply]
 
-	}; // TestVolume
-
-	//! Check basic construction
-	void
-	test0
-		( std::ostream & oss
-		)
-	{
-		// [DoxyExample00]
-		// [DoxyExample00]
-
-		// Successful compile is test condition
-		TestVolume const tVolume{};
-		TestEmpty const tEmpty{};
-	}
-}
-
-
-/*! \brief Unit test for IndexVolume
- */
-int
-main
-	()
-{
-	std::ostringstream oss;
-
-	test0(oss);
-
-	return tst::finish(oss);
-}
+#endif // aply_env_ActiveVolume_INCL_
 

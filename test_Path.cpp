@@ -78,6 +78,7 @@ main
 {
 	std::ostringstream oss;
 
+	using namespace aply;
 	using namespace engabra::g3;
 
 	tst::Slab const media

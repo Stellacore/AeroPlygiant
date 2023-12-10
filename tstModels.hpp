@@ -43,6 +43,7 @@
 namespace tst
 {
 	using namespace engabra::g3;
+	using namespace aply;
 
 
 	/*! \brief Thick slab of constant index of refraction

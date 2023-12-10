@@ -50,6 +50,7 @@ namespace
 		return ( (! (value < minIncluded)) && (value < maxExcluded) );
 	}
 
+	using namespace aply;
 	using namespace engabra::g3;
 
 	//! Simple test volume

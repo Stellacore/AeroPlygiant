@@ -22,87 +22,73 @@
 // SOFTWARE.
 // 
 
+#ifndef aply_ray_Start_INCL_
+#define aply_ray_Start_INCL_
 
 /*! \file
  *
- * \brief Unit test for class IndexVolume
+ * \brief Ray propagation simulation functions.
  *
  */
 
 
-#include "tst.hpp"
+#include <Engabra>
 
-#include "env.hpp"
+#include <sstream>
+#include <string>
 
 
-namespace
+namespace aply
 {
-	//! Test construction of IndexVolume with no argument
-	struct TestEmpty : public aply::env::IndexVolume
-	{
-		inline
-		TestEmpty
-			()
-			: IndexVolume()
-		{ }
+namespace ray
+{
+	using namespace engabra::g3;
 
+	/*! \brief Data representing initial boundary values for a ray(curve).
+	 *
+	 */
+	struct Start
+	{
+		Vector const theTanDir{}; //!< Incident tangent direction (unitary)
+		Vector const thePntLoc{}; //!< Point of incidence for tangent dir
+
+		//! Create an instance ensuring tangent dir is unitary.
 		inline
-		double
-		nuValue
-			( engabra::g3::Vector const & rVec
-			) const
+		static
+		Start
+		from // Start::
+			( Vector const & anyTan
+			, Vector const & loc
+			)
 		{
-			return 1.;
+			return { direction(anyTan), loc };
 		}
 
-	}; // TestEmpty
-
-	//! Test construction of IndexVolume with argument
-	struct TestVolume : public aply::env::IndexVolume
-	{
+		//! Descriptive information about this instance
 		inline
-		TestVolume
-			()
-			: IndexVolume(aply::env::sPtAllSpace)
-		{ }
-
-		inline
-		double
-		nuValue
-			( engabra::g3::Vector const & rVec
+		std::string
+		infoString // Start::
+			( std::string const & title = {}
 			) const
 		{
-			return 1.;
+			std::ostringstream oss;
+			if (! title.empty())
+			{
+				oss << title << " ";
+			}
+			oss
+				<< "dir: " << theTanDir
+				<< ' '
+				<< "loc: " << thePntLoc
+				;
+			return oss.str();
 		}
 
-	}; // TestVolume
+	}; // Start
 
-	//! Check basic construction
-	void
-	test0
-		( std::ostream & oss
-		)
-	{
-		// [DoxyExample00]
-		// [DoxyExample00]
-
-		// Successful compile is test condition
-		TestVolume const tVolume{};
-		TestEmpty const tEmpty{};
-	}
-}
+} // [ray]
+} // [aply]
 
 
-/*! \brief Unit test for IndexVolume
- */
-int
-main
-	()
-{
-	std::ostringstream oss;
-
-	test0(oss);
-
-	return tst::finish(oss);
-}
+#endif // aply_ray_Start_INCL_
 
