@@ -248,6 +248,15 @@ namespace ray
 		, double const & nuNext //!< Exiting IoR
 		)
 	{
+
+std::ostringstream oss;
+oss << '\n';
+oss << "nextTangentDir\n";
+oss << "tDirPrev: " << tDirPrev << '\n';
+oss << "  nuPrev: " << nuPrev << '\n';
+oss << "   gCurr: " << gCurr << '\n';
+oss << "  nuNext: " << nuNext << '\n';
+
 		// default case is an unaltered ray
 		std::pair<Vector, DirChange> tanDirChange{ tDirPrev, Unaltered };
 		Vector & tDirNext = tanDirChange.first;
@@ -267,6 +276,8 @@ namespace ray
 			// note that sq(bivector) = -magSq(bivector)
 			double const gCurrSq{ magSq(gCurr) };
 			double const radicand{ gCurrSq - magSq(currB) };
+oss << "   currB: " << currB << '\n';
+oss << "radicand: " << radicand << '\n';
 			//
 			// use current conditions to select computation option
 			//
@@ -279,23 +290,59 @@ namespace ray
 			}
 			else
 			{
+/*
+// TODO
+Current problem is that gCurr can be inconsistent
+with the other data.
+I.e. nuPrev and nuNext are relative to incomming tangent direction.
+At the same time, gCurr needs to point from nuLess toward nuMore
+Probably the product tDirPrev(dot)gCurr needs to be used
+instead of comparing the values of nuPrev and nuNext directly.
+*/
+double const tDotG{ (tDirPrev * gCurr).theSca[0] };
+if (0. < tDotG)
+{
+	// requires nuPrev < nuNext
+	if (! (nuPrev < nuNext))
+	{
+		std::cerr << "\n\n### Consistency Error - Pos tDotG\n\n" << std::endl;
+	}
+}
+if (tDotG < 0.)
+{
+	// requires nuNext < nuPrev
+	if (! (nuNext < nuPrev))
+	{
+		std::cerr << "\n\n### Consistency Error - Neg tDotG\n\n" << std::endl;
+	}
+}
+
+
 				double const rootXi{ std::sqrt(radicand) };
-				if (nuPrev < nuNext) // propagating into more dense media
-				{
-					Spinor const spin{  rootXi, currB };
-					tDirNext = (spin * gCurrInv).theVec;
-					tChange = Converged;
-				}
-				else
-				if (nuNext < nuPrev) // propagating into less dense media
+				if (tDotG < 0.) // propagating into TODO-more/less dense media
 				{
 					Spinor const spin{ -rootXi, currB };
 					tDirNext = (spin * gCurrInv).theVec;
+					tChange = Converged;
+oss << "    spinA " << spin << '\n';
+oss << "tDirNextA " << tDirNext << '\n';
+				}
+				else
+				if (0. < tDotG) // propagating into TODO-more/less dense media
+				{
+					Spinor const spin{  rootXi, currB };
+					tDirNext = (spin * gCurrInv).theVec;
 					tChange = Diverged;
+oss << "    spinB " << spin << '\n';
+oss << "tDirNextB " << tDirNext << '\n';
 				}
 				// (nuNext == nuPrev) // same as default (gCurr == 0)
 			}
+oss << " tChange: " << nameFor(tChange) << '\n';
 		}
+oss << "tDirNext: " << tDirNext << '\n';
+//std::cout << oss.str() << '\n';
+
 		//
 		return tanDirChange;
 	}
