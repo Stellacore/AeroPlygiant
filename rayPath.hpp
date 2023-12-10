@@ -31,10 +31,9 @@
  *
  */
 
-#include "rayStart.hpp"
 
-//#include "env.hpp"
 #include "rayNode.hpp"
+#include "rayStart.hpp"
 
 #include <Engabra>
 
@@ -57,27 +56,17 @@ namespace ray
 	 * has increased by more then #theSaveDelta amount, then the
 	 * considered node is added to #theNodes collection.
 	 * 
-	 * Provides methods that are compatible with those of std::vector.
-	 * TODO - why?
-	 *
+	 * Provides methods that are compatible with those of std::vector
+	 * so that an instance can be used in generic programming contexts.
 	 */
 	struct Path
 	{
 		//! Starting boundary condition (direction and location) for the ray
 		Start const theStart{};
-		//! Point used for estimating path size used for Propagation
-		Vector const theStopLoc{ null<Vector>() };
 		//! Increment specifying how often to archive path data in theNodes.
 		double const theSaveDelta{ null<double>() };
 		//! Archived path information (approximately every theSaveDelta units)
 		std::vector<ray::Node> theNodes{};
-
-	private:
-
-		//! Tracking value (how close to theStopLoc on previous emplace_back()
-		double thePrevNearDist{ null<double>() };
-		//! Tracking value (how close to theStopLoc currently)
-		double theCurrNearDist{ null<double>() };
 
 		//! Estimate collection size needed to span between beg/end locations.
 		inline
@@ -98,7 +87,6 @@ namespace ray
 			return nomSize;
 		}
 
-	public:
 
 		//! Construct storage based on nominal distance between points
 		inline
@@ -114,10 +102,7 @@ namespace ray
 				//!< Used to estimate/allocate storage space
 			)
 			: theStart{ startWith }
-			, theStopLoc{ stopNearTo }
 			, theSaveDelta{ saveStepSize }
-			, thePrevNearDist{ null<double>() }
-			, theCurrNearDist{ 1.e10 }
 		{
 			// estimate distance (as if straight line)
 			if (engabra::g3::isValid(approxEndLoc))
@@ -126,10 +111,6 @@ namespace ray
 				std::size_t const nomSize
 					{ sizeBetween(begLoc, approxEndLoc, theSaveDelta) };
 				theNodes.reserve(nomSize);
-			}
-			if (engabra::g3::isValid(theStopLoc))
-			{
-				theCurrNearDist = magnitude(theStart.thePntLoc - theStopLoc);
 			}
 		}
 
@@ -168,6 +149,16 @@ namespace ray
 		//! Process a node - determine if should be archived or not
 		inline
 		void
+		emplace_back // Path::
+			( ray::Node const & node
+			)
+		{
+			considerNode(node);
+		}
+
+		//! Process a node - determine if should be archived or not
+		inline
+		void
 		considerNode // Path::
 			( ray::Node const & node
 			)
@@ -189,17 +180,6 @@ namespace ray
 			}
 		}
 
-
-		//! Process a node - determine if should be archived or not
-		inline
-		void
-		emplace_back // Path::
-			( ray::Node const & node
-			)
-		{
-			considerNode(node);
-		}
-
 		//! Descriptive information about this instance
 		inline
 		std::string
@@ -213,8 +193,6 @@ namespace ray
 				oss << title << '\n';
 			}
 			oss << "theStart: " << theStart.infoString();
-			oss << '\n';
-			oss << "theStopLoc: " << theStopLoc;
 			oss << '\n';
 			oss << "theSaveDelta: " << theSaveDelta;
 			oss << '\n';
