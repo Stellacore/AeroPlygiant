@@ -712,146 +712,6 @@ oss << " tNext: " << tNext;
 			return oss.str();
 		}
 
-		//! First node in path (or null if not present)
-		inline
-		Node
-		begNode // Path::
-			() const
-		{
-			if (! theNodes.empty())
-			{
-				return theNodes.front();
-			}
-			return Node{};
-		}
-
-		//! Last node in path (or null if not present)
-		inline
-		Node
-		endNode // Path::
-			() const
-		{
-			if (! theNodes.empty())
-			{
-				return theNodes.back();
-			}
-			return Node{};
-		}
-
-		//! Direction (of tangent) at first node
-		inline
-		Vector
-		begDirection // Path::
-			() const
-		{
-			return begNode().thePrevTan;
-		}
-
-		//! Direction (of tangent) at last node
-		inline
-		Vector
-		endDirection // Path::
-			() const
-		{
-			return endNode().theNextTan;
-		}
-
-		//! Direction of direct path (from first location to end location)
-		inline
-		Vector
-		netDirection // Path::
-			() const
-		{
-			Vector dir{ null<Vector>() };
-			if (1u < theNodes.size())
-			{
-				Vector const netDiff
-					{ endNode().theCurrLoc - begNode().theCurrLoc };
-				dir = direction(netDiff);
-			}
-			
-				return dir;
-		}
-
-		//! Directed angle between fromVec and intoVec
-		inline
-		BiVector
-		angleFromInto // Path::
-			( Vector const & fromVec
-			, Vector const & intoVec
-			) const
-		{
-			BiVector angle{ null<BiVector>() };
-			if (1 < theNodes.size())
-			{
-				Spinor const expSpin(fromVec * intoVec);
-				Spinor const logSpin{ logG2(expSpin) };
-				angle = logSpin.theBiv;
-			}
-			return angle;
-		}
-
-		//! Angle from netDirection() toward begin tangent
-		inline
-		BiVector
-		begDeviation // Path::
-			() const
-		{
-			return angleFromInto(netDirection(), begDirection());
-		}
-
-		//! Angle from netDirection() toward end tangent
-		inline
-		BiVector
-		endDeviation // Path::
-			() const
-		{
-			return angleFromInto(netDirection(), endDirection());
-		}
-
-		//! Angle from begDir toward endDir
-		inline
-		BiVector
-		totalDeviation // Path::
-			() const
-		{
-			return angleFromInto(begDirection(), endDirection());
-		}
-
-		//! Summary of overall path info
-		inline
-		std::string
-		infoCurvature // Path::
-			() const
-		{
-			std::ostringstream oss;
-			oss << "begDirection: " << begDirection();
-			oss << '\n';
-			oss << "endDirection: " << endDirection();
-			oss << '\n';
-			oss << "  begDeviation: " << begDeviation();
-			oss << '\n';
-			oss << "  endDeviation: " << endDeviation();
-			oss << '\n';
-			oss << "totalDeviation: " << totalDeviation();
-			return oss.str();
-		}
-
-		//! Summary of overall path info
-		inline
-		std::string
-		infoShape // Path::
-			() const
-		{
-			std::ostringstream oss;
-			oss << "begNode: " << begNode().infoString();
-			oss << '\n';
-			oss << "endNode: " << endNode().infoString();
-			oss << '\n';
-			oss << infoCurvature() << '\n';
-			return oss.str();
-		}
-
 	private:
 
 		//! True when the nearest distance to stop point starts increasing
@@ -903,6 +763,154 @@ oss << " tNext: " << tNext;
 		}
 	
 	}; // Path
+
+	//! Provide view of interesting path information
+	struct PathView
+	{
+		//! Must be set by consumer
+		std::vector<Node> const * const thePtNodes;
+
+		//! First node in path (or null if not present)
+		inline
+		Node
+		begNode // PathView::
+			() const
+		{
+			if (! thePtNodes->empty())
+			{
+				return thePtNodes->front();
+			}
+			return Node{};
+		}
+
+		//! Last node in path (or null if not present)
+		inline
+		Node
+		endNode // PathView::
+			() const
+		{
+			if (! thePtNodes->empty())
+			{
+				return thePtNodes->back();
+			}
+			return Node{};
+		}
+
+		//! Direction (of tangent) at first node
+		inline
+		Vector
+		begDirection // PathView::
+			() const
+		{
+			return begNode().thePrevTan;
+		}
+
+		//! Direction (of tangent) at last node
+		inline
+		Vector
+		endDirection // PathView::
+			() const
+		{
+			return endNode().theNextTan;
+		}
+
+		//! Direction of direct path (from first location to end location)
+		inline
+		Vector
+		netDirection // PathView::
+			() const
+		{
+			Vector dir{ null<Vector>() };
+			if (1u < thePtNodes->size())
+			{
+				Vector const netDiff
+					{ endNode().theCurrLoc - begNode().theCurrLoc };
+				dir = direction(netDiff);
+			}
+			
+				return dir;
+		}
+
+		//! Directed angle between fromVec and intoVec
+		inline
+		BiVector
+		angleFromInto // PathView::
+			( Vector const & fromVec
+			, Vector const & intoVec
+			) const
+		{
+			BiVector angle{ null<BiVector>() };
+			if (engabra::g3::isValid(fromVec) && engabra::g3::isValid(intoVec))
+			{
+				Spinor const expSpin(fromVec * intoVec);
+				Spinor const logSpin{ logG2(expSpin) };
+				angle = logSpin.theBiv;
+			}
+			return angle;
+		}
+
+		//! Angle from netDirection() toward begin tangent
+		inline
+		BiVector
+		begDeviation // PathView::
+			() const
+		{
+			return angleFromInto(netDirection(), begDirection());
+		}
+
+		//! Angle from netDirection() toward end tangent
+		inline
+		BiVector
+		endDeviation // PathView::
+			() const
+		{
+			return angleFromInto(netDirection(), endDirection());
+		}
+
+		//! Angle from begDir toward endDir
+		inline
+		BiVector
+		totalDeviation // PathView::
+			() const
+		{
+			return angleFromInto(begDirection(), endDirection());
+		}
+
+		//! Summary of overall path info
+		inline
+		std::string
+		infoCurvature // PathView::
+			() const
+		{
+			std::ostringstream oss;
+			oss << "begDirection: " << begDirection();
+			oss << '\n';
+			oss << "endDirection: " << endDirection();
+			oss << '\n';
+			oss << "  begDeviation: " << begDeviation();
+			oss << '\n';
+			oss << "  endDeviation: " << endDeviation();
+			oss << '\n';
+			oss << "totalDeviation: " << totalDeviation();
+			return oss.str();
+		}
+
+		//! Summary of overall path info
+		inline
+		std::string
+		infoShape // PathView::
+			() const
+		{
+			std::ostringstream oss;
+			oss << "begNode: " << begNode().infoString();
+			oss << '\n';
+			oss << "endNode: " << endNode().infoString();
+			oss << '\n';
+			oss << infoCurvature() << '\n';
+			return oss.str();
+		}
+
+	}; // PathView
 
 } // [ray]
 
