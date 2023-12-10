@@ -57,9 +57,9 @@ namespace
 	//! Test case sample
 	struct Sample
 	{
-		double const theNuPrev;
-		Vector const theNormDir;
-		double const theNuNext;
+		double const theNuIn; // on incoming side
+		Vector const theNormDir; // from In to Out
+		double const theNuOt;  // on outgoing side
 
 		BiVector const theInPlane; // plane of incidence
 
@@ -70,21 +70,21 @@ namespace
 		Sample
 			( Vector const & normDir
 			, Vector const & orthDir // norm/orthDir define ray plane
-			, double const & nuPrev
-			, double const & nuNext
+			, double const & nuIn
+			, double const & nuOt
 			, double const & inAngle
 			, double const & otAngle
 			)
-			: theNuPrev{ nuPrev }
+			: theNuIn{ nuIn }
 			, theNormDir{ direction(normDir) }
-			, theNuNext{ nuNext }
+			, theNuOt{ nuOt }
 			, theInPlane{ direction((normDir * orthDir).theBiv) }
 			, theInAngle{ inAngle }
 			, theOtAngle{ otAngle }
 		{ }
 
 		Vector
-		tanPrev
+		tanIn
 			() const
 		{
 			Vector const dir
@@ -93,7 +93,7 @@ namespace
 		}
 
 		Vector
-		tanNext
+		tanOt
 			() const
 		{
 			Vector const dir
@@ -111,11 +111,11 @@ namespace
 			{
 				oss << title << '\n';
 			}
-			oss << " theNuPrev: " << theNuPrev;
+			oss << " theNuIn: " << theNuIn;
 			oss << '\n';
 			oss << "theNormDir: " << theNormDir;
 			oss << '\n';
-			oss << " theNuNext: " << theNuNext;
+			oss << " theNuOt: " << theNuOt;
 			oss << '\n';
 			oss << "theInPlane: " << theInPlane;
 			oss << '\n';
@@ -123,9 +123,9 @@ namespace
 			oss << '\n';
 			oss << "theOtAngle: " << theOtAngle;
 			oss << '\n';
-			oss << " tanPrev(): " << tanPrev();
+			oss << " tanIn(): " << tanIn();
 			oss << '\n';
-			oss << " tanNext(): " << tanNext();
+			oss << " tanOt(): " << tanOt();
 			return oss.str();
 		};
 
@@ -168,10 +168,11 @@ namespace
 	//   Air
 	//      e3 (normal)
 	// Glass
-	constexpr double sNuIn{ 1.5 };
 	constexpr double sNuOt{ 1.  };
+	constexpr double sNuIn{ 1.5 };
+	Vector const sGradDir{ -e3 };
 	constexpr double sDubNumRefract{ 4. };
-	static Vector const sNorm{ e3 }; // normal to interface
+	static Vector const sUp{ e3 }; // normal to interface
 	static Vector const sOrth{ e1 }; // orthogonal to normal
 	//
 	// up to critical angle expect refraction forward and reverse
@@ -180,11 +181,12 @@ namespace
 
 
 	//! Check computation of boundary layer propagation (before critical angle)
-	void
-	testRefractGlassToAir
-		( std::ostringstream & oss
-		)
+	std::string
+	test0_RefractGlassToAir
+		()
 	{
+		std::ostringstream oss;
+
 		// [DoxyExample00]
 		// [DoxyExample00]
 
@@ -193,17 +195,17 @@ namespace
 			// Snel's law
 			double const otSinAng{ (sNuIn/sNuOt) * std::sin(inA) };
 			double const otA{ std::asin(otSinAng) };
-			Sample const sample(sNorm, sOrth, sNuIn, sNuOt, inA, otA);
+			Sample const sample(sUp, sOrth, sNuIn, sNuOt, inA, otA);
 
 			// forward direction (glass to air) (refraction up to critical)
 			{
 				std::pair<Vector, ray::DirChange> const expDirChange
-					{ sample.tanNext(), ray::Diverged };
+					{ sample.tanOt(), ray::Diverged };
 
 				// get computed result
 				std::pair<Vector, ray::DirChange> const gotDirChange
 					{ ray::nextTangentDir
-						(sample.tanPrev(), sNuIn, sNorm, sNuOt)
+						(sample.tanIn(), sNuIn, sGradDir, sNuOt)
 					};
 
 				// check result
@@ -213,12 +215,12 @@ namespace
 			// reverse direction (air to glass) (refraction as well)
 			{
 				std::pair<Vector, ray::DirChange> const expDirChange
-					{ -sample.tanPrev(), ray::Converged };
+					{ -sample.tanIn(), ray::Converged };
 
 				// get computed result
 				std::pair<Vector, ray::DirChange> const gotDirChange
 					{ ray::nextTangentDir
-						(-sample.tanNext(), sNuOt, sNorm, sNuIn)
+						(-sample.tanOt(), sNuOt, sGradDir, sNuIn)
 					};
 
 				// check result
@@ -233,14 +235,17 @@ namespace
 			}
 
 		} // angles less than or equal to forward crtical
+
+		return oss.str();
 	}
 
 	//! Check computation of boundary layer propagation (after critical angle)
-	void
-	testReflectGlassToAir
-		( std::ostringstream & oss
-		)
+	std::string
+	test1_ReflectGlassToAir
+		()
 	{
+		std::ostringstream oss;
+
 		// [DoxyExample00]
 		// [DoxyExample00]
 
@@ -250,17 +255,17 @@ namespace
 		{
 			// Reflection
 			double const otA{ pi - inA };
-			Sample const sample(sNorm, sOrth, sNuIn, sNuOt, inA, otA);
+			Sample const sample(sUp, sOrth, sNuIn, sNuOt, inA, otA);
 
 			// forward direction (glass to air) reflection after critical angle.
 			{
 				std::pair<Vector, ray::DirChange> const expDirChange
-					{ sample.tanNext(), ray::Reflected };
+					{ sample.tanOt(), ray::Reflected };
 
 				// get computed result
 				std::pair<Vector, ray::DirChange> const gotDirChange
 					{ ray::nextTangentDir
-						(sample.tanPrev(), sNuIn, sNorm, sNuOt)
+						(sample.tanIn(), sNuIn, sGradDir, sNuOt)
 					};
 
 				// check result
@@ -275,14 +280,17 @@ namespace
 			}
 
 		} // angles after critical to piHalf
+
+		return oss.str();
 	}
 
 	//! Check computation of boundary layer propagation (before critical angle)
-	void
-	testRefractAirToGlass
-		( std::ostringstream & oss
-		)
+	std::string
+	test2_RefractAirToGlass
+		()
 	{
+		std::ostringstream oss;
+
 		// [DoxyExample00]
 		// [DoxyExample00]
 
@@ -290,32 +298,35 @@ namespace
 		constexpr double nuIn{ sNuOt };
 		constexpr double nuOt{ sNuIn };
 
-		for (double inA{0.} ; (! (sInAngMagC < inA)) ; inA += sDelAng)
+		for (double inA{0.} ; (! (piHalf < inA)) ; inA += sDelAng)
 		{
 			// Snel's law
 			double const otSinAng{ (nuIn/nuOt) * std::sin(inA) };
 			double const otA{ std::asin(otSinAng) };
-			// Note use of negative normal here (because of the
-			// way sample() ctor is setup)
-			Sample const sample(-sNorm, sOrth, nuIn, nuOt, inA, otA);
+			// Note reversal of the test-sample normal direction
+			Vector const down{ -sUp };
+			Sample const sample(down, sOrth, nuIn, nuOt, inA, otA);
 
-/*
-std::cout << std::endl;
-std::cout << "  inA: " << inA << std::endl;
-std::cout << "inDir: " << sample.tanPrev() << std::endl;
-std::cout << "otDir: " << sample.tanNext() << std::endl;
-std::cout << "  otA: " << otA << std::endl;
-*/
+			/*
+			std::cout << std::endl;
+			std::cout << "  inA: " << inA << "  nuIn: " << nuIn << '\n';
+			std::cout << "inDir: " << sample.tanIn() << '\n';
+			std::cout << " norm: " << sample.theNormDir << '\n';
+			std::cout << "  sUp: " << sUp << '\n';
+			std::cout << "sGrad: " << sGradDir << '\n';
+			std::cout << "otDir: " << sample.tanOt() << '\n';
+			std::cout << "  otA: " << otA << "  nuOt: " << nuOt << '\n';
+			*/
 
 			// forward direction (glass to air) (refraction up to critical)
 			{
 				std::pair<Vector, ray::DirChange> const expDirChange
-					{ sample.tanNext(), ray::Converged };
+					{ sample.tanOt(), ray::Converged };
 
 				// get computed result
 				std::pair<Vector, ray::DirChange> const gotDirChange
 					{ ray::nextTangentDir
-						(sample.tanPrev(), nuIn, sNorm, nuOt)
+						(sample.tanIn(), nuIn, sGradDir, nuOt)
 					};
 
 				// check result
@@ -330,6 +341,8 @@ std::cout << "  otA: " << otA << std::endl;
 			}
 
 		} // angles less than or equal to forward crtical
+
+		return oss.str();
 	}
 
 }
@@ -343,9 +356,9 @@ main
 {
 	std::ostringstream oss;
 
-	testRefractGlassToAir(oss);
-	testReflectGlassToAir(oss);
-	testRefractAirToGlass(oss);
+	oss << test0_RefractGlassToAir();
+	oss << test1_ReflectGlassToAir();
+	oss << test2_RefractAirToGlass();
 
 	return tst::finish(oss);
 }

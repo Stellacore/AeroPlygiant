@@ -36,6 +36,7 @@
 
 #include <Engabra>
 
+#include <cassert>
 #include <cmath>
 #include <limits>
 #include <sstream>
@@ -303,36 +304,38 @@ double const tDotG{ (tDirPrev * gCurr).theSca[0] };
 if (0. < tDotG)
 {
 	// requires nuPrev < nuNext
-	if (! (nuPrev < nuNext))
+	if (! (nuPrev < nuNext)) // into more dense
 	{
 		std::cerr << "\n\n### Consistency Error - Pos tDotG\n\n" << std::endl;
+	//	assert(false);
 	}
 }
 if (tDotG < 0.)
 {
 	// requires nuNext < nuPrev
-	if (! (nuNext < nuPrev))
+	if (! (nuNext < nuPrev)) // into less dense
 	{
 		std::cerr << "\n\n### Consistency Error - Neg tDotG\n\n" << std::endl;
+	//	assert(false);
 	}
 }
 
 
 				double const rootXi{ std::sqrt(radicand) };
-				if (tDotG < 0.) // propagating into TODO-more/less dense media
+				if (tDotG < 0.) // propagating into less dense media
 				{
 					Spinor const spin{ -rootXi, currB };
 					tDirNext = (spin * gCurrInv).theVec;
-					tChange = Converged;
+					tChange = Diverged;
 oss << "    spinA " << spin << '\n';
 oss << "tDirNextA " << tDirNext << '\n';
 				}
 				else
-				if (0. < tDotG) // propagating into TODO-more/less dense media
+				if (0. < tDotG) // propagating into more dense media
 				{
 					Spinor const spin{  rootXi, currB };
 					tDirNext = (spin * gCurrInv).theVec;
-					tChange = Diverged;
+					tChange = Converged;
 oss << "    spinB " << spin << '\n';
 oss << "tDirNextB " << tDirNext << '\n';
 				}
@@ -341,7 +344,7 @@ oss << "tDirNextB " << tDirNext << '\n';
 oss << " tChange: " << nameFor(tChange) << '\n';
 		}
 oss << "tDirNext: " << tDirNext << '\n';
-//std::cout << oss.str() << '\n';
+std::cout << oss.str() << '\n';
 
 		//
 		return tanDirChange;
