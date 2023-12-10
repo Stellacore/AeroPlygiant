@@ -32,13 +32,15 @@
 
 #include "tst.hpp"
 
+#include <sstream>
+
 
 namespace
 {
 	//! Check .... TODO
 	void
 	test0
-		( std::ostream & oss
+		( std::ostringstream & oss
 		)
 	{
 		// [DoxyExample00]
