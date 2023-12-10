@@ -125,6 +125,6 @@ main
 		std::cout << node.infoBrief() << std::endl;
 	}
 
-	std::cout << path.infoCurvature() << '\n';
+	std::cout << ray::PathView{&path.theNodes}.infoCurvature() << '\n';
 }
 
