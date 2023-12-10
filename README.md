@@ -3,7 +3,7 @@
 
 ## Project Info
 
-AeroPlygiant is a C++ development environment for investigating
+AeroPlygiant is a C++ development toolset for investigating
 general optical refraction behavior associated with arbitrarily complex
 three-dimensional (3D) atmospheric refraction conditions.
 
@@ -15,29 +15,28 @@ meaning "refraction".
 
 Pronunciation is somewhat up for grabs. Recommended is "air-o" 
 followed by ["pluh-g-yant"](https://www.howtopronounce.com/welsh/plygiant)
-(in Welsh) or maybe something like "ply-ge-ant" (in English).
+(in Welsh) or perhaps something like "ply-ge-ant" (in English).
 
 ### Purpose
 
 AeroPlygiant supports analysis and simulation of basic atmospheric
-refraction effects that are encountered in airborne (and spaceborne)
+refraction effects such as those encountered in airborne (and spaceborne)
 remote sensing and terrestrial surveying applications.
 
 
-## Uses and Applications
+## Applications
 
 In its current form, AeroPlygiant is primarily a development toolbox
 with which specific questions can be investigated by custom coding
-something to answer the question at hand. Notwithstanding, some of the
-demonstration programs may be generally useful as command line utility
-applications. E.g.
+something easily using the available classes. Notwithstanding, some of the
+demonstration programs may be generally useful more or less as-is. E.g.
 
 * demoExpAtmosphere - program to simulate refracting ray path from
 an airborne sensor platform using nominal (very)simplified exponential
 decay model for Earth atmospheric index of refraction.
 
 * demoThickPlate - program with which to evaluate refraction path
-through a classic optical "thick plate">
+through a classic optical "thick plate".
 
 
 ## Features
@@ -60,6 +59,63 @@ Technical/math modeling notes are contained in the document
 [Lyx document processor](https://www.lyx.org/).
 This project document, along with the associated \ref Papers.bib 
 bibliography file provide references to various works on refraction.
+
+
+## General Use
+
+TODO - incorporate these steps into example program e.g. demoAeroPlygiant.cpp
+
+In general creating a custom ray path involves the following.
+
+* Define a refractive environment:
+
+	* Derive a class from env::IndexVolume that provides the
+	index of refraction values through a volume of space. E.g.
+
+		TODO
+
+	* In general, also derive a class from env::ActiveVolume that
+	specifies the region of interest (such that ray propagation
+	terminates at boundaries of the active volume). E.g.
+
+		TODO
+
+	* Construct an instance of the refractive media volume. E.g.
+
+		tst::Slab const opticalMedium(....);
+
+* Configure initial ray path boundary conditions:
+
+	* Construct a ray::Start object to define the incident tangent
+	direction and an initial point on the ray path. e.g.
+
+		ray::Start const start{ ray::Start::from(tanBeg, locBeg) };
+
+	* Construct a ray::Propagator instance. E.g.
+
+		ray::Propagator const prop{ &opticalMedium, propStepDist };
+
+* Use the ray::Propagator to trace as many rays as desired:
+
+	* Construct a ray::Path instance that will hold the traced
+	path information (as a collection of ray::Node instance that
+	are saved every delta-length along the path). E.g.
+
+		ray::Path aPath(start, saveDeltaDistance);
+
+	* Use the ray::Propagator to trace as many paths as desired. E.g.
+
+		prop.tracePath(&aPath);
+
+* Retrieve path data:
+
+	* Retrieve desired data from ray::Path archive of ray::Node
+	instances. E.g.
+
+		for (ray::Node const & node : aPath.theNodes)
+		{
+			std::cout << node.infoBrief() << std::endl;
+		}
 
 
 ## Project Development Environment
@@ -112,6 +168,10 @@ names and included options as appropriate for local system).
 	$ cmake --build . --target all -j `nproc`
 	$ # -- Run library unit tests
 	$ ctest -j `nproc`
+
+Reference documentation is then available via
+
+	$ <favoriteBrowser> <someBuildDir>/doc/html/index.html
 
 ### Installation
 

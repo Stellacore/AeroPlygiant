@@ -22,66 +22,44 @@
 // SOFTWARE.
 // 
 
-#ifndef aply_ray_INCL_
-#define aply_ray_INCL_
 
 /*! \file
  *
- * \brief Ray propagation simulation functions.
+ * \brief Unit test for class CN
  *
  */
 
 
-#include "rayDirChange.hpp"
-#include "rayNode.hpp"
-#include "rayPath.hpp"
-#include "rayPathView.hpp"
-#include "rayPropagator.hpp"
-#include "rayStart.hpp"
+#include "tst.hpp"
 
-#include <iostream>
-
-
-namespace aply
-{
-/*! \brief Functions and classes for simulation of ray propagation
- */
-namespace ray
-{
-
-} // [ray]
-} // [aply]
+#include <sstream>
 
 
 namespace
 {
-
-	//! Overload output for ray::Start
-	inline
-	std::ostream &
-	operator<<
-		( std::ostream & ostrm
-		, aply::ray::Start const & start
+	//! Check .... TODO
+	void
+	test0
+		( std::ostringstream & oss
 		)
 	{
-		ostrm << start.infoString();
-		return ostrm;
+		// [DoxyExample00]
+		oss << "Failure code me\n";
+		// [DoxyExample00]
 	}
-
-	//! Overload output for ray::Node
-	inline
-	std::ostream &
-	operator<<
-		( std::ostream & ostrm
-		, aply::ray::Node const & node
-		)
-	{
-		ostrm << node.infoString();
-		return ostrm;
-	}
-
-} // [anon]
+}
 
 
-#endif // aply_ray_INCL_
+/*! \brief Unit test for CN
+ */
+int
+main
+	()
+{
+	std::ostringstream oss;
+
+	test0(oss);
+
+	return tst::finish(oss);
+}
 

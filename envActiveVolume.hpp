@@ -22,66 +22,62 @@
 // SOFTWARE.
 // 
 
-#ifndef aply_ray_INCL_
-#define aply_ray_INCL_
+#ifndef aply_env_ActiveVolume_INCL_
+#define aply_env_ActiveVolume_INCL_
 
 /*! \file
  *
- * \brief Ray propagation simulation functions.
+ * \brief Environment configuration parameters (related to Refraction)
  *
  */
 
 
-#include "rayDirChange.hpp"
-#include "rayNode.hpp"
-#include "rayPath.hpp"
-#include "rayPathView.hpp"
-#include "rayPropagator.hpp"
-#include "rayStart.hpp"
+#include <Engabra>
 
-#include <iostream>
+#include <memory>
+#include <string>
+
 
 
 namespace aply
 {
-/*! \brief Functions and classes for simulation of ray propagation
- */
-namespace ray
+namespace env
 {
+	using namespace engabra::g3;
 
-} // [ray]
+	/*! \brief Specify volume of space through which rays should be propagated.
+	 */
+	struct ActiveVolume
+	{
+		std::string theName{};
+
+		//! Construct a named instance
+		explicit
+		ActiveVolume
+			( std::string const & name = "ActiveVolume"
+			)
+			: theName{ name }
+		{ }
+
+		//! Overload to define shape of volume (true: inside, false: outside)
+		inline
+		virtual
+		bool
+		contains
+			( Vector const & rVec
+			) const
+		{
+			return true;
+		}
+
+	}; // ActiveVolume
+
+	//! An active volume w/o limits
+	static std::shared_ptr<ActiveVolume> const sPtAllSpace
+		{ std::make_shared<ActiveVolume>("sAllSpace") };
+
+} // [env]
 } // [aply]
 
-
-namespace
-{
-
-	//! Overload output for ray::Start
-	inline
-	std::ostream &
-	operator<<
-		( std::ostream & ostrm
-		, aply::ray::Start const & start
-		)
-	{
-		ostrm << start.infoString();
-		return ostrm;
-	}
-
-	//! Overload output for ray::Node
-	inline
-	std::ostream &
-	operator<<
-		( std::ostream & ostrm
-		, aply::ray::Node const & node
-		)
-	{
-		ostrm << node.infoString();
-		return ostrm;
-	}
-
-} // [anon]
-
-
-#endif // aply_ray_INCL_
+#endif // aply_env_ActiveVolume_INCL_
 

@@ -80,8 +80,11 @@ set(testProgs
 
 	test_test
 
-	test_roundTrip
+	test_IndexVolume
+	test_nextTangentDir
 	test_Path
+	test_Propagator
+	test_roundTrip
 
 	)
 

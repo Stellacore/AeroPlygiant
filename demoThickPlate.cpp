@@ -33,7 +33,6 @@
 #include "tstModels.hpp"
 
 #include "ray.hpp"
-//#include "save.hpp"
 
 #include <Engabra>
 
@@ -46,6 +45,7 @@
 //! \brief Functions and data specific to each application (e.g. each demo).
 namespace app
 {
+	using namespace aply;
 	using namespace engabra::g3;
 
 	//! Generate a bundle of ray starting elements
@@ -149,6 +149,7 @@ main
 		return 1;
 	}
 
+	using namespace aply;
 	using namespace engabra::g3;
 
 	tst::Slab const media
@@ -181,7 +182,7 @@ main
 	{
 		// interact with data consumer
 		ray::Path path(start, stopNear, saveStepDist);
-		prop.traceNodes(path.theStart, &path);
+		prop.tracePath(&path);
 
 		// show path info
 		for (ray::Node const & node : path.theNodes)

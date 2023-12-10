@@ -1753,8 +1753,8 @@ The condition,
 \begin_inset Formula $0<\lambda_{n}$
 \end_inset
 
-, corresponds with refraction into an increasingly dense next medium for
- which 
+, when the tangent and the gradient are mostly aligned, corresponds with
+ refraction into an increasingly dense next medium for which 
 \begin_inset Formula $\nu_{p}<\nu_{n}$
 \end_inset
 
@@ -1766,8 +1766,8 @@ The condition,
 \begin_inset Formula $\lambda_{n}<0$
 \end_inset
 
-, corresponds with refraction into an increasingly sparse next medium for
- which 
+, when the tangent and gradient are oppositely directed, corresponds with
+ refraction into an increasingly sparse next medium for which 
 \begin_inset Formula $\nu_{n}<\nu_{p}$
 \end_inset
 

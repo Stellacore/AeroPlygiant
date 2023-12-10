@@ -90,11 +90,14 @@ int
 main
 	()
 {
-	tst::AtmModel const atm(env::sEarth);
-	// std::cout << atm.infoString("atm") << std::endl;
+	// Project namespace
+	using namespace aply;
 
 	// math/algebra foundation
 	using namespace engabra::g3; // for basis vectors, e1,e2,...
+
+	tst::AtmModel const atm(env::sEarth);
+	// std::cout << atm.infoString("atm") << std::endl;
 
 	// location on Earth
 	double const & groundRad = env::sEarth.theRadGround;
@@ -117,7 +120,7 @@ main
 	ray::Path path(start, stopNear, saveStepDist);
 
 	// perform path propagation
-	prop.traceNodes(path.theStart, &path);
+	prop.tracePath(&path);
 
 	// report results
 	for (ray::Node const & node : path.theNodes)
@@ -125,6 +128,6 @@ main
 		std::cout << node.infoBrief() << std::endl;
 	}
 
-	std::cout << path.infoCurvature() << '\n';
+	std::cout << ray::PathView{&path.theNodes}.infoCurvature() << '\n';
 }
 
