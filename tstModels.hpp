@@ -67,9 +67,9 @@ namespace tst
 			( Vector const & normDir
 			, double const & begDot
 			, double const & endDot
-			, double const & nuPrev = 1.
-			, double const & nuCurr = 1.5
-			, double const & nuNext = 1.
+			, double const & nuPrev
+			, double const & nuCurr
+			, double const & nuNext
 			, std::shared_ptr<env::ActiveVolume>
 				const & ptVolume = env::sPtAllSpace
 			)

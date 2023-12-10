@@ -81,6 +81,10 @@ main
 	using namespace aply;
 	using namespace engabra::g3;
 
+	std::shared_ptr<env::ActiveVolume> const ptVolume
+		{ std::make_shared<env::ActiveBox>
+			(zero<Vector>(), Vector{10., 10., 10.})
+		};
 	tst::Slab const media
 		( e1   // 'x' direction
 		, 4.   // xBeg
@@ -88,13 +92,14 @@ main
 		, 1.0  // nu before
 		, 1.5  // nu inside
 		, 1.0  // nu after
+		, ptVolume // a bounding box
 		);
 	// tst:showMedia(media);
 
 	// path specification
 	Vector const tBeg{ 5., 5., 5. };
 	Vector const rBeg{ 0., 0., 0.  };
-	Vector const stopNear{ 10., 10., 10. };
+	Vector const approxEndLoc{ 10., 10., 10. };
 	ray::Start const start{ ray::Start::from(tBeg, rBeg) };
 
 	// configuration
@@ -106,7 +111,7 @@ constexpr double propStepDist{ 1./128. }; // integration step size
 	ray::Propagator const prop{ &media, propStepDist };
 
 	// interact with data consumer
-	ray::Path path(start, stopNear, saveStepDist);
+	ray::Path path(start, saveStepDist, approxEndLoc);
 	prop.tracePath(&path);
 
 	// show path info
