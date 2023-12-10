@@ -69,8 +69,10 @@ namespace tst
 			, double const & nuPrev = 1.
 			, double const & nuCurr = 1.5
 			, double const & nuNext = 1.
+			, std::shared_ptr<env::ActiveVolume>
+				const & ptVolume = env::sPtAllSpace
 			)
-			: IndexVolume{}
+			: IndexVolume(ptVolume)
 			, theNormDir{ direction(normDir) }
 			, theBegDot{ begDot }
 			, theEndDot{ endDot }
@@ -128,8 +130,10 @@ namespace tst
 			, double const & radius
 			, double const & nuCenter = 1.5
 			, double const & nuEdge = 1.
+			, std::shared_ptr<env::ActiveVolume>
+				const & ptVolume = env::sPtAllSpace
 			)
-			: IndexVolume{}
+			: IndexVolume(ptVolume)
 			, theCenter{ center }
 			, theRadius{ radius }
 			, theNuCenter{ nuCenter }
@@ -304,7 +308,7 @@ namespace tst
 		inline
 		AtmModel
 			()
-			: IndexVolume{}
+			: IndexVolume()
 			, theNuFunc{}
 		{ }
 
@@ -312,8 +316,10 @@ namespace tst
 		inline
 		AtmModel
 			( env::Planet const & planet
+			, std::shared_ptr<env::ActiveVolume>
+				const & ptVolume = env::sPtAllSpace
 			)
-			: IndexVolume{}
+			: IndexVolume(ptVolume)
 			, the_v0r0{ planet.theNuGround, planet.theRadGround }
 			, the_v1r1{ planet.theNuSpace, planet.theRadSpace }
 			, theNuFunc

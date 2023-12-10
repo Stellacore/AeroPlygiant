@@ -35,8 +35,9 @@
 #include <Engabra>
 
 #include <iostream>
-#include <string>
+#include <memory>
 #include <sstream>
+#include <string>
 #include <vector>
 
 
@@ -100,6 +101,37 @@ namespace env
 		, 6470.e3  // radiusSpace
 		};
 
+	/*! \brief Specify volume of space through which rays should be propagated.
+	 */
+	struct ActiveVolume
+	{
+		std::string theName{};
+
+		//! Construct a named instance
+		explicit
+		ActiveVolume
+			( std::string const & name = "ActiveVolume"
+			)
+			: theName{ name }
+		{ }
+
+		//! Overload to define shape of volume (true: inside, false: outside)
+		inline
+		virtual
+		bool
+		contains
+			( Vector const & rVec
+			) const
+		{
+			return true;
+		}
+
+	}; // ActiveVolume
+
+	//! An active volume w/o limits
+	static std::shared_ptr<ActiveVolume> const sPtAllSpace
+		{ std::make_shared<ActiveVolume>("sAllSpace") };
+
 	/*! \brief Interface specification for refractive media volume
 	 *
 	 * Represent the ray trace environment as a volume of refractive
@@ -113,6 +145,37 @@ namespace env
 	 */
 	struct IndexVolume
 	{
+		/*! \brief Region in which ray propagation should be performed.
+		 *
+		 * By default, the index volume (IoR field) is active everywhere.
+		 * E.g. ray propagation will never hit an edge
+		 */
+		std::shared_ptr<ActiveVolume> const thePtVolume{};
+
+		//! \brief Construct media IoR volume (clipped by ActiveVolume)
+		inline
+		explicit
+		IndexVolume
+			( std::shared_ptr<ActiveVolume> const & ptVolume = sPtAllSpace
+			)
+			: thePtVolume{ ptVolume }
+		{ }
+
+		//! \brief Index of Refraction value, or null if outside thePtVolume.
+		inline
+		double
+		qualifiedNuValue
+			( Vector const & rVec
+			) const
+		{
+			double nu{ null<double>() }; // default to stop condition
+			if (thePtVolume->contains(rVec))
+			{
+				nu = nuValue(rVec);
+			}
+			return nu;
+		}
+
 		/*! \brief Index of refraction value at vector location rVec.
 		 *
 	 	 * Note: return nuValue = null<double>() to indicate the edges

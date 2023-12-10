@@ -36,6 +36,7 @@
 
 #include <Engabra>
 
+#include <cassert>
 #include <cmath>
 #include <limits>
 #include <sstream>
@@ -59,6 +60,7 @@ namespace ray
 		Vector const thePntLoc{}; //!< Point of incidence for tangent dir
 
 		//! Create an instance ensuring tangent dir is unitary.
+		inline
 		static
 		Start
 		from // Start::
@@ -85,7 +87,7 @@ namespace ray
 				<< "dir: " << theTanDir
 				<< ' '
 				<< "loc: " << thePntLoc
-				<< '\n';
+				;
 			return oss.str();
 		}
 
@@ -245,48 +247,56 @@ namespace ray
 		, double const & nuPrev //!< Incoming IoR
 		, Vector const & gCurr //! Must be non-zero (to be invertable
 		, double const & nuNext //!< Exiting IoR
-		, env::IndexVolume const * const & ptMedia //!< Refraction media
 		)
 	{
-		// default to unaltered
+		// default case is an unaltered ray
 		std::pair<Vector, DirChange> tanDirChange{ tDirPrev, Unaltered };
 		Vector & tDirNext = tanDirChange.first;
 		DirChange & tChange = tanDirChange.second;
 		//
-		// compute refraction bivector
-		// note that magnitude is order of |gCurr|
-		BiVector const currB{ (nuPrev/nuNext) * (tDirPrev*gCurr).theBiv };
-		//
-		// note that sq(bivector) = -magSq(bivector)
-		double const gCurrSq{ magSq(gCurr) };
-		double const radicand{ gCurrSq - magSq(currB) };
-		//
-		// use current conditions to select computation option
-		//
-		Vector const gCurrInv{ (1./gCurrSq) * gCurr };
-		if (radicand < 0.) // total internal reflection
+		// check for stop condition
+		if (! engabra::g3::isValid(nuPrev))
 		{
-			// reflect tangent from interface plane (dual to gCurr)
-			tDirNext = -(gCurr * tDirPrev * gCurrInv).theVec;
-			tChange = Reflected;
+			tChange = Stopped;
 		}
 		else
 		{
-			double const rootXi{ std::sqrt(radicand) };
-			if (nuPrev < nuNext) // propagating into more dense media
+			// compute refraction bivector
+			// note that magnitude is order of |gCurr|
+			BiVector const currB{ (nuPrev/nuNext) * (tDirPrev*gCurr).theBiv };
+			//
+			// note that sq(bivector) = -magSq(bivector)
+			double const gCurrSq{ magSq(gCurr) };
+			double const radicand{ gCurrSq - magSq(currB) };
+			//
+			// use current conditions to select computation option
+			//
+			Vector const gCurrInv{ (1./gCurrSq) * gCurr };
+			if (radicand < 0.) // total internal reflection
 			{
-				Spinor const spin{  rootXi, currB };
-				tDirNext = (spin * gCurrInv).theVec;
-				tChange = Converged;
+				// reflect tangent from interface plane (dual to gCurr)
+				tDirNext = -(gCurr * tDirPrev * gCurrInv).theVec;
+				tChange = Reflected;
 			}
 			else
-			if (nuNext < nuPrev) // propagating into less dense media
 			{
-				Spinor const spin{ -rootXi, currB };
-				tDirNext = (spin * gCurrInv).theVec;
-				tChange = Diverged;
+				double const rootXi{ std::sqrt(radicand) };
+				double const tDotG{ (tDirPrev * gCurr).theSca[0] };
+				if (tDotG < 0.) // propagating into less dense media
+				{
+					Spinor const spin{ -rootXi, currB };
+					tDirNext = (spin * gCurrInv).theVec;
+					tChange = Diverged;
+				}
+				else
+				if (0. < tDotG) // propagating into more dense media
+				{
+					Spinor const spin{  rootXi, currB };
+					tDirNext = (spin * gCurrInv).theVec;
+					tChange = Converged;
+				}
+				// (nuNext == nuPrev) // same as default (gCurr == 0)
 			}
-			// (nuNext == nuPrev) // same as default (gCurr == 0)
 		}
 		//
 		return tanDirChange;
@@ -326,17 +336,14 @@ namespace ray
 			double const gMag{ magnitude(gCurr) };
 			static double const gTol // enough to unitize and invert gCurr
 				{ std::numeric_limits<double>::min() };
-std::ostringstream oss;
-oss << "gCurr: " << gCurr;
 			if (! (gTol < gMag)) // unaltered
 			{
-oss << " PassThrough";
 				// location at which to evaluate nuNext (iteratively refined)
 				Vector const qNext{ rCurr + .5*theStepDist*tNext };
 
 				// update estimated forward next refraction index value
 				// (which should be same as previous)
-				nuNext = thePtMedia->nuValue(qNext);
+				nuNext = thePtMedia->qualifiedNuValue(qNext);
 
 				// update tangent direction
 				tNext = tPrev; // default initialized
@@ -365,11 +372,8 @@ oss << " PassThrough";
 				while ((tolDifSq < difSq) && (numLoop++ < maxLoop) && doLoop)
 				{
 					// update IoR evaluation location
-//std::cout << "tNext: " << io::fixed(tNext) << std::endl;
-//std::cout << "gCurr: " << io::fixed(gCurr) << std::endl;
 					if (! isReflection)
 					{
-oss << " Refraction ";
 						// update refraction index to midpoint of predicted next
 						// interval (along evolving next tangent direction).
 						qNext = rCurr + .5*theStepDist*tNext;
@@ -377,7 +381,6 @@ oss << " Refraction ";
 					else
 					// if (isReflection) // perfect reflection
 					{
-oss << " REFLECTION ";
 						Vector const gDir{ direction(gCurr) };
 						qNext = rCurr + .5*theStepDist*gDir;
 						// No need to iterate further for perfect reflection
@@ -385,13 +388,19 @@ oss << " REFLECTION ";
 					}
 
 					// update estimated forward next refraction index value
-					nuNext = thePtMedia->nuValue(qNext);
+					nuNext = thePtMedia->qualifiedNuValue(qNext);
 
 					// update tangent direction
 					std::pair<Vector, DirChange> const tDirChange
-						{ nextTangentDir
-							(tPrev, nuPrev, gCurr, nuNext, thePtMedia)
-						};
+						{ nextTangentDir(tPrev, nuPrev, gCurr, nuNext) };
+
+					// check for stop condition
+					if (Stopped == tDirChange.second)
+					{
+						break;
+					}
+
+					// note reflection condition for next loop iteration
 					isReflection = (Reflected == tDirChange.second);
 
 					// evaluate convergence of tangent direction
@@ -404,22 +413,7 @@ oss << " REFLECTION ";
 
 				} // while loop on refraction index estimation
 
-/*
-if (0u < numLoop)
-{
-std::cout
-	<< "-- numLoop: " << numLoop
-	<< "  at: " << rCurr
-	<< '\n';
-}
-*/
-
 			} // significant gCurr magnitude
-
-oss << " nuPrev: " << io::fixed(nuPrev, 3u, 3u);
-oss << " nuNext: " << io::fixed(nuNext, 3u, 3u);
-oss << " tNext: " << tNext;
-//std::cout << oss.str() << std::endl;
 
 			// check for invalid media index volume (e.g. exit region)
 			if (! engabra::g3::isValid(nuNext))
@@ -461,24 +455,25 @@ oss << " tNext: " << tNext;
 		template <typename Consumer>
 		inline
 		void
-		traceNodes // Propagator::
-			( Start const & start
-			, Consumer * const & ptConsumer
+		tracePath // Propagator::
+			( Consumer * const & ptConsumer
 			) const
 		{
-			if (isValid())
+			if (isValid() && ptConsumer)
 			{
+				Vector const & tBeg = ptConsumer->theStart.theTanDir;
+				Vector const & rBeg = ptConsumer->theStart.thePntLoc;
+
 				// start with initial conditions
-				Vector tPrev{ start.theTanDir };
-				Vector rCurr{ start.thePntLoc };
+				Vector tPrev{ tBeg };
+				Vector rCurr{ rBeg };
 
 				// incident media IoR
-				Vector const & tBeg = start.theTanDir;
-				Vector const & rBeg = start.thePntLoc;
-				double nuPrev
-					{ thePtMedia->nuValue(rBeg - .5*theStepDist*tBeg) };
+				Vector const rPrev{ (rBeg - .5*theStepDist*tBeg) };
+				double nuPrev{ thePtMedia->qualifiedNuValue(rPrev) };
 
 				// propagate until path approximate reaches requested length
+				// or encounteres a NaN value for index of refraction
 				while (ptConsumer->size() < ptConsumer->capacity())
 				{
 					// determine propagation change at this step
@@ -497,15 +492,15 @@ oss << " tNext: " << tNext;
 					Vector const rNext{ nextLocation(rCurr, tNext) };
 
 					// give consumer opportunity to record node data
-					ptConsumer->emplace_back
-						(Node{ tPrev, nuPrev, rCurr, nuNext, tNext, change });
+					Node const nextNode
+						{ tPrev, nuPrev, rCurr, nuNext, tNext, change };
+					ptConsumer->emplace_back(nextNode);
 
 					// update state for next node
 					tPrev = tNext;
 					rCurr = rNext;
 					nuPrev = nuNext;
 				}
-//std::cout << "\n####\n#### done tracing\n####\n";
 			}
 		}
 
@@ -570,14 +565,19 @@ oss << " tNext: " << tNext;
 			, theStopLoc{ stopNearTo }
 			, theSaveDelta{ saveStepSize }
 			, thePrevNearDist{ null<double>() }
-			, theCurrNearDist{ magnitude(theStopLoc - theStart.thePntLoc) }
+			, theCurrNearDist{ 1.e10 }
 		{
 			// estimate distance (as if straight line)
-			double const nomDist{ magnitude(stopNearTo - theStart.thePntLoc) };
-			constexpr double padFactor{ 9./8. }; // about 12% extra
-			double const dubSize{ padFactor * nomDist / theSaveDelta };
-			std::size_t const nomSize{ static_cast<std::size_t>(dubSize) };
-			theNodes.reserve(nomSize);
+			if (engabra::g3::isValid(theStopLoc))
+			{
+				theCurrNearDist = magnitude(theStopLoc - theStart.thePntLoc);
+				double const nomDist
+					{ magnitude(theStopLoc - theStart.thePntLoc) };
+				constexpr double padFactor{ 9./8. }; // about 12% extra
+				double const dubSize{ padFactor * nomDist / theSaveDelta };
+				std::size_t const nomSize{ static_cast<std::size_t>(dubSize) };
+				theNodes.reserve(nomSize);
+			}
 		}
 
 		//! Indicate how much this instance currently *has* stored.
@@ -589,12 +589,27 @@ oss << " tNext: " << tNext;
 			return theNodes.size();
 		}
 
+		/*! \brief Set maximum capacity.
+		 * 
+		 * This value controls termination for cases where the
+		 * media has valid IoR value for long (or infinite) distances.
+		 */
+		inline
+		void
+		reserve
+			( std::size_t const & maxNodeSize
+			)
+		{
+			theNodes.reserve(maxNodeSize);
+		}
+
 		//! Indicate how much this instance *can* store.
 		inline
 		std::size_t
 		capacity // Path::
 			() const
 		{
+
 			std::size_t cap{ 0u }; // default is to stop
 			if (keepGoing())
 			{
@@ -671,146 +686,6 @@ oss << " tNext: " << tNext;
 			return oss.str();
 		}
 
-		//! First node in path (or null if not present)
-		inline
-		Node
-		begNode // Path::
-			() const
-		{
-			if (! theNodes.empty())
-			{
-				return theNodes.front();
-			}
-			return Node{};
-		}
-
-		//! Last node in path (or null if not present)
-		inline
-		Node
-		endNode // Path::
-			() const
-		{
-			if (! theNodes.empty())
-			{
-				return theNodes.back();
-			}
-			return Node{};
-		}
-
-		//! Direction (of tangent) at first node
-		inline
-		Vector
-		begDirection // Path::
-			() const
-		{
-			return begNode().thePrevTan;
-		}
-
-		//! Direction (of tangent) at last node
-		inline
-		Vector
-		endDirection // Path::
-			() const
-		{
-			return endNode().theNextTan;
-		}
-
-		//! Direction of direct path (from first location to end location)
-		inline
-		Vector
-		netDirection // Path::
-			() const
-		{
-			Vector dir{ null<Vector>() };
-			if (1u < theNodes.size())
-			{
-				Vector const netDiff
-					{ endNode().theCurrLoc - begNode().theCurrLoc };
-				dir = direction(netDiff);
-			}
-			
-				return dir;
-		}
-
-		//! Directed angle between fromVec and intoVec
-		inline
-		BiVector
-		angleFromInto // Path::
-			( Vector const & fromVec
-			, Vector const & intoVec
-			) const
-		{
-			BiVector angle{ null<BiVector>() };
-			if (1 < theNodes.size())
-			{
-				Spinor const expSpin(fromVec * intoVec);
-				Spinor const logSpin{ logG2(expSpin) };
-				angle = logSpin.theBiv;
-			}
-			return angle;
-		}
-
-		//! Angle from netDirection() toward begin tangent
-		inline
-		BiVector
-		begDeviation // Path::
-			() const
-		{
-			return angleFromInto(netDirection(), begDirection());
-		}
-
-		//! Angle from netDirection() toward end tangent
-		inline
-		BiVector
-		endDeviation // Path::
-			() const
-		{
-			return angleFromInto(netDirection(), endDirection());
-		}
-
-		//! Angle from begDir toward endDir
-		inline
-		BiVector
-		totalDeviation // Path::
-			() const
-		{
-			return angleFromInto(begDirection(), endDirection());
-		}
-
-		//! Summary of overall path info
-		inline
-		std::string
-		infoCurvature // Path::
-			() const
-		{
-			std::ostringstream oss;
-			oss << "begDirection: " << begDirection();
-			oss << '\n';
-			oss << "endDirection: " << endDirection();
-			oss << '\n';
-			oss << "  begDeviation: " << begDeviation();
-			oss << '\n';
-			oss << "  endDeviation: " << endDeviation();
-			oss << '\n';
-			oss << "totalDeviation: " << totalDeviation();
-			return oss.str();
-		}
-
-		//! Summary of overall path info
-		inline
-		std::string
-		infoShape // Path::
-			() const
-		{
-			std::ostringstream oss;
-			oss << "begNode: " << begNode().infoString();
-			oss << '\n';
-			oss << "endNode: " << endNode().infoString();
-			oss << '\n';
-			oss << infoCurvature() << '\n';
-			return oss.str();
-		}
-
 	private:
 
 		//! True when the nearest distance to stop point starts increasing
@@ -862,6 +737,154 @@ oss << " tNext: " << tNext;
 		}
 	
 	}; // Path
+
+	//! Provide view of interesting path information
+	struct PathView
+	{
+		//! Must be set by consumer
+		std::vector<Node> const * const thePtNodes;
+
+		//! First node in path (or null if not present)
+		inline
+		Node
+		begNode // PathView::
+			() const
+		{
+			if (! thePtNodes->empty())
+			{
+				return thePtNodes->front();
+			}
+			return Node{};
+		}
+
+		//! Last node in path (or null if not present)
+		inline
+		Node
+		endNode // PathView::
+			() const
+		{
+			if (! thePtNodes->empty())
+			{
+				return thePtNodes->back();
+			}
+			return Node{};
+		}
+
+		//! Direction (of tangent) at first node
+		inline
+		Vector
+		begDirection // PathView::
+			() const
+		{
+			return begNode().thePrevTan;
+		}
+
+		//! Direction (of tangent) at last node
+		inline
+		Vector
+		endDirection // PathView::
+			() const
+		{
+			return endNode().theNextTan;
+		}
+
+		//! Direction of direct path (from first location to end location)
+		inline
+		Vector
+		netDirection // PathView::
+			() const
+		{
+			Vector dir{ null<Vector>() };
+			if (1u < thePtNodes->size())
+			{
+				Vector const netDiff
+					{ endNode().theCurrLoc - begNode().theCurrLoc };
+				dir = direction(netDiff);
+			}
+			
+				return dir;
+		}
+
+		//! Directed angle between fromVec and intoVec
+		inline
+		BiVector
+		angleFromInto // PathView::
+			( Vector const & fromVec
+			, Vector const & intoVec
+			) const
+		{
+			BiVector angle{ null<BiVector>() };
+			if (engabra::g3::isValid(fromVec) && engabra::g3::isValid(intoVec))
+			{
+				Spinor const expSpin(fromVec * intoVec);
+				Spinor const logSpin{ logG2(expSpin) };
+				angle = logSpin.theBiv;
+			}
+			return angle;
+		}
+
+		//! Angle from netDirection() toward begin tangent
+		inline
+		BiVector
+		begDeviation // PathView::
+			() const
+		{
+			return angleFromInto(netDirection(), begDirection());
+		}
+
+		//! Angle from netDirection() toward end tangent
+		inline
+		BiVector
+		endDeviation // PathView::
+			() const
+		{
+			return angleFromInto(netDirection(), endDirection());
+		}
+
+		//! Angle from begDir toward endDir
+		inline
+		BiVector
+		totalDeviation // PathView::
+			() const
+		{
+			return angleFromInto(begDirection(), endDirection());
+		}
+
+		//! Summary of overall path info
+		inline
+		std::string
+		infoCurvature // PathView::
+			() const
+		{
+			std::ostringstream oss;
+			oss << "begDirection: " << begDirection();
+			oss << '\n';
+			oss << "endDirection: " << endDirection();
+			oss << '\n';
+			oss << "  begDeviation: " << begDeviation();
+			oss << '\n';
+			oss << "  endDeviation: " << endDeviation();
+			oss << '\n';
+			oss << "totalDeviation: " << totalDeviation();
+			return oss.str();
+		}
+
+		//! Summary of overall path info
+		inline
+		std::string
+		infoShape // PathView::
+			() const
+		{
+			std::ostringstream oss;
+			oss << "begNode: " << begNode().infoString();
+			oss << '\n';
+			oss << "endNode: " << endNode().infoString();
+			oss << '\n';
+			oss << infoCurvature() << '\n';
+			return oss.str();
+		}
+
+	}; // PathView
 
 } // [ray]
 

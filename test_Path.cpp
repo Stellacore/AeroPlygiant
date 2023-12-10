@@ -35,7 +35,6 @@
 
 #include "env.hpp"
 #include "ray.hpp"
-//#include "save.hpp"
 
 #include <Engabra>
 
@@ -77,7 +76,6 @@ int
 main
 	()
 {
-	int istat{ 1 }; // default to failure
 	std::ostringstream oss;
 
 	using namespace engabra::g3;
@@ -108,11 +106,11 @@ constexpr double propStepDist{ 1./128. }; // integration step size
 
 	// interact with data consumer
 	ray::Path path(start, stopNear, saveStepDist);
-	prop.traceNodes(path.theStart, &path);
+	prop.tracePath(&path);
 
 	// show path info
-	constexpr bool showIt{ true };
-//	constexpr bool showIt{ false };
+//	constexpr bool showIt{ true };
+	constexpr bool showIt{ false };
 	if (showIt)
 	{
 		for (ray::Node const & node : path.theNodes)

@@ -22,28 +22,87 @@
 // SOFTWARE.
 // 
 
-#ifndef Refraction_save_INCL_
-#define Refraction_save_INCL_
 
 /*! \file
  *
- * \brief Environment configuration parameters (related to Refraction)
+ * \brief Unit test for class IndexVolume
  *
  */
 
 
-#include "ray.hpp"
+#include "tst.hpp"
+
+#include "env.hpp"
 
 
-/*! \brief Classes and functions for recording and saving propagated path data.
- */
-namespace save
+namespace
 {
+	//! Test construction of IndexVolume with no argument
+	struct TestEmpty : public env::IndexVolume
+	{
+		inline
+		TestEmpty
+			()
+			: IndexVolume()
+		{ }
 
-	using namespace engabra::g3;
+		inline
+		double
+		nuValue
+			( engabra::g3::Vector const & rVec
+			) const
+		{
+			return 1.;
+		}
+
+	}; // TestEmpty
+
+	//! Test construction of IndexVolume with argument
+	struct TestVolume : public env::IndexVolume
+	{
+		inline
+		TestVolume
+			()
+			: IndexVolume(env::sPtAllSpace)
+		{ }
+
+		inline
+		double
+		nuValue
+			( engabra::g3::Vector const & rVec
+			) const
+		{
+			return 1.;
+		}
+
+	}; // TestVolume
+
+	//! Check basic construction
+	void
+	test0
+		( std::ostream & oss
+		)
+	{
+		// [DoxyExample00]
+		// [DoxyExample00]
+
+		// Successful compile is test condition
+		TestVolume const tVolume{};
+		TestEmpty const tEmpty{};
+	}
+}
 
 
-} // [save]
+/*! \brief Unit test for IndexVolume
+ */
+int
+main
+	()
+{
+	std::ostringstream oss;
 
-#endif // Refraction_save_INCL_
+	test0(oss);
+
+	return tst::finish(oss);
+}
 
