@@ -110,8 +110,8 @@ constexpr double propStepDist{ 1./128. }; // integration step size
 	prop.tracePath(&path);
 
 	// show path info
-	constexpr bool showIt{ true };
-//	constexpr bool showIt{ false };
+//	constexpr bool showIt{ true };
+	constexpr bool showIt{ false };
 	if (showIt)
 	{
 		for (ray::Node const & node : path.theNodes)
