@@ -39,8 +39,8 @@
 #include <memory>
 
 
-/*! \brief Functions and data associated with ray propagation environment
- */
+namespace aply
+{
 namespace env
 {
 	using namespace engabra::g3;
@@ -128,6 +128,7 @@ namespace env
 	}; // IndexVolume
 
 } // [env]
+} // [aply]
 
 #endif // aply_env_IndexVolume_INCL_
 

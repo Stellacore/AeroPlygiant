@@ -47,6 +47,8 @@ main
 {
 	std::ostringstream oss; // test message string
 
+	using namespace aply;
+
 	tst::AtmModel const atm(env::sEarth);
 	std::size_t const pathSize{ 8u };
 

@@ -41,8 +41,8 @@
 #include <vector>
 
 
-/*! \brief Functions and classes for simulation of ray propagation
- */
+namespace aply
+{
 namespace ray
 {
 	using namespace engabra::g3;
@@ -196,6 +196,7 @@ namespace ray
 	}; // PathView
 
 } // [ray]
+} // [aply]
 
 
 #endif // aply_ray_PathView_INCL_

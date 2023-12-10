@@ -34,8 +34,8 @@
 #include <string>
 
 
-/*! \brief Functions and classes for simulation of ray propagation
- */
+namespace aply
+{
 namespace ray
 {
 
@@ -100,6 +100,7 @@ namespace ray
 	}
 
 } // [ray]
+} // [aply]
 
 
 #endif // aply_ray_DirChange_INCL_

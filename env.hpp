@@ -37,12 +37,13 @@
 #include "envPlanet.hpp"
 
 
-/*! \brief Functions and data associated with ray propagation environment
- */
+namespace aply
+{
 namespace env
 {
 
 } // [env]
+} // [aply]
 
 #endif // aply_env_INCL_
 

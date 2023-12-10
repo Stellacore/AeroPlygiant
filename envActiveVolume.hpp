@@ -39,8 +39,8 @@
 
 
 
-/*! \brief Functions and data associated with ray propagation environment
- */
+namespace aply
+{
 namespace env
 {
 	using namespace engabra::g3;
@@ -77,6 +77,7 @@ namespace env
 		{ std::make_shared<ActiveVolume>("sAllSpace") };
 
 } // [env]
+} // [aply]
 
 #endif // aply_env_ActiveVolume_INCL_
 

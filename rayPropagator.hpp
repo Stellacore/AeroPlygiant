@@ -44,8 +44,8 @@
 #include <utility>
 
 
-/*! \brief Functions and classes for simulation of ray propagation
- */
+namespace aply
+{
 namespace ray
 {
 	using namespace engabra::g3;
@@ -318,6 +318,7 @@ namespace ray
 	}; // Propagator
 
 } // [ray]
+} // [aply]
 
 
 

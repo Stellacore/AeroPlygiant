@@ -42,12 +42,15 @@
 #include <iostream>
 
 
+namespace aply
+{
 /*! \brief Functions and classes for simulation of ray propagation
  */
 namespace ray
 {
 
 } // [ray]
+} // [aply]
 
 
 namespace
@@ -58,7 +61,7 @@ namespace
 	std::ostream &
 	operator<<
 		( std::ostream & ostrm
-		, ray::Start const & start
+		, aply::ray::Start const & start
 		)
 	{
 		ostrm << start.infoString();
@@ -70,7 +73,7 @@ namespace
 	std::ostream &
 	operator<<
 		( std::ostream & ostrm
-		, ray::Node const & node
+		, aply::ray::Node const & node
 		)
 	{
 		ostrm << node.infoString();

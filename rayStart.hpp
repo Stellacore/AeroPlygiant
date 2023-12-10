@@ -38,8 +38,8 @@
 #include <string>
 
 
-/*! \brief Functions and classes for simulation of ray propagation
- */
+namespace aply
+{
 namespace ray
 {
 	using namespace engabra::g3;
@@ -87,6 +87,7 @@ namespace ray
 	}; // Start
 
 } // [ray]
+} // [aply]
 
 
 #endif // aply_ray_Start_INCL_

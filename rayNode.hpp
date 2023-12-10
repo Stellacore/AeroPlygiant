@@ -39,8 +39,8 @@
 #include <string>
 
 
-/*! \brief Functions and classes for simulation of ray propagation
- */
+namespace aply
+{
 namespace ray
 {
 	using namespace engabra::g3;
@@ -130,6 +130,7 @@ namespace ray
 	}; // Node
 
 } // [ray]
+} // [aply]
 
 
 #endif // aply_ray_Node_INCL_

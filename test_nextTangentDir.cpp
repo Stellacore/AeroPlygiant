@@ -131,6 +131,8 @@ namespace
 
 	};
 
+	using namespace aply;
+
 	//! Run test on refracted result
 	void
 	checkRefract

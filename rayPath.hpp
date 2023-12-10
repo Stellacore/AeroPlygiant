@@ -43,6 +43,8 @@
 #include <vector>
 
 
+namespace aply
+{
 namespace ray
 {
 	using namespace engabra::g3;
@@ -279,6 +281,7 @@ namespace ray
 	}; // Path
 
 } // [ray]
+} // [aply]
 
 
 #endif // aply_ray_Path_INCL_

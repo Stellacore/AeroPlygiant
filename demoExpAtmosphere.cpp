@@ -90,11 +90,14 @@ int
 main
 	()
 {
-	tst::AtmModel const atm(env::sEarth);
-	// std::cout << atm.infoString("atm") << std::endl;
+	// Project namespace
+	using namespace aply;
 
 	// math/algebra foundation
 	using namespace engabra::g3; // for basis vectors, e1,e2,...
+
+	tst::AtmModel const atm(env::sEarth);
+	// std::cout << atm.infoString("atm") << std::endl;
 
 	// location on Earth
 	double const & groundRad = env::sEarth.theRadGround;

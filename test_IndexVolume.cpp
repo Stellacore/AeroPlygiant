@@ -38,7 +38,7 @@
 namespace
 {
 	//! Test construction of IndexVolume with no argument
-	struct TestEmpty : public env::IndexVolume
+	struct TestEmpty : public aply::env::IndexVolume
 	{
 		inline
 		TestEmpty
@@ -58,12 +58,12 @@ namespace
 	}; // TestEmpty
 
 	//! Test construction of IndexVolume with argument
-	struct TestVolume : public env::IndexVolume
+	struct TestVolume : public aply::env::IndexVolume
 	{
 		inline
 		TestVolume
 			()
-			: IndexVolume(env::sPtAllSpace)
+			: IndexVolume(aply::env::sPtAllSpace)
 		{ }
 
 		inline
