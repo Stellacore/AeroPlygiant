@@ -58,19 +58,6 @@ namespace ray
 		Vector const theTanDir{}; //!< Incident tangent direction (unitary)
 		Vector const thePntLoc{}; //!< Point of incidence for tangent dir
 
-/*
-		//! Construct instance (with unitized tangent direction)
-		inline
-		explicit
-		Start // Start::
-			( Vector const & anyTan
-			, Vector const & loc
-			)
-			: theTanDir{ direction(anyTan), loc }
-			, thePntLoc{ loc }
-		{ }
-*/
-
 		//! Create an instance ensuring tangent dir is unitary.
 		inline
 		static
@@ -636,6 +623,7 @@ oss << " tNext: " << tNext;
 		capacity // Path::
 			() const
 		{
+
 			std::size_t cap{ 0u }; // default is to stop
 			if (keepGoing())
 			{
