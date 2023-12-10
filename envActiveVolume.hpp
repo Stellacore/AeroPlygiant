@@ -22,8 +22,8 @@
 // SOFTWARE.
 // 
 
-#ifndef aply_env_INCL_
-#define aply_env_INCL_
+#ifndef aply_env_ActiveVolume_INCL_
+#define aply_env_ActiveVolume_INCL_
 
 /*! \file
  *
@@ -32,17 +32,51 @@
  */
 
 
-#include "envIndexVolume.hpp"
-#include "envActiveVolume.hpp"
-#include "envPlanet.hpp"
+#include <Engabra>
+
+#include <memory>
+#include <string>
+
 
 
 /*! \brief Functions and data associated with ray propagation environment
  */
 namespace env
 {
+	using namespace engabra::g3;
+
+	/*! \brief Specify volume of space through which rays should be propagated.
+	 */
+	struct ActiveVolume
+	{
+		std::string theName{};
+
+		//! Construct a named instance
+		explicit
+		ActiveVolume
+			( std::string const & name = "ActiveVolume"
+			)
+			: theName{ name }
+		{ }
+
+		//! Overload to define shape of volume (true: inside, false: outside)
+		inline
+		virtual
+		bool
+		contains
+			( Vector const & rVec
+			) const
+		{
+			return true;
+		}
+
+	}; // ActiveVolume
+
+	//! An active volume w/o limits
+	static std::shared_ptr<ActiveVolume> const sPtAllSpace
+		{ std::make_shared<ActiveVolume>("sAllSpace") };
 
 } // [env]
 
-#endif // aply_env_INCL_
+#endif // aply_env_ActiveVolume_INCL_
 
