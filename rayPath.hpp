@@ -51,25 +51,14 @@ namespace ray
 
 	/*! \brief Consumer of dynamically generated path information.
 	 *
-	 * Monitors path propagation progress in order to determine
-	 * when to stop propagation computations. Intermediate results
-	 * are archived (into theNodes) along the way.
-	 *
-	 * After consuming propagation data, theNodes collection, provides
-	 * a representation of the overall curved (polygonal) propagation
-	 * path.
-	 *
+	 * Wraps a collection (std::vector) of Node instances. The
+	 * considerNode() method monitors path propagation length since
+	 * the previous Node was added to the collection. If the pathlength
+	 * has increased by more then #theSaveDelta amount, then the
+	 * considered node is added to #theNodes collection.
+	 * 
 	 * Provides methods that are compatible with those of std::vector.
-	 * The capacity() is originally set based on nominal distance from
-	 * the theStart location. After which capacity() is reported larger
-	 * than the size() while the ray is closing on theStopLoc. When the
-	 * ray begins opening distance to theStopLoc, the capacity() is
-	 * set to zero (which forces the Propagator to stop.
-	 *
-	 * TODO - need a smarter way to control propagation length (or at
-	 *        least a better way to implement the idea).
-	 *
-	 * TODO - Factor shape/info reporting (wrappers to use collection of Nodes)
+	 * TODO - why?
 	 *
 	 */
 	struct Path
@@ -90,8 +79,6 @@ namespace ray
 		//! Tracking value (how close to theStopLoc currently)
 		double theCurrNearDist{ null<double>() };
 
-	public:
-
 		//! Estimate collection size needed to span between beg/end locations.
 		inline
 		static
@@ -110,6 +97,8 @@ namespace ray
 			std::size_t const nomSize{ static_cast<std::size_t>(dubSize) };
 			return nomSize;
 		}
+
+	public:
 
 		//! Construct storage based on nominal distance between points
 		inline
@@ -173,23 +162,16 @@ namespace ray
 		capacity // Path::
 			() const
 		{
-
-			std::size_t cap{ 0u }; // default is to stop
-			if (keepGoing())
-			{
-				cap = theNodes.capacity();
-			}
-			return cap;
+			return theNodes.capacity();
 		}
 
 		//! Process a node - determine if should be archived or not
 		inline
 		void
-		emplace_back // Path::
+		considerNode // Path::
 			( ray::Node const & node
 			)
 		{
-			updateNearDists(node);
 			double distFromSave{ 0. };
 			if (! theNodes.empty())
 			{
@@ -200,28 +182,22 @@ namespace ray
 
 			bool const isFirstStep{ theNodes.empty() };
 			bool const pastStepSize{ ! (distFromSave < theSaveDelta) };
-			bool const aboutToStop{ ! keepGoing() };
-//bool const aboutToStop{ false }; // catch with null IoR instead
 
-			/*
-			std::cout
-				<< "  thePrevNearDist: " << io::fixed(thePrevNearDist) << '\n'
-				<< "  theCurrNearDist: " << io::fixed(theCurrNearDist) << '\n'
-				<< "  theCurrLoc: " << io::fixed(node.theCurrLoc) << '\n'
-				<< "  theStopLoc: " << io::fixed(theStopLoc) << '\n'
-				<< "     distFromSave: " << io::fixed(distFromSave) << '\n'
-				<< "  T/F:isFirstStep: " << isFirstStep << '\n'
-				<< " T/F:pastStepSize: " << pastStepSize << '\n'
-				<< "  T/F:aboutToStop: " << aboutToStop << '\n'
-				<< "             size: " << size() << '\n'
-				<< "         capacity: " << capacity() << '\n'
-				;
-			*/
-
-			if (isFirstStep || pastStepSize || aboutToStop)
+			if (isFirstStep || pastStepSize)
 			{
 				addNode(node);
 			}
+		}
+
+
+		//! Process a node - determine if should be archived or not
+		inline
+		void
+		emplace_back // Path::
+			( ray::Node const & node
+			)
+		{
+			considerNode(node);
 		}
 
 		//! Descriptive information about this instance
@@ -242,26 +218,13 @@ namespace ray
 			oss << '\n';
 			oss << "theSaveDelta: " << theSaveDelta;
 			oss << '\n';
-			oss << "theNodes.size(): " << theNodes.size();
+			oss << "theNodes.size(): " << theNodes.size()
+				<< "  of(capacity)  " << theNodes.capacity();
 
 			return oss.str();
 		}
 
 	private:
-
-		//! True when the nearest distance to stop point starts increasing
-		inline
-		bool
-		keepGoing // Path::
-			() const
-		{
-			bool keepGo{ true };
-			if (isValid(theCurrNearDist) && isValid(thePrevNearDist))
-			{
-				keepGo = ! (thePrevNearDist < theCurrNearDist);
-			}
-			return keepGo;
-		}
 
 		//! Archive this node in storage
 		inline
@@ -271,30 +234,6 @@ namespace ray
 			)
 		{
 			theNodes.emplace_back(node);
-		}
-
-		//! Distance (cord length - NOT along ray) to stop request point
-		inline
-		double
-		distanceFromStop // Path::
-			( ray::Node const & node
-			)
-		{
-			return magnitude(theStopLoc - node.theCurrLoc);
-		}
-
-		//! Keep track of Previous and Current nearest distances
-		inline
-		void
-		updateNearDists // Path::
-			( ray::Node const & currNode
-			)
-		{
-			// compute the current distance to stopping point
-			double const currDist{ distanceFromStop(currNode) };
-			// ping pong the buffers
-			thePrevNearDist = theCurrNearDist;
-			theCurrNearDist = currDist;
 		}
 	
 	}; // Path
