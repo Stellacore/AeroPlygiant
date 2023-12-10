@@ -106,7 +106,9 @@ constexpr double propStepDist{ 1./128. }; // integration step size
 	ray::Propagator const prop{ &media, propStepDist };
 
 	// interact with data consumer
-	ray::Path path(start, stopNear, saveStepDist);
+//	Vector const & approxEndLoc = stopNear;
+	ray::Path path(start, stopNear, saveStepDist, stopNear);
+std::cout << "path: " << path.infoString() << std::endl;
 	prop.tracePath(&path);
 
 	// show path info

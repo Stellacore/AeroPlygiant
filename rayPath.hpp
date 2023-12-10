@@ -92,6 +92,25 @@ namespace ray
 
 	public:
 
+		//! Estimate collection size needed to span between beg/end locations.
+		inline
+		static
+		std::size_t
+		sizeBetween
+			( Vector const & begLoc
+			, Vector const & endLoc
+			, double const & deltaDist
+			, double const & padFactor = 9./8.
+			)
+		{
+			// estimate distance (as if straight line)
+			double const nomDist{ magnitude(endLoc - begLoc) };
+			// make a bit larger to allow for path curvature/changes
+			double const dubSize{ padFactor * nomDist / deltaDist };
+			std::size_t const nomSize{ static_cast<std::size_t>(dubSize) };
+			return nomSize;
+		}
+
 		//! Construct storage based on nominal distance between points
 		inline
 		explicit
@@ -102,6 +121,8 @@ namespace ray
 				//!< Stop tracing with path stops getting closer to this
 			, double const & saveStepSize
 				//!< Save node if path exceeds this distance from previous save
+			, Vector const & approxEndLoc = null<Vector>()
+				//!< Used to estimate/allocate storage space
 			)
 			: theStart{ startWith }
 			, theStopLoc{ stopNearTo }
@@ -110,15 +131,16 @@ namespace ray
 			, theCurrNearDist{ 1.e10 }
 		{
 			// estimate distance (as if straight line)
+			if (engabra::g3::isValid(approxEndLoc))
+			{
+				Vector const & begLoc = theStart.thePntLoc;
+				std::size_t const nomSize
+					{ sizeBetween(begLoc, approxEndLoc, theSaveDelta) };
+				theNodes.reserve(nomSize);
+			}
 			if (engabra::g3::isValid(theStopLoc))
 			{
-				theCurrNearDist = magnitude(theStopLoc - theStart.thePntLoc);
-				double const nomDist
-					{ magnitude(theStopLoc - theStart.thePntLoc) };
-				constexpr double padFactor{ 9./8. }; // about 12% extra
-				double const dubSize{ padFactor * nomDist / theSaveDelta };
-				std::size_t const nomSize{ static_cast<std::size_t>(dubSize) };
-				theNodes.reserve(nomSize);
+				theCurrNearDist = magnitude(theStart.thePntLoc - theStopLoc);
 			}
 		}
 
@@ -179,6 +201,7 @@ namespace ray
 			bool const isFirstStep{ theNodes.empty() };
 			bool const pastStepSize{ ! (distFromSave < theSaveDelta) };
 			bool const aboutToStop{ ! keepGoing() };
+//bool const aboutToStop{ false }; // catch with null IoR instead
 
 			/*
 			std::cout
@@ -220,10 +243,6 @@ namespace ray
 			oss << "theSaveDelta: " << theSaveDelta;
 			oss << '\n';
 			oss << "theNodes.size(): " << theNodes.size();
-		//	oss << '\n';
-		//	oss << "thePrevNearDist: " << io::fixed(thePrevNearDist);
-		//	oss << '\n';
-		//	oss << "theCurrNearDist: " << io::fixed(theCurrNearDist);
 
 			return oss.str();
 		}
