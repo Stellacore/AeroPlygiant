@@ -246,7 +246,6 @@ namespace ray
 		, double const & nuPrev //!< Incoming IoR
 		, Vector const & gCurr //! Must be non-zero (to be invertable
 		, double const & nuNext //!< Exiting IoR
-		, env::IndexVolume const * const & ptMedia //!< Refraction media
 		)
 	{
 		// default case is an unaltered ray
@@ -398,9 +397,7 @@ oss << " REFLECTION ";
 
 					// update tangent direction
 					std::pair<Vector, DirChange> const tDirChange
-						{ nextTangentDir
-							(tPrev, nuPrev, gCurr, nuNext, thePtMedia)
-						};
+						{ nextTangentDir(tPrev, nuPrev, gCurr, nuNext) };
 
 					// check for stop condition
 					if (Stopped == tDirChange.second)
