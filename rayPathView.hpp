@@ -227,6 +227,9 @@ namespace ray
 			oss << '\n';
 			oss << " endDeflection: " << io::fixed(endDeflection(), 6u, 3u);
 			oss << '\n';
+			Vector const & begLoc = begNode().theCurrLoc;
+			oss << " begNode.rCurr: " << io::fixed(begLoc, 7u, 3u);
+			oss << '\n';
 			Vector const & endLoc = endNode().theCurrLoc;
 			oss << " endNode.rCurr: " << io::fixed(endLoc, 7u, 3u);
 			return oss.str();
