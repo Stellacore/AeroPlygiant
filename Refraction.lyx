@@ -2829,6 +2829,118 @@ Differential Approach
 \end_layout
 
 \begin_layout Subsection
+Path Description
+\end_layout
+
+\begin_layout Standard
+Let the path be represented by position vector, 
+\begin_inset Formula $r$
+\end_inset
+
+, as a function of path length, 
+\begin_inset Formula $\lambda$
+\end_inset
+
+.
+ I.e.
+ the function, 
+\begin_inset Formula $r\left(\lambda\right)$
+\end_inset
+
+, describes the path over some half open [begin,end) interval, 
+\begin_inset Formula $\lambda_{b}\le\lambda<\lambda_{e}$
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+The tangent vector, 
+\begin_inset Formula $t$
+\end_inset
+
+, as a function of 
+\begin_inset Formula $\lambda$
+\end_inset
+
+, i.e.
+ 
+\begin_inset Formula $t\left(\lambda\right)$
+\end_inset
+
+, is the (vector) derivative,
+\begin_inset Formula 
+\[
+t\left(\lambda\right)=\frac{dr}{d\lambda}=\dot{r}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Need to determine ratio of 
+\begin_inset Formula $\frac{\nu_{p}}{\nu_{n}}$
+\end_inset
+
+ (presumably in terms of gradient and 
+\begin_inset Formula $dr$
+\end_inset
+
+?).
+ Perhaps
+\begin_inset Formula 
+\[
+\Delta\nu=g\cdot\Delta r
+\]
+
+\end_inset
+
+
+\begin_inset Formula 
+\[
+\nu_{n}-\nu_{p}=\Delta\nu=g\cdot\Delta r
+\]
+
+\end_inset
+
+
+\begin_inset Formula 
+\[
+\nu_{p}=\nu_{n}-g\cdot\Delta r
+\]
+
+\end_inset
+
+so
+\begin_inset Formula 
+\[
+\frac{\nu_{p}}{\nu_{n}}=1-\frac{1}{\nu_{n}}g_{c}\cdot\Delta r
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The derivative of this (wrt 
+\begin_inset Formula $\lambda$
+\end_inset
+
+) is
+\begin_inset Formula 
+\[
+\dot{t}=\frac{dt}{d\lambda}=\frac{d^{2}r}{d\lambda^{2}}=\ddot{r}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection
 Refraction Invariant (?)
 \end_layout
 
