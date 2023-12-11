@@ -53,7 +53,7 @@ namespace ray
 	 * Wraps a collection (std::vector) of Node instances. The
 	 * considerNode() method monitors path propagation length since
 	 * the previous Node was added to the collection. If the pathlength
-	 * has increased by more then #theSaveDelta amount, then the
+	 * has increased by more then #theSaveDist amount, then the
 	 * considered node is added to #theNodes collection.
 	 * 
 	 * Provides methods that are compatible with those of std::vector
@@ -64,9 +64,16 @@ namespace ray
 		//! Starting boundary condition (direction and location) for the ray
 		Start const theStart{};
 		//! Increment specifying how often to archive path data in theNodes.
-		double const theSaveDelta{ null<double>() };
-		//! Archived path information (approximately every theSaveDelta units)
+		double const theSaveDist{ null<double>() };
+		//! Archived path information (approximately every theSaveDist units)
 		std::vector<ray::Node> theNodes{};
+
+	private:
+
+		//! Track (approximate) residual arc-length since last archived node
+		double theResidArcDist{ null<double>() };
+		//! The location of the last considered (but generally not saved) node
+		Vector theLastSeenLoc{ null<Vector>() };
 
 		//! Estimate collection size needed to span between beg/end locations.
 		inline
@@ -87,6 +94,7 @@ namespace ray
 			return nomSize;
 		}
 
+	public:
 
 		//! Construct storage based on nominal distance between points
 		inline
@@ -94,20 +102,23 @@ namespace ray
 		Path // Path::
 			( Start const & startWith
 				//!< Initial direction and start point for propagation
-			, double const & saveStepSize
+			, double const & saveStepDist
 				//!< Save node if path exceeds this distance from previous save
 			, Vector const & approxEndLoc = null<Vector>()
 				//!< Used to estimate/allocate storage space
 			)
 			: theStart{ startWith }
-			, theSaveDelta{ saveStepSize }
+			, theSaveDist{ saveStepDist }
+			, theNodes{ }
+			, theResidArcDist{ 0. }
+			, theLastSeenLoc{ null<Vector>() }
 		{
 			// estimate distance (as if straight line)
 			if (engabra::g3::isValid(approxEndLoc))
 			{
 				Vector const & begLoc = theStart.thePntLoc;
 				std::size_t const nomSize
-					{ sizeBetween(begLoc, approxEndLoc, theSaveDelta) };
+					{ sizeBetween(begLoc, approxEndLoc, theSaveDist) };
 				theNodes.reserve(nomSize);
 			}
 		}
@@ -135,16 +146,16 @@ namespace ray
 			theNodes.reserve(maxNodeSize);
 		}
 
-		//! Reserve enough space for this (arc-length) at #theSaveDelta.
+		//! Reserve enough space for this (arc-length) at #theSaveDist.
 		inline
 		void
 		reserveForDistance
 			( double const & dist
 			)
 		{
-			if (theSaveDelta < dist)
+			if (theSaveDist < dist)
 			{
-				double const dNum{ dist / theSaveDelta };
+				double const dNum{ dist / theSaveDist };
 				std::size_t const numElem{ static_cast<std::size_t>(dNum) + 1u};
 				theNodes.reserve(numElem);
 			}
@@ -176,21 +187,37 @@ namespace ray
 			( ray::Node const & node
 			)
 		{
-			double distFromSave{ 0. };
-			if (! theNodes.empty())
+			bool saveThisNode{ false };
+
+			if (theNodes.empty())
 			{
-				Vector const pathDelta
-					{ node.theCurrLoc - theNodes.back().theCurrLoc };
-				distFromSave = magnitude(pathDelta);
+				saveThisNode = true;
+			}
+			else
+			{
+				// check distance from previously considered node
+				Vector const delta{ node.theCurrLoc - theLastSeenLoc };
+				double const deltaMag{ magnitude(delta) };
+				// increment residual arc length by this much
+				theResidArcDist += deltaMag;
 			}
 
-			bool const isFirstStep{ theNodes.empty() };
-			bool const pastStepSize{ ! (distFromSave < theSaveDelta) };
-
-			if (isFirstStep || pastStepSize)
+			// check if save distance is exceeded
+			if (! (theResidArcDist < theSaveDist))
 			{
-				addNode(node);
+				saveThisNode = true;
 			}
+
+			if (saveThisNode)
+			{
+				// always add the first node
+				theNodes.emplace_back(node);
+				// set residual arc distance
+				theResidArcDist = 0.;
+			}
+
+			// remember the last considered node (whether added or not)
+			theLastSeenLoc = node.theCurrLoc;
 		}
 
 		//! Descriptive information about this instance
@@ -207,7 +234,7 @@ namespace ray
 			}
 			oss << "theStart: " << theStart.infoString();
 			oss << '\n';
-			oss << "theSaveDelta: " << theSaveDelta;
+			oss << "theSaveDist: " << theSaveDist;
 			oss << '\n';
 			oss << "theNodes.size(): " << theNodes.size()
 				<< "  of(capacity)  " << theNodes.capacity();
@@ -215,18 +242,6 @@ namespace ray
 			return oss.str();
 		}
 
-	private:
-
-		//! Archive this node in storage
-		inline
-		void
-		addNode // Path::
-			( ray::Node const & node
-			)
-		{
-			theNodes.emplace_back(node);
-		}
-	
 	}; // Path
 
 } // [ray]
