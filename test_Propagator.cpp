@@ -163,9 +163,10 @@ namespace
 
 		// trace the ray(s)
 		constexpr double saveDeltaDistance{ 1./8. };
-Vector const stopLoc{ 2. * e1 };
-		ray::Path aPath(start, stopLoc, saveDeltaDistance);
-		aPath.reserve(20u);
+		// provide a location for estimating path length (to reserve space)
+		Vector const approxEndLoc{ 1.25 * e1 };
+		ray::Path aPath(start, saveDeltaDistance, approxEndLoc);
+
 		prop.tracePath(&aPath);
 
 		constexpr bool showIt{ false };

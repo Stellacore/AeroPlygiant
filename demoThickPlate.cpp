@@ -152,6 +152,14 @@ main
 	using namespace aply;
 	using namespace engabra::g3;
 
+	// general configuration (10x10x10 box)
+	Vector const station{ 5., 5., 10. };
+	Vector const minCorner{ zero<Vector>() };
+	Vector const maxCorner{ 10., 10., 10. };
+
+	// environment volume of interest and index medium
+	std::shared_ptr<env::ActiveVolume> const ptVolume
+		{ std::make_shared<env::ActiveBox>(minCorner, maxCorner) };
 	tst::Slab const media
 		( e3   // 'z' normal direction
 		, 4.5  // zBeg
@@ -159,19 +167,16 @@ main
 		, 1.0  // nu below
 		, 1.5  // nu inside
 		, 1.25  // nu above
+		, ptVolume // bounding volume
 		);
 	// tst:showMedia(media);
 
-	// configuration
+	// path specification
 	constexpr double propStepDist{ 1./4096. }; // integration step size
 	constexpr double saveStepDist{ 1./128. }; // save this often
 
 	// create tracer
 	ray::Propagator const prop{ &media, propStepDist };
-
-	// path specification
-	Vector const station { 5., 5., 10. };
-	Vector const stopNear{ 5., 5., -5. };
 
 	// starting rays to trace
 	std::vector<ray::Start> const starts{ app::rayStarts(station) };
@@ -180,17 +185,27 @@ main
 	std::ofstream ofs(use.theSaveName);
 	for (ray::Start const & start : starts)
 	{
-		// interact with data consumer
-		ray::Path path(start, stopNear, saveStepDist);
+		// propagation while interacting with data consumer(path)
+		ray::Path path(start, saveStepDist);
+		path.reserveForDistance(10.);
 		prop.tracePath(&path);
 
-		// show path info
+		// save path info for this ray
 		for (ray::Node const & node : path.theNodes)
 		{
 			ofs << node.infoBrief() << std::endl;
 		}
 		ofs << "\n\n\n";
-		std::cout << "path.size: " << path.theNodes.size() << std::endl;
+
+		std::cout << "path size: " << path.theNodes.size() << std::endl;
+	}
+	if (! ofs.fail())
+	{
+		std::cout << "results written to: " << use.theSaveName << '\n';
+	}
+	else
+	{
+		std::cerr << "problem writing results to: " << use.theSaveName << '\n';
 	}
 
 }

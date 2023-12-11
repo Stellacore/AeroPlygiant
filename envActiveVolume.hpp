@@ -53,7 +53,7 @@ namespace env
 
 		//! Construct a named instance
 		explicit
-		ActiveVolume
+		ActiveVolume // ActiveVolume::
 			( std::string const & name = "ActiveVolume"
 			)
 			: theName{ name }
@@ -63,7 +63,7 @@ namespace env
 		inline
 		virtual
 		bool
-		contains
+		contains // ActiveVolume::
 			( Vector const & rVec
 			) const
 		{
@@ -75,6 +75,53 @@ namespace env
 	//! An active volume w/o limits
 	static std::shared_ptr<ActiveVolume> const sPtAllSpace
 		{ std::make_shared<ActiveVolume>("sAllSpace") };
+
+	//! A rectangular ActiveVolume determined by two corner points.
+	struct ActiveBox : public ActiveVolume
+	{
+		//! True if (minIncluded <= value < maxExcluded)
+		inline
+		static
+		bool
+		inInterval
+			( double const & minIncluded
+			, double const & value
+			, double const & maxExcluded
+			)
+		{
+			return ( (! (value < minIncluded)) && (value < maxExcluded) );
+		}
+
+		Vector const theMinCorner{ null<Vector>() };
+		Vector const theMaxCorner{ null<Vector>() };
+
+		inline
+		explicit
+		ActiveBox
+			( Vector const & minCorner
+			, Vector const & maxCorner
+			)
+			: theMinCorner{ minCorner }
+			, theMaxCorner{ maxCorner }
+		{ }
+
+		//! true if theMinCorner[ndx] <= rVec[ndx] < theMaxCorner[ndx] all ndx.
+		inline
+		virtual
+		bool
+		contains
+			( Vector const & rVec
+			) const
+		{
+			return
+				(  inInterval(theMinCorner[0], rVec[0], theMaxCorner[0])
+				&& inInterval(theMinCorner[1], rVec[1], theMaxCorner[1])
+				&& inInterval(theMinCorner[2], rVec[2], theMaxCorner[2])
+				);
+		}
+
+
+	}; // ActiveBox
 
 } // [env]
 } // [aply]

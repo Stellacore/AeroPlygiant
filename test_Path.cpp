@@ -70,6 +70,115 @@ namespace tst
 } // [tst]
 
 
+namespace
+{
+
+	//! Check propagation through a classic thick plate
+	std::string
+	test0
+		()
+	{
+		std::ostringstream oss;
+
+		using namespace aply;
+		using namespace engabra::g3;
+
+		std::shared_ptr<env::ActiveVolume> const ptVolume
+			{ std::make_shared<env::ActiveBox>
+				(zero<Vector>(), Vector{10., 10., 10.})
+			};
+		tst::Slab const media
+			( e1   // 'x' direction
+			, 4.   // xBeg
+			, 6.   // xEnd
+			, 1.0  // nu before
+			, 1.5  // nu inside
+			, 1.0  // nu after
+			, ptVolume // a bounding box
+			);
+		// tst:showMedia(media);
+
+		// path specification
+		Vector const tBeg{ 5., 5., 5. };
+		Vector const rBeg{ 0., 0., 0.  };
+		Vector const approxEndLoc{ 10., 10., 10. };
+		ray::Start const start{ ray::Start::from(tBeg, rBeg) };
+
+		// configuration
+		constexpr double propStepDist{ 1./128. }; // integration step size
+		constexpr double saveStepDist{ 1./128. }; // save this often
+
+		// create tracer
+		ray::Propagator const prop{ &media, propStepDist };
+
+		// interact with data consumer
+		ray::Path path(start, saveStepDist, approxEndLoc);
+		prop.tracePath(&path);
+
+		/*
+		std::cout
+			<< "\nCompleted path:\n"
+			<< ray::PathView{&path}.infoCurvature()
+			<< '\n';
+		*/
+
+		// show path info
+	//	constexpr bool showIt{ true };
+		constexpr bool showIt{ false };
+		if (showIt)
+		{
+			for (ray::Node const & node : path.theNodes)
+			{
+				std::cout << node.infoBrief() << std::endl;
+			}
+			std::cout << "path.size: " << path.theNodes.size() << std::endl;
+		}
+
+		// check that path contains data
+		if (! (2u < path.size()))  // size of 2 required for test below
+		{
+			oss << "Failure of path size test\n";
+			oss << "path.size: " << path.size() << '\n';
+		}
+		else
+		{
+			// check that path exiting the slab is parallel to one entering
+			ray::Node const & begNode = path.theNodes.front();
+			ray::Node const & endNode = path.theNodes.back();
+			Vector const & begDir = begNode.thePrevTan;
+			Vector const & endDir = endNode.theNextTan;
+			if (! nearlyEquals(begDir, endDir))
+			{
+				oss << "Failure of begin/end direction test\n";
+				oss << "begDir: " << begDir << '\n';
+				oss << "endDir: " << endDir << '\n';
+			}
+
+			// check that internal ray direction is distinct
+			// (assuming block is near center of path)
+			std::size_t const midNdx{ path.size() / 2u };
+			ray::Node const & midNode = path.theNodes[midNdx];
+			Vector const inDir{ .5*(midNode.thePrevTan + midNode.theNextTan) };
+			Vector const exDir{ .5*(begNode.thePrevTan + endNode.theNextTan) };
+			Spinor const relSpin{ inDir * exDir };
+			constexpr double significantDeflection{ .1 };
+			double const bivMag{ magnitude(relSpin.theBiv) };
+			if (! (significantDeflection < bivMag))
+			{
+				oss << "Failure of internal significant deflection test\n";
+				oss << "inDir: " << inDir << std::endl;
+				oss << "exDir: " << exDir << std::endl;
+				oss << "relSpin: " << relSpin << std::endl;
+				oss << " bivTol: " << significantDeflection << std::endl;
+				oss << " bivMag: " << bivMag << std::endl;
+			}
+		}
+
+		return oss.str();
+	}
+
+} // [anon]
+
 /*! \brief Simple ray trace example with which to check ray::Path
  */
 int
@@ -78,88 +187,7 @@ main
 {
 	std::ostringstream oss;
 
-	using namespace aply;
-	using namespace engabra::g3;
-
-	tst::Slab const media
-		( e1   // 'x' direction
-		, 4.   // xBeg
-		, 6.   // xEnd
-		, 1.0  // nu before
-		, 1.5  // nu inside
-		, 1.0  // nu after
-		);
-	// tst:showMedia(media);
-
-	// path specification
-	Vector const tBeg{ 5., 5., 5. };
-	Vector const rBeg{ 0., 0., 0.  };
-	Vector const stopNear{ 10., 10., 10. };
-	ray::Start const start{ ray::Start::from(tBeg, rBeg) };
-
-	// configuration
-//	constexpr double propStepDist{ 1./4096. }; // integration step size
-constexpr double propStepDist{ 1./128. }; // integration step size
-	constexpr double saveStepDist{ 1./128. }; // save this often
-
-	// create tracer
-	ray::Propagator const prop{ &media, propStepDist };
-
-	// interact with data consumer
-	ray::Path path(start, stopNear, saveStepDist);
-	prop.tracePath(&path);
-
-	// show path info
-//	constexpr bool showIt{ true };
-	constexpr bool showIt{ false };
-	if (showIt)
-	{
-		for (ray::Node const & node : path.theNodes)
-		{
-			std::cout << node.infoBrief() << std::endl;
-		}
-		std::cout << "path.size: " << path.theNodes.size() << std::endl;
-	}
-
-	// check that path contains data
-	if (! (2u < path.size()))  // size of 2 required for test below
-	{
-		oss << "Failure of path size test\n";
-		oss << "path.size: " << path.size() << '\n';
-	}
-	else
-	{
-		// check that path exiting the slab is parallel to one entering
-		ray::Node const & begNode = path.theNodes.front();
-		ray::Node const & endNode = path.theNodes.back();
-		Vector const & begDir = begNode.thePrevTan;
-		Vector const & endDir = endNode.theNextTan;
-		if (! nearlyEquals(begDir, endDir))
-		{
-			oss << "Failure of begin/end direction test\n";
-			oss << "begDir: " << begDir << '\n';
-			oss << "endDir: " << endDir << '\n';
-		}
-
-		// check that internal ray direction is distinct
-		// (assuming block is near center of path)
-		std::size_t const midNdx{ path.size() / 2u };
-		ray::Node const & midNode = path.theNodes[midNdx];
-		Vector const inDir{ .5*(midNode.thePrevTan + midNode.theNextTan) };
-		Vector const exDir{ .5*(begNode.thePrevTan + endNode.theNextTan) };
-		Spinor const relSpin{ inDir * exDir };
-		constexpr double significantDeflection{ .1 };
-		double const bivMag{ magnitude(relSpin.theBiv) };
-		if (! (significantDeflection < bivMag))
-		{
-			oss << "Failure of internal significant deflection test\n";
-			oss << "inDir: " << inDir << std::endl;
-			oss << "exDir: " << exDir << std::endl;
-			oss << "relSpin: " << relSpin << std::endl;
-			oss << " bivTol: " << significantDeflection << std::endl;
-			oss << " bivMag: " << bivMag << std::endl;
-		}
-	}
+	oss << test0();
 
 	return tst::finish(oss.str());
 }

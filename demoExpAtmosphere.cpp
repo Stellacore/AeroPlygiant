@@ -43,40 +43,6 @@ namespace
 {
 	using namespace engabra::g3;
 
-/*
-	//! Put current position and tangent values to stream
-	std::string
-	inline
-	nodeStateInfo
-		( Vector const & tPrev
-		, Vector const & rCurr
-		, Vector const & tNext
-		, std::size_t const & ndx
-		)
-	{
-		std::ostringstream oss;
-		oss
-			<< " ndx: " << std::setw(9u) << ndx
-			<< " " << "tPrev: " << io::fixed(tPrev, 2u)
-			<< " " << "rCurr: " << io::fixed(rCurr, 8u)
-			<< " " << "tNext: " << io::fixed(tNext, 2u)
-			;
-		return oss.str();
-	}
-
-	//! Put current node data values to stream
-	std::string
-	inline
-	nodeInfo
-		( ray::Node const & node
-		, std::size_t const & ndx
-		)
-	{
-		return nodeStateInfo
-			(node.thePrevTan, node.theCurrLoc, node.theNextTan, ndx);
-	}
-*/
-
 } // [anon]
 
 
@@ -101,7 +67,7 @@ main
 
 	// location on Earth
 	double const & groundRad = env::sEarth.theRadGround;
-	Vector const stopNear{ groundRad * e3 };
+	Vector const approxEndLoc{ groundRad * e3 };
 
 	// initial conditions
 	ray::Start const start
@@ -112,12 +78,12 @@ main
 		};
 
 	// ray propgation parms
-	constexpr double propStepDist{  10. }; // integration step size
-	constexpr double saveStepDist{ 100. }; // save this often
+	constexpr double propStepDist{    .0001 }; // integration step size
+	constexpr double saveStepDist{ 100.     }; // save this often
 
 	// path propagation setup
 	ray::Propagator const prop{ &atm, propStepDist };
-	ray::Path path(start, stopNear, saveStepDist);
+	ray::Path path(start, saveStepDist, approxEndLoc);
 
 	// perform path propagation
 	prop.tracePath(&path);
@@ -125,9 +91,10 @@ main
 	// report results
 	for (ray::Node const & node : path.theNodes)
 	{
-		std::cout << node.infoBrief() << std::endl;
+//		std::cout << node.infoBrief() << std::endl;
 	}
 
-	std::cout << ray::PathView{&path.theNodes}.infoCurvature() << '\n';
+	std::cout << "propStepDist: " << io::fixed(propStepDist) << '\n';
+	std::cout << ray::PathView{&path}.infoCurvature() << '\n';
 }
 
