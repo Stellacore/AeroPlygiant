@@ -52,6 +52,20 @@ namespace ray
 	{
 		//! Must be set by consumer
 		std::vector<Node> const * const thePtNodes;
+		std::vector<double> const * const thePtArcDists;
+
+		/*! \brief Attach an instance to (EXTERNALLY managed!!) path data.
+		 *
+		 * \note Does *NOT* take position of the path data, but only
+		 * accesses the externally owned and managed instance.
+		 */
+		explicit
+		PathView
+			( Path const * const & ptPath
+			)
+			: thePtNodes{ &(ptPath->theNodes) }
+			, thePtArcDists{ &(ptPath->theArcDists) }
+		{ }
 
 		//! First node in path (or null if not present)
 		inline
@@ -159,6 +173,37 @@ namespace ray
 			return angleFromInto(begDirection(), endDirection());
 		}
 
+		//! Distance along path (propagation resolution approximation).
+		inline
+		double
+		pathDistance
+			() const
+		{
+			double const distSum
+				{ std::accumulate
+					(thePtArcDists->cbegin(), thePtArcDists->cend(), 0.)
+				};
+			return distSum;
+		}
+
+		//! Distance subtended by begDeviation() at pathDistance().
+		inline
+		double
+		begDeflection
+			() const
+		{
+			return (magnitude(begDeviation()) * pathDistance());
+		}
+
+		//! Distance subtended by endDeviation() at pathDistance().
+		inline
+		double
+		endDeflection
+			() const
+		{
+			return (magnitude(endDeviation()) * pathDistance());
+		}
+
 		//! Summary of overall path info
 		inline
 		std::string
@@ -170,11 +215,20 @@ namespace ray
 			oss << '\n';
 			oss << "endDirection: " << endDirection();
 			oss << '\n';
-			oss << "  begDeviation: " << begDeviation();
+			oss << "  begDeviation: " << io::fixed(begDeviation(), 2u, 9u);
 			oss << '\n';
-			oss << "  endDeviation: " << endDeviation();
+			oss << "  endDeviation: " << io::fixed(endDeviation(), 2u, 9u);
 			oss << '\n';
-			oss << "totalDeviation: " << totalDeviation();
+			oss << "totalDeviation: " << io::fixed(totalDeviation(), 2u, 9u);
+			oss << '\n';
+			oss << "  pathDistance: " << io::fixed(pathDistance(), 6u, 3u);
+			oss << '\n';
+			oss << " begDeflection: " << io::fixed(begDeflection(), 6u, 3u);
+			oss << '\n';
+			oss << " endDeflection: " << io::fixed(endDeflection(), 6u, 3u);
+			oss << '\n';
+			Vector const & endLoc = endNode().theCurrLoc;
+			oss << " endNode.rCurr: " << io::fixed(endLoc, 7u, 3u);
 			return oss.str();
 		}
 

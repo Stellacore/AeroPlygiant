@@ -305,6 +305,15 @@ namespace tst
 		std::pair<double, double> const the_v1r1{}; //!< 2nd boundary loc/val
 		ExpDecay const theNuFunc{};
 
+	private:
+
+		//! The smaller of the radii in the_v[01]r[01].second.
+		double const theMinRad{ null<double>() };
+		//! The larger of the radii in the_v[01]r[01].second.
+		double const theMaxRad{ null<double>() };
+
+	public:
+
 		//! Construct an invalid instance
 		inline
 		AtmModel
@@ -329,6 +338,8 @@ namespace tst
 				, the_v0r0.second
 				, the_v1r1.second
 				)
+			, theMinRad{ std::min(the_v0r0.second, the_v1r1.second) }
+			, theMaxRad{ std::max(the_v0r0.second, the_v1r1.second) }
 		{ }
 
 		//! Thickness of atmosphere
@@ -349,8 +360,13 @@ namespace tst
 			( Vector const & rVec
 			) const
 		{
+			double nu{ null<double>() }; // out of model
 			double const rMag{ magnitude(rVec) };
-			return theNuFunc(rMag);
+			if (! (rMag < theMinRad) && (rMag < theMaxRad))
+			{
+				nu = theNuFunc(rMag);
+			}
+			return nu;
 		}
 
 		//! Descriptive information about this instance.
