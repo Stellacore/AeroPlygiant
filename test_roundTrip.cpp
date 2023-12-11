@@ -48,22 +48,28 @@ main
 	std::ostringstream oss; // test message string
 
 	using namespace aply;
+	using namespace engabra::g3;
 
 	tst::AtmModel const atm(env::sEarth);
 	std::size_t const pathSize{ 8u };
 
+	constexpr double propStepDist{ 1./16. }; // meters
+	constexpr double saveStepDist{ 4./16 }; // meters
+
 	// initial conditions
-	using namespace engabra::g3;
 	Vector const tFwdBeg{ direction(e1 + e3) };
-	Vector const rFwdBeg{ env::sEarth.theRadGround * e3 };
+	// Pad needs to be larger than the propStepDist.  This is so that
+	// the reverse path ray has room to complete it's propgation before
+	// being terminated by the (nu=null) value at the bottom of the
+	// atmosphere lower boundary.
+	double const pad{ 2. * propStepDist };
+	Vector const rFwdBeg{ (env::sEarth.theRadGround + pad) * e3 };
 	ray::Start const fwdStart{ ray::Start::from(tFwdBeg, rFwdBeg) };
 
 	// ray tracing parameters
-	double const propStepDist{ 0.100 }; // meters
 	ray::Propagator const prop{ &atm, propStepDist };
 
 	// trace ray forward
-	double const saveStepDist{ 0.100 }; // meters
 	ray::Path fwdPath(fwdStart, saveStepDist);
 	fwdPath.reserve(pathSize);
 	prop.tracePath(&fwdPath);
