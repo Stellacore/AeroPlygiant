@@ -39,6 +39,9 @@
 
 namespace aply
 {
+/*! \brief Functions and classes for specifying ray propgation environment.
+ *
+ */
 namespace env
 {
 
