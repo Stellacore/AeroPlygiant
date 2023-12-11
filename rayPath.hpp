@@ -135,6 +135,21 @@ namespace ray
 			theNodes.reserve(maxNodeSize);
 		}
 
+		//! Reserve enough space for this (arc-length) at #theSaveDelta.
+		inline
+		void
+		reserveForDistance
+			( double const & dist
+			)
+		{
+			if (theSaveDelta < dist)
+			{
+				double const dNum{ dist / theSaveDelta };
+				std::size_t const numElem{ static_cast<std::size_t>(dNum) + 1u};
+				theNodes.reserve(numElem);
+			}
+		}
+
 		//! Indicate how much this instance *can* store.
 		inline
 		std::size_t
