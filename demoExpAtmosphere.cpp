@@ -78,7 +78,7 @@ main
 		};
 
 	// ray propgation parms
-	constexpr double propStepDist{   .1 }; // integration step size
+	constexpr double propStepDist{ .0001 }; // integration step size
 	constexpr double saveStepDist{ 100. }; // save this often
 
 	// path propagation setup
