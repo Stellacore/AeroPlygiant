@@ -116,7 +116,7 @@ namespace ray
 			, theSaveDist{ saveStepDist }
 			, theNodes{}
 			, theArcDists{}
-			, theResidArcDist{ 0. }
+			, theResidArcDist{ null<double>() }
 			, theLastSeenLoc{ null<Vector>() }
 		{
 			// estimate distance (as if straight line)
@@ -198,6 +198,7 @@ namespace ray
 			if (theNodes.empty())
 			{
 				saveThisNode = true;
+				theResidArcDist = 0.;
 			}
 			else
 			{
