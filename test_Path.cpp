@@ -115,6 +115,13 @@ namespace
 		ray::Path path(start, saveStepDist, approxEndLoc);
 		prop.tracePath(&path);
 
+		/*
+		std::cout
+			<< "\nCompleted path:\n"
+			<< ray::PathView{&path}.infoCurvature()
+			<< '\n';
+		*/
+
 		// show path info
 	//	constexpr bool showIt{ true };
 		constexpr bool showIt{ false };
