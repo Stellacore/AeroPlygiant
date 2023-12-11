@@ -43,40 +43,6 @@ namespace
 {
 	using namespace engabra::g3;
 
-/*
-	//! Put current position and tangent values to stream
-	std::string
-	inline
-	nodeStateInfo
-		( Vector const & tPrev
-		, Vector const & rCurr
-		, Vector const & tNext
-		, std::size_t const & ndx
-		)
-	{
-		std::ostringstream oss;
-		oss
-			<< " ndx: " << std::setw(9u) << ndx
-			<< " " << "tPrev: " << io::fixed(tPrev, 2u)
-			<< " " << "rCurr: " << io::fixed(rCurr, 8u)
-			<< " " << "tNext: " << io::fixed(tNext, 2u)
-			;
-		return oss.str();
-	}
-
-	//! Put current node data values to stream
-	std::string
-	inline
-	nodeInfo
-		( ray::Node const & node
-		, std::size_t const & ndx
-		)
-	{
-		return nodeStateInfo
-			(node.thePrevTan, node.theCurrLoc, node.theNextTan, ndx);
-	}
-*/
-
 } // [anon]
 
 
