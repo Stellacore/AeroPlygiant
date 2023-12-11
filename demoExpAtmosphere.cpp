@@ -78,7 +78,7 @@ main
 		};
 
 	// ray propgation parms
-	constexpr double propStepDist{  10. }; // integration step size
+	constexpr double propStepDist{   .1 }; // integration step size
 	constexpr double saveStepDist{ 100. }; // save this often
 
 	// path propagation setup
@@ -94,6 +94,6 @@ main
 		std::cout << node.infoBrief() << std::endl;
 	}
 
-	std::cout << ray::PathView{&path.theNodes}.infoCurvature() << '\n';
+	std::cout << ray::PathView{&path}.infoCurvature() << '\n';
 }
 

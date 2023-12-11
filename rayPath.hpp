@@ -67,6 +67,11 @@ namespace ray
 		double const theSaveDist{ null<double>() };
 		//! Archived path information (approximately every theSaveDist units)
 		std::vector<ray::Node> theNodes{};
+		/*! \brief Propagation stepwise approximation to arc length.
+		 *
+		 * \arg theArcDists[ndx] : arc distance from node[ndx-1] to node[ndx]
+		 */
+		std::vector<double> theArcDists{};
 
 	private:
 
@@ -109,7 +114,8 @@ namespace ray
 			)
 			: theStart{ startWith }
 			, theSaveDist{ saveStepDist }
-			, theNodes{ }
+			, theNodes{}
+			, theArcDists{}
 			, theResidArcDist{ 0. }
 			, theLastSeenLoc{ null<Vector>() }
 		{
@@ -139,7 +145,7 @@ namespace ray
 		 */
 		inline
 		void
-		reserve
+		reserve // Path::
 			( std::size_t const & maxNodeSize
 			)
 		{
@@ -149,7 +155,7 @@ namespace ray
 		//! Reserve enough space for this (arc-length) at #theSaveDist.
 		inline
 		void
-		reserveForDistance
+		reserveForDistance // Path::
 			( double const & dist
 			)
 		{
@@ -212,6 +218,10 @@ namespace ray
 			{
 				// always add the first node
 				theNodes.emplace_back(node);
+
+				// record arch length since last saved node
+				theArcDists.emplace_back(theResidArcDist);
+
 				// set residual arc distance
 				theResidArcDist = 0.;
 			}
