@@ -47,7 +47,8 @@ namespace
 	{
 		// [DoxyExample00]
 		using namespace engabra::g3;
-		Vector const begAxis{ zero<Vector>() };
+		Vector const offset{  10.,  20.,  30. };
+		Vector const begAxis{ zero<Vector>() + offset };
 		Vector const dirAxis{ e3 };
 		double const rad{ 5. };
 		double const len{ 17. };
@@ -57,12 +58,12 @@ namespace
 		geom::Cylinder const cylinder(begAxis, dirAxis, len, rad);
 
 		// decompose location into values relative to cylinder
-		Vector const aLoc{ 2., 0.00, 11. };
+		Vector const aLoc{ Vector{2., 1.5, 11.} + offset };
 		double const gotRadialDist{ cylinder.distanceFromAxis(aLoc) };
 		double const gotRadialFrac{ cylinder.fractionFromAxis(aLoc) };
 		double const gotLengthDist{ cylinder.distanceAlongAxis(aLoc) };
 		double const gotLengthFrac{ cylinder.fractionAlongAxis(aLoc) };
-		double const expRadialDist{ std::sqrt(2.*2. + 0.00*0.00) };
+		double const expRadialDist{ std::sqrt(2.*2. + 1.5*1.5) };
 		double const expRadialFrac{ expRadialDist/5. };
 		double const expLengthDist{ 11. };
 		double const expLengthFrac{ 11./17. };
