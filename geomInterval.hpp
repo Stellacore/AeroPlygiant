@@ -43,28 +43,31 @@ namespace geom
 	/*! \brief Use to values to define a distance scale (origin and unit value)
 	 *
 	 * Perhaps best explained by example:
-	 * \arg fracAtValue(1., pair<>(2., 3.)) = -1 // extrapolation
-	 * \arg fracAtValue(2., pair<>(2., 3.)) =  0 // Begin interval Included
-	 * \arg fracAtValue(3., pair<>(2., 3.)) =  1 // End interval EXcluded
-	 * \arg fracAtValue(4., pair<>(2., 3.)) =  2 // extrapolation
+	 * \snippet test_Interval.cpp DoxyExample00
 	 *
-	 * And the inverses:
+	 * And the inverse, e.g.
 	 * \arg valueAtFrac(.75, pair<>(2., 3.)) == 2.75
+	 *
+	 * \note The "include/exclude" conditions are not relevant to
+	 *       currently implemented methods.
 	 *
 	 */
 	class Interval
 	{
 		//! Define the half open interval [min,max)
 		std::pair<double, double> const theMinMax{};
+		//! Distance between end points.
 		double const theSpan{};
+		//! Inverse of the span (i.e. scale = 1./span).
 		double const theScale{};
 
 	public:
 
+		//! Value construction of half open interval [begValue, endValue)
 		explicit
 		Interval
-			( double const & begValue
-			, double const & endValue
+			( double const & begValue //!< IN-cluded value starting interval
+			, double const & endValue //!< EX-cluded value ending interval
 			)
 			: theMinMax{ begValue, endValue }
 			, theSpan{ theMinMax.second - theMinMax.first }

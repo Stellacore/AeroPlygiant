@@ -81,11 +81,17 @@ set(testProgs
 
 	test_test
 
+	# env
 	test_IndexVolume
+
+	# ray
 	test_nextTangentDir
 	test_Path
 	test_Propagator
 	test_roundTrip
+
+	# geom
+	test_Interval
 
 	)
 
