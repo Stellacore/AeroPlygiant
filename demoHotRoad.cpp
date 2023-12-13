@@ -30,6 +30,7 @@
  */
 
 
+#include "geom.hpp"
 #include "env.hpp"
 #include "ray.hpp"
 
@@ -37,169 +38,22 @@
 #include <utility>
 
 
-//! \brief Basic geometry primatives.
-namespace geom
-{
-	using namespace engabra::g3;
-
-	/*! \brief Use to values to define a distance scale (origin and unit value)
-	 *
-	 * Perhaps best explained by example:
-	 * \arg fracAtValue(1., pair<>(2., 3.)) = -1 // extrapolation
-	 * \arg fracAtValue(2., pair<>(2., 3.)) =  0 // Begin interval Included
-	 * \arg fracAtValue(3., pair<>(2., 3.)) =  1 // End interval EXcluded
-	 * \arg fracAtValue(4., pair<>(2., 3.)) =  2 // extrapolation
-	 *
-	 * And the inverses:
-	 * \arg valueAtFrac(.75, pair<>(2., 3.)) == 2.75
-	 *
-	 */
-	struct Interval
-	{
-		//! Define the half open interval [min,max)
-		std::pair<double, double> const theMinMax{};
-		double const theSpan{ null<double>() };
-		double const theScale{ null<double>() };
-
-		explicit
-		Interval
-			( double const & begValue
-			, double const & endValue
-			)
-			: theMinMax{ begValue, endValue }
-			, theSpan{ theMinMax.second - theMinMax.first }
-			, theScale{ 1. / theSpan }
-		{ }
-
-		//! The origin of the interval
-		inline
-		double
-		min
-			() const
-		{
-			return theMinMax.first;
-		}
-
-		//! The origin of the interval
-		inline
-		double
-		max
-			() const
-		{
-			return theMinMax.second;
-		}
-
-		/*! \brief Inter(extra)polated fraction of way into interval.
-		 */
-		inline
-		double
-		fracAtValue
-			( double const & value
-			) const
-		{
-			return theScale * (value - min());
-		}
-
-		//! \brief Value associated with fraction between end points.
-		inline
-		double
-		valueAtFrac
-			( double const & frac
-			) const
-		{
-			return (frac * theSpan + min());
-		}
-
-	}; // Interval
-
-	//! \brief A geometric cylinder shape of finite length
-	struct Cylinder
-	{
-		Vector const theAxisBeg;
-		Vector const theAxisDir;
-		double const theLength;
-		double const theRadius;
-		Interval const theGapLength;
-		Interval const theGapRad;
-
-		//! Value construction
-		inline
-		explicit
-		Cylinder
-			( Vector const & axisBeg
-			, Vector const & axisDir
-			, double const & length
-			, double const & radius
-			)
-			: theAxisBeg{ axisBeg }
-			, theAxisDir{ direction(axisDir) }
-			, theLength{ length }
-			, theRadius{ radius }
-			, theGapLength{ 0., theLength }
-			, theGapRad{ 0., theRadius }
-		{ }
-
-		//! Distance orthogonal from body axis to loc.
-		inline
-		double
-		distanceFromAxis
-			( Vector const & someLoc
-			) const
-		{
-			double const dist
-				{ ((someLoc - theAxisBeg)*theAxisDir).theSca[0] };
-			return dist;
-		}
-
-		//! Distance orthogonal from body axis to loc.
-		inline
-		double
-		fractionFromAxis
-			( Vector const & someLoc
-			) const
-		{
-			return theGapRad.fracAtValue(distanceFromAxis(someLoc));
-		}
-
-		//! Distance parallel along body axis to loc.
-		inline
-		double
-		distanceAlongAxis
-			( Vector const & someLoc
-			) const
-		{
-			double const dist
-				{ (someLoc*theAxisDir).theSca[0] };
-			return dist;
-		}
-
-		inline
-		double
-		fractionAlongAxis
-			( Vector const & someLoc
-			) const
-		{
-			return theGapLength.fracAtValue(distanceAlongAxis(someLoc));
-		}
-
-	}; // Cylinder
-
-} // [geom]
-
 //! Utilities for supporting HotRoad demo
 namespace road
 {
 	//! \brief TODO
 	struct AirVolume : public aply::env::IndexVolume
 	{
-		geom::Cylinder const theTube; //!< cylindrical tube of reduced air IoR
-		geom::Interval const theGapNu;
+		//! Cylindrical tube of (linearly) varying air IoR
+		aply::geom::Cylinder const theTube;
+		//! Index of refraction gap from axis to outside radial edge
+		aply::geom::Interval const theGapNu;
 
 		//! Construct this shape and alignment
 		inline
 		explicit
 		AirVolume
-			( geom::Cylinder const & tube
+			( aply::geom::Cylinder const & tube
 			)
 			: IndexVolume{}
 			, theTube{ tube }
@@ -262,6 +116,8 @@ main
 	constexpr double propStepDist{ .001 }; // Propagation step size[m]
 	constexpr double saveStepDist{ .001 }; // Data save step size[m]
 
+	using namespace aply;
+
 	// Configure a cylinder with axis centered on 'road' center
 	road::AirVolume const media
 		{ geom::Cylinder
@@ -273,7 +129,6 @@ main
 		};
 
 	// setup ray start parallel to cylinder 'off to the side' of the 'road'
-	using namespace aply;
 	ray::Start const start
 		{ ray::Start::from(axisDir, .5*hotRadius*dirToRight) };
 
