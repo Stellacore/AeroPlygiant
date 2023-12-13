@@ -34,6 +34,8 @@
  */
 
 
+#include <Engabra>
+
 #include <iostream>
 #include <sstream>
 #include <string>
@@ -43,6 +45,25 @@
  */
 namespace tst
 {
+	//! \brief compare generic 'got' and 'expected' values.
+	template <typename Type>
+	inline
+	void
+	checkGotExp
+		( std::ostringstream & oss
+		, Type const & got
+		, Type const & exp
+		, std::string const & tname
+		)
+	{
+		if (! engabra::g3::nearlyEquals(got, exp))
+		{
+			oss << "Failure of '" << tname << "' test\n";
+			oss << "exp: " << exp << '\n';
+			oss << "got: " << got << '\n';
+		}
+	}
+
 	//! CTest/CMake main program return conventions
 	struct CTest
 	{

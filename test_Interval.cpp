@@ -34,31 +34,11 @@
 
 #include "geomInterval.hpp"
 
-#include <Engabra>
 #include <sstream>
 
 
 namespace
 {
-	//! \brief compare generic 'got' and 'expected' values.
-	template <typename Type>
-	inline
-	void
-	checkGotExp
-		( std::ostringstream & oss
-		, Type const & got
-		, Type const & exp
-		, std::string const & tname
-		)
-	{
-		if (! engabra::g3::nearlyEquals(got, exp))
-		{
-			oss << "Failure of '" << tname << "' test\n";
-			oss << "exp: " << exp << '\n';
-			oss << "got: " << got << '\n';
-		}
-	}
-
 	//! Check .... TODO
 	void
 	test0
@@ -81,6 +61,8 @@ namespace
 		double const expValueAt3{  1. }; // end point EX-cluded
 		double const expValueAt4{  2. }; // extrapolation after interval
 		// [DoxyExample00]
+
+		using tst::checkGotExp;
 
 		checkGotExp(oss, gotValueAt1, expValueAt1, "fracAtValue");
 		checkGotExp(oss, gotValueAt2, expValueAt2, "fracAtValue");
