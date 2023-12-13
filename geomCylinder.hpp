@@ -32,6 +32,8 @@
  */
 
 
+#include "geomInterval.hpp"
+
 #include <Engabra>
 
 
@@ -44,12 +46,18 @@ namespace geom
 	//! \brief A geometric cylinder shape of finite length
 	struct Cylinder
 	{
+		//! Start point of axis.
 		Vector const theAxisBeg;
+		//! (unitary) direction of axis leaving #theAxisBeg.
 		Vector const theAxisDir;
+		//! Length of cylinder along the axis (distance between end caps).
 		double const theLength;
+		//! Radius of cylinder (axis to outer curved edge).
 		double const theRadius;
-		Interval const theGapLength;
-		Interval const theGapRad;
+		//! Length Interval from begin cap to end cap.
+		Interval const theLengthInterval;
+		//! Radial Interval from axis to outer curved edge.
+		Interval const theRadialInterval;
 
 		//! Value construction
 		inline
@@ -64,8 +72,8 @@ namespace geom
 			, theAxisDir{ direction(axisDir) }
 			, theLength{ length }
 			, theRadius{ radius }
-			, theGapLength{ 0., theLength }
-			, theGapRad{ 0., theRadius }
+			, theLengthInterval{ 0., theLength }
+			, theRadialInterval{ 0., theRadius }
 		{ }
 
 		//! Distance orthogonal from body axis to loc.
@@ -75,9 +83,10 @@ namespace geom
 			( Vector const & someLoc
 			) const
 		{
-			double const dist
-				{ ((someLoc - theAxisBeg)*theAxisDir).theSca[0] };
-			return dist;
+			Vector const relLoc{ someLoc - theAxisBeg };
+			// dot product of relLoc and axis direction
+			BiVector const rejection{ (relLoc*theAxisDir).theBiv };
+			return magnitude(rejection);
 		}
 
 		//! Distance orthogonal from body axis to loc.
@@ -87,7 +96,7 @@ namespace geom
 			( Vector const & someLoc
 			) const
 		{
-			return theGapRad.fracAtValue(distanceFromAxis(someLoc));
+			return theRadialInterval.fracAtValue(distanceFromAxis(someLoc));
 		}
 
 		//! Distance parallel along body axis to loc.
@@ -97,9 +106,10 @@ namespace geom
 			( Vector const & someLoc
 			) const
 		{
-			double const dist
-				{ (someLoc*theAxisDir).theSca[0] };
-			return dist;
+			Vector const relLoc{ someLoc - theAxisBeg };
+			// dot product of relLoc and axis direction
+			double const projection{ (relLoc*theAxisDir).theSca[0] };
+			return projection;
 		}
 
 		inline
@@ -108,7 +118,7 @@ namespace geom
 			( Vector const & someLoc
 			) const
 		{
-			return theGapLength.fracAtValue(distanceAlongAxis(someLoc));
+			return theLengthInterval.fracAtValue(distanceAlongAxis(someLoc));
 		}
 
 	}; // Cylinder

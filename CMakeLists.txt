@@ -91,6 +91,7 @@ set(testProgs
 	test_roundTrip
 
 	# geom
+	test_Cylinder
 	test_Interval
 
 	)
