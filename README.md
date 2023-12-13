@@ -104,7 +104,7 @@ In general creating a custom ray path involves the following.
 	path information (as a collection of ray::Node instance that
 	are saved every delta-length along the path). E.g.
 
-		ray::Path aPath(start, saveDeltaDistance);
+		ray::Path aPath(start, saveStepDist);
 
 	* Use the ray::Propagator to trace as many paths as desired. E.g.
 
@@ -115,10 +115,7 @@ In general creating a custom ray path involves the following.
 	* Retrieve desired data from ray::Path archive of ray::Node
 	instances. E.g.
 
-		for (ray::Node const & node : aPath.theNodes)
-		{
-			std::cout << node.infoBrief() << std::endl;
-		}
+		std::cout << ray::PathView(&aPath).infoCurvature() << std::endl;
 
 
 ## Project Development Environment
