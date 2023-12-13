@@ -57,6 +57,7 @@ set(mainProgs
 	hello
 
 	demoExpAtmosphere
+	demoHotRoad
 	demoThickPlate
 
 	)
