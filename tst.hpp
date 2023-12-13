@@ -58,9 +58,12 @@ namespace tst
 	{
 		if (! engabra::g3::nearlyEquals(got, exp))
 		{
+			using engabra::g3::io::fixed;
+			Type const dif{ got - exp };
 			oss << "Failure of '" << tname << "' test\n";
 			oss << "exp: " << exp << '\n';
 			oss << "got: " << got << '\n';
+			oss << "dif: " << fixed(dif, 3u, 18u) << '\n';
 		}
 	}
 
