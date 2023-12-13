@@ -167,7 +167,7 @@ names and included options as appropriate for local system).
 		-DCMAKE_BUILD_TYPE=Release \
 		-DCMAKE_INSTALL_PREFIX=/tmpLocal/ \
 		-DCMAKE_PREFIX_PATH=/tmpLocal/ \
-		/repos/Refraction
+		/repos/AeroPlygiant
 	$ cmake --build . --target all -j `nproc`
 	$ # -- Run library unit tests
 	$ ctest -j `nproc`
