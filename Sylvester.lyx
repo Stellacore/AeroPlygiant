@@ -1,0 +1,380 @@
+#LyX 2.3 created this file. For more info see http://www.lyx.org/
+\lyxformat 544
+\begin_document
+\begin_header
+\save_transient_properties true
+\origin unavailable
+\textclass IEEEtran
+\use_default_options true
+\maintain_unincluded_children false
+\language english
+\language_package default
+\inputencoding auto
+\fontencoding global
+\font_roman "default" "default"
+\font_sans "default" "default"
+\font_typewriter "default" "default"
+\font_math "auto" "auto"
+\font_default_family default
+\use_non_tex_fonts false
+\font_sc false
+\font_osf false
+\font_sf_scale 100 100
+\font_tt_scale 100 100
+\use_microtype false
+\use_dash_ligatures true
+\graphics default
+\default_output_format default
+\output_sync 0
+\bibtex_command default
+\index_command default
+\paperfontsize default
+\spacing single
+\use_hyperref false
+\papersize default
+\use_geometry false
+\use_package amsmath 1
+\use_package amssymb 1
+\use_package cancel 1
+\use_package esint 1
+\use_package mathdots 1
+\use_package mathtools 1
+\use_package mhchem 1
+\use_package stackrel 1
+\use_package stmaryrd 1
+\use_package undertilde 1
+\cite_engine biblatex
+\cite_engine_type authoryear
+\biblio_style plain
+\biblatex_bibstyle authoryear
+\biblatex_citestyle authoryear
+\use_bibtopic false
+\use_indices false
+\paperorientation portrait
+\suppress_date false
+\justification true
+\use_refstyle 1
+\use_minted 0
+\index Index
+\shortcut idx
+\color #008000
+\end_index
+\secnumdepth 3
+\tocdepth 3
+\paragraph_separation indent
+\paragraph_indentation default
+\is_math_indent 0
+\math_numbering_side default
+\quotes_style english
+\dynamic_quotes 0
+\papercolumns 1
+\papersides 1
+\paperpagestyle default
+\tracking_changes false
+\output_changes false
+\html_math_output 0
+\html_css_as_file 0
+\html_be_strict false
+\end_header
+
+\begin_body
+
+\begin_layout Title
+Sylvester's Equation in GA
+\end_layout
+
+\begin_layout Abstract
+This technical note provides a summary of the solution to Sylvester's equation
+ using Geometric Algebra.
+ It summarizes the general multivector solution by
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset CommandInset citation
+LatexCommand cite
+key "Chappell_3DFuncsPlos2015"
+literal "false"
+
+\end_inset
+
+ and then applies this to a bivector valued equation that arises in optical
+ refraction theory.
+ The expressions, including the special case, have been verified with a
+ s/w program
+\begin_inset Foot
+status open
+
+\begin_layout Plain Layout
+AeroPlygiant repository program test_Sylvester.cpp
+\end_layout
+
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Section
+Summary
+\end_layout
+
+\begin_layout Standard
+The following is a step by step explication of the solution presented in
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset CommandInset citation
+LatexCommand cite
+key "Chappell_3DFuncsPlos2015"
+literal "false"
+
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+Consider the multivector equation
+\begin_inset Formula 
+\begin{equation}
+AX+XB=D\label{eq:Orig}
+\end{equation}
+
+\end_inset
+
+in which all variables are general multivectors.
+\end_layout
+
+\begin_layout Standard
+Assuming 
+\begin_inset Formula $A$
+\end_inset
+
+ is invertible (i.e.
+ that 
+\begin_inset Formula $A^{-1}$
+\end_inset
+
+ exists), proceed as follows (similar process if 
+\begin_inset Formula $B^{-1}$
+\end_inset
+
+ exists instead), multiply from the left by 
+\begin_inset Formula $A^{-1}$
+\end_inset
+
+ to obtain
+\begin_inset Formula 
+\[
+X+A^{-1}XB=A^{-1}D
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Next multiply from the right by the dirverse (Clifford conjugate), 
+\begin_inset Formula $\overline{B}$
+\end_inset
+
+, in which the vector and bivector grades are negated,
+\begin_inset Formula 
+\[
+X\overline{B}+A^{-1}XB\overline{B}=A^{-1}D\overline{B}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Note that 
+\begin_inset Formula $B\overline{B}$
+\end_inset
+
+ commutes with all elements (as does 
+\begin_inset Formula $B+\overline{B}$
+\end_inset
+
+ to be used next), so that
+\begin_inset Formula 
+\begin{equation}
+X\overline{B}+A^{-1}B\overline{B}X=A^{-1}D\overline{B}\label{eq:Sandwiched}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Add the original and sandwiched transformed equations to obtain
+\begin_inset Formula 
+\[
+AX+XB+X\overline{B}+A^{-1}B\overline{B}X=D+A^{-1}D\overline{B}
+\]
+
+\end_inset
+
+
+\begin_inset Formula 
+\[
+\left(A+A^{-1}B\overline{B}\right)X+X\left(B+\overline{B}\right)=D+A^{-1}D\overline{B}
+\]
+
+\end_inset
+
+Then using the commutativity of 
+\begin_inset Formula $B+\overline{B}$
+\end_inset
+
+,
+\begin_inset Formula 
+\[
+\left(A+A^{-1}B\overline{B}\right)X+\left(B+\overline{B}\right)X=D+A^{-1}D\overline{B}
+\]
+
+\end_inset
+
+
+\begin_inset Formula 
+\[
+\left(A+A^{-1}B\overline{B}+B+\overline{B}\right)X=\left(D+A^{-1}D\overline{B}\right)
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+If the leading coefficient is invertible (depends on the configuration and
+ values), then
+\begin_inset Formula 
+\[
+X=\left(A+A^{-1}B\overline{B}+B+\overline{B}\right)^{-1}\left(D+A^{-1}D\overline{B}\right)
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection
+Special Case
+\end_layout
+
+\begin_layout Standard
+If variables on the left or original equation are vectors, and 
+\begin_inset Formula $D$
+\end_inset
+
+ is a bivector, then
+\begin_inset Formula 
+\[
+ax+xb=D
+\]
+
+\end_inset
+
+The general solution may be expressed as
+\begin_inset Formula 
+\[
+x=\left(a+a^{-1}b\left(-b\right)+b+\left(-b\right)\right)^{-1}\left(D+a^{-1}D\left(-b\right)\right)
+\]
+
+\end_inset
+
+
+\begin_inset Formula 
+\[
+x=\left(a-a^{-1}b^{2}\right)^{-1}\left(D-a^{-1}Db\right)
+\]
+
+\end_inset
+
+
+\begin_inset Formula 
+\[
+x=\left(a^{-1}\left(a^{2}-b^{2}\right)\right)^{-1}\left(a^{-1}\left(aD-Db\right)\right)
+\]
+
+\end_inset
+
+
+\begin_inset Formula 
+\[
+x=\left(a^{2}-b^{2}\right)^{-1}\left[\left(a^{-1}\right)^{-1}a^{-1}\right]\left(aD-Db\right)
+\]
+
+\end_inset
+
+
+\begin_inset Formula 
+\[
+x=\left(a^{2}-b^{2}\right)^{-1}\left(aD-Db\right)
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The leading factor on the right is a scalar.
+ If 
+\begin_inset Formula $x$
+\end_inset
+
+ is to be a vector, then the trivector grade of 
+\begin_inset Formula $aD-Db$
+\end_inset
+
+ must vanish.
+ To explore this, expand the trailing factor in terms of vector and trivector
+ grades,
+\begin_inset Formula 
+\begin{align*}
+x & =\left(a^{2}-b^{2}\right)^{-1}\left(a\cdot D-D\cdot b+a\wedge D-D\wedge b\right)\\
+ & =\left(a^{2}-b^{2}\right)^{-1}\left(a\cdot D+b\cdot D+a\wedge D-b\wedge D\right)\\
+ & =\left(a^{2}-b^{2}\right)^{-1}\left(\left(a+b\right)\cdot D+\left(a-b\right)\wedge D\right)
+\end{align*}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+From this, it is clear that, for the solution, 
+\begin_inset Formula $x$
+\end_inset
+
+, to be a pure vector, requires the difference vector, 
+\begin_inset Formula $a-b$
+\end_inset
+
+, to be parallel to the plane of 
+\begin_inset Formula $D$
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+\begin_inset CommandInset bibtex
+LatexCommand bibtex
+btprint "btPrintCited"
+bibfiles "Papers"
+
+\end_inset
+
+
+\end_layout
+
+\end_body
+\end_document
