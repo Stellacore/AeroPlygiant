@@ -37,6 +37,7 @@
 #include <Engabra>
 
 #include <iostream>
+#include <limits>
 #include <sstream>
 #include <string>
 
@@ -54,9 +55,10 @@ namespace tst
 		, Type const & got
 		, Type const & exp
 		, std::string const & tname
+		, double const & tol = std::numeric_limits<double>::epsilon()
 		)
 	{
-		if (! engabra::g3::nearlyEquals(got, exp))
+		if (! engabra::g3::nearlyEquals(got, exp, tol))
 		{
 			using engabra::g3::io::fixed;
 			Type const dif{ got - exp };
