@@ -3940,6 +3940,38 @@ where
  is a pure bivector grade element.
 \end_layout
 
+\begin_layout Subsubsection
+Sylvester's Equation
+\end_layout
+
+\begin_layout Standard
+Consider equation of the form
+\begin_inset Formula 
+\[
+ax+xb=D
+\]
+
+\end_inset
+
+where 
+\begin_inset Formula $a=t+g$
+\end_inset
+
+, 
+\begin_inset Formula $b=t-g$
+\end_inset
+
+, and 
+\begin_inset Formula $x$
+\end_inset
+
+ are vectors, and 
+\begin_inset Formula $D$
+\end_inset
+
+ is a pure bivector grade element.
+\end_layout
+
 \begin_layout Standard
 In general, the solution, 
 \begin_inset Formula $\check{x}$
@@ -3974,6 +4006,14 @@ In general, the solution,
  grades.
  (For the specific application at hand above, the trivector portion should
  vanish identically).
+\end_layout
+
+\begin_layout Paragraph
+Case 1: Using 
+\begin_inset Formula $a^{-1}$
+\end_inset
+
+
 \end_layout
 
 \begin_layout Standard
@@ -4109,6 +4149,150 @@ x=\frac{a\left(aD-Db\right)a}{a^{2}\left(a^{2}-b^{2}\right)}
 
 \end_layout
 
+\begin_layout Paragraph
+Case 1: Using 
+\begin_inset Formula $b^{-1}$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Assuming 
+\begin_inset Formula $b^{-1}$
+\end_inset
+
+ exists (
+\begin_inset Formula $b\ne0$
+\end_inset
+
+) or that 
+\begin_inset Formula $t-g\ne0$
+\end_inset
+
+, multiply from the right by 
+\begin_inset Formula $b^{-1}$
+\end_inset
+
+, to obtain
+\begin_inset Formula 
+\[
+axb^{-1}+xbb^{-1}=Db^{-1}
+\]
+
+\end_inset
+
+Then multiply from the left by 
+\begin_inset Formula $\overline{a}=-a$
+\end_inset
+
+,
+\begin_inset Formula 
+\[
+-aaxb^{-1}-axbb^{-1}=-aDb^{-1}
+\]
+
+\end_inset
+
+
+\begin_inset Formula 
+\[
+-xa^{2}b^{-1}-ax=-aDb^{-1}
+\]
+
+\end_inset
+
+Add this to the original
+\begin_inset Formula 
+\[
+ax+xb-xa^{2}b^{-1}-ax=D-aDb^{-1}
+\]
+
+\end_inset
+
+
+\begin_inset Formula 
+\[
+xb-xa^{2}b^{-1}=D-aDb^{-1}
+\]
+
+\end_inset
+
+
+\begin_inset Formula 
+\[
+x\left(b-a^{2}b^{-1}\right)=D-aDb^{-1}
+\]
+
+\end_inset
+
+To obtain solution
+\begin_inset Formula 
+\[
+x=\left(D-aDb^{-1}\right)\left(b-a^{2}b^{-1}\right)^{-1}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Introducing 
+\begin_inset Formula $b^{-1}=bb^{-2}$
+\end_inset
+
+,
+\begin_inset Formula 
+\[
+x=\left(\left(Db-aD\right)b^{-1}\right)\left(\left(bb-a^{2}\right)b^{-1}\right)^{-1}
+\]
+
+\end_inset
+
+
+\begin_inset Formula 
+\[
+x=\left(b^{2}-a^{2}\right)^{-1}\left(\left(Db-aD\right)\left(b^{-1}\right)\right)\left(b^{-1}\right)^{-1}
+\]
+
+\end_inset
+
+
+\begin_inset Formula 
+\[
+x=\left(b^{2}-a^{2}\right)^{-1}\left(Db-aD\right)
+\]
+
+\end_inset
+
+
+\begin_inset Formula 
+\[
+x=\frac{Db-aD}{b^{2}-a^{2}}
+\]
+
+\end_inset
+
+Assuming, 
+\begin_inset Formula $\left(b=t-g\right)\ne0$
+\end_inset
+
+ and that 
+\begin_inset Formula $\left(b^{2}-a^{2}=-4t\cdot g\right)\ne0$
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Subsubsection
+Solution for 
+\begin_inset Formula $\dot{t}$
+\end_inset
+
+
+\end_layout
+
 \begin_layout Standard
 Sylvester's equation above,
 \begin_inset Formula 
@@ -4118,10 +4302,18 @@ ax+xb=D
 
 \end_inset
 
-and solution
+
 \begin_inset Formula 
 \[
-x=\frac{a\left(aD-Db\right)a}{a^{2}\left(a^{2}-b^{2}\right)}
+x_{a}=\frac{a\left(aD-Db\right)a}{a^{2}\left(a^{2}-b^{2}\right)}
+\]
+
+\end_inset
+
+
+\begin_inset Formula 
+\[
+x_{b}=\frac{Db-aD}{b^{2}-a^{2}}
 \]
 
 \end_inset
@@ -4137,6 +4329,167 @@ D & =2\left(\nu^{-1}\left(\nabla\nu\cdot t\right)\left(t\wedge g\right)+\sum_{j}
 
 \end_inset
 
+
+\end_layout
+
+\begin_layout Standard
+Validity of the first solution, 
+\begin_inset Formula $x_{a}$
+\end_inset
+
+, depends on 
+\begin_inset Formula $a^{-1}$
+\end_inset
+
+ existing which requires that 
+\begin_inset Formula $\left(a=t+g\right)\ne0$
+\end_inset
+
+.
+ Validity of the second solution, 
+\begin_inset Formula $x_{b}$
+\end_inset
+
+, depends on 
+\begin_inset Formula $b^{-1}$
+\end_inset
+
+ existing which requires the complementary condition that 
+\begin_inset Formula $\left(b=t-g\right)\ne0$
+\end_inset
+
+.
+ Both solutions require that 
+\begin_inset Formula $\left(a^{2}-b^{2}=4t\cdot g\right)\ne0$
+\end_inset
+
+ such that neither solution is valid if the tangent direction is orthogonal
+ to the gradient direction.
+\end_layout
+
+\begin_layout Standard
+Consider the numerator
+\begin_inset Formula 
+\[
+x_{b}=\frac{D\left(t-g\right)-\left(t+g\right)D}{b^{2}-a^{2}}
+\]
+
+\end_inset
+
+note that 
+\begin_inset Formula $t$
+\end_inset
+
+ anti commutes with both terms in 
+\begin_inset Formula $D$
+\end_inset
+
+, such that
+\begin_inset Formula 
+\[
+x_{b}=\frac{Dt-Dg-tD-gD}{b^{2}-a^{2}}
+\]
+
+\end_inset
+
+
+\begin_inset Formula 
+\[
+x_{b}=\frac{Dt-Dg+Dt-gD}{b^{2}-a^{2}}
+\]
+
+\end_inset
+
+
+\begin_inset Formula 
+\[
+x_{b}=\frac{2Dt-\left(Dg+gD\right)}{b^{2}-a^{2}}
+\]
+
+\end_inset
+
+
+\begin_inset Formula 
+\[
+x_{b}=\frac{2Dt-2\left(D\wedge g\right)}{b^{2}-a^{2}}
+\]
+
+\end_inset
+
+
+\begin_inset Formula 
+\[
+x_{b}=\frac{2D\cdot t+2D\wedge t-2\left(D\wedge g\right)}{b^{2}-a^{2}}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The denominator is 
+\begin_inset Formula $b^{2}-a^{2}=-4t\cdot g$
+\end_inset
+
+, so that
+\begin_inset Formula 
+\[
+x_{b}=\frac{2D\cdot t+2D\wedge t-2\left(D\wedge g\right)}{-4t\cdot g}
+\]
+
+\end_inset
+
+
+\begin_inset Formula 
+\[
+x_{b}=\frac{-D\cdot t-D\wedge t-D\wedge g}{2t\cdot g}
+\]
+
+\end_inset
+
+
+\begin_inset Formula 
+\[
+x_{b}=\frac{1}{2t\cdot g}\left\{ -D\cdot t-\left(D\wedge\left(t+g\right)\right)\right\} 
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+If 
+\begin_inset Formula $x_{b}$
+\end_inset
+
+ is to be vector grade as expected, then the trivector term should vanish.
+ 
+\begin_inset Note Note
+status open
+
+\begin_layout Plain Layout
+TODO
+\end_layout
+
+\end_inset
+
+/TBD - need to investigate/establish if this is true or not (in general,
+ no, but for this application, perhaps there's something in the gradient
+ or Hessian that makes this happen).
+\end_layout
+
+\begin_layout Subsection
+TODO to be organized
+\end_layout
+
+\begin_layout Standard
+The first case, can be avoided (TODO/TBD) by utilizing the alternate process
+ for solving Sylvester's equation.
+\end_layout
+
+\begin_layout Standard
 TODO/TBD - Application: Note that both 
 \begin_inset Formula $t+g$
 \end_inset
@@ -4597,6 +4950,49 @@ Consider if
 \[
 \dot{t}=\left[0+0\right]\frac{-t^{2}}{+t^{2}}=0
 \]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Paragraph
+Constant Gradient
+\end_layout
+
+\begin_layout Standard
+If 
+\begin_inset Formula $g=\text{const}$
+\end_inset
+
+, then 
+\begin_inset Formula $\nabla\gamma_{j}=0$
+\end_inset
+
+ so that
+\begin_inset Formula 
+\begin{align*}
+\dot{t}= & \left[\nu^{-1}\left(\nabla\nu\cdot t\right)\left(t\wedge g\right)+\sum_{j}\cancelto{0}{\left(\nabla\gamma_{j}\cdot t\right)}\left(t\wedge e_{j}\right)\right]\frac{g^{2}-t^{2}+2g\wedge t}{g^{2}+t^{2}}
+\end{align*}
+
+\end_inset
+
+
+\begin_inset Formula 
+\begin{align*}
+\dot{t}= & \left[\nu^{-1}\left(g\cdot t\right)\left(t\wedge g\right)\right]\frac{g^{2}-t^{2}+2g\wedge t}{g^{2}+t^{2}}
+\end{align*}
+
+\end_inset
+
+
+\begin_inset Formula 
+\begin{align*}
+\left(gt+tg\right)\left(tg-gt\right) & =gttg-gtgt+tgtg-tggt\\
+ & =t^{2}g^{2}-gtgt+tgtg-t^{2}g^{2}\\
+ & =tgtg-gtgt\\
+ & =2g\wedge\left(tgt\right)
+\end{align*}
 
 \end_inset
 
