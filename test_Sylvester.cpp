@@ -107,6 +107,10 @@ main
 	// // General solution form (for vector coefficients and biv RHS
 	// MultiVector const coef{ mv_a + mv_aInv*mv_b*mv_bDvr + mv_b + mv_bDvr };
 
+	//
+	// using a^-1 in derivation
+	//
+
 	{
 	MultiVector const coef{ mv_a - mv_aInv*mv_b*mv_b };
 	MultiVector const fact{ mv_D - mv_aInv*mv_D*mv_b };
@@ -114,7 +118,7 @@ main
 	MultiVector const soln{ cInv * fact };
 
 	MultiVector const gotEqn{ equation(mv_a, mv_b, soln, mv_D) };
-	tst::checkGotExp(oss, gotEqn, expEqn, "soln(1)", tol);
+	tst::checkGotExp(oss, gotEqn, expEqn, "soln(1a)", tol);
 	}
 
 	{
@@ -125,7 +129,7 @@ main
 	MultiVector const soln{ cInv * fact };
 
 	MultiVector const gotEqn{ equation(mv_a, mv_b, soln, mv_D) };
-	tst::checkGotExp(oss, gotEqn, expEqn, "soln(2)", tol);
+	tst::checkGotExp(oss, gotEqn, expEqn, "soln(1b)", tol);
 	}
 
 	{
@@ -133,14 +137,14 @@ main
 	MultiVector const soln{ (1./(aSq-bSq)) * fact };
 
 	MultiVector const gotEqn{ equation(mv_a, mv_b, soln, mv_D) };
-	tst::checkGotExp(oss, gotEqn, expEqn, "soln(3)", tol);
+	tst::checkGotExp(oss, gotEqn, expEqn, "soln(1c)", tol);
 	}
 
 	{
 	MultiVector const soln{ (1./(aSq-bSq)) * (mv_a*mv_D - mv_D*mv_b) };
 
 	MultiVector const gotEqn{ equation(mv_a, mv_b, soln, mv_D) };
-	tst::checkGotExp(oss, gotEqn, expEqn, "soln(4)", tol);
+	tst::checkGotExp(oss, gotEqn, expEqn, "soln(1d)", tol);
 	}
 
 	{
@@ -152,7 +156,18 @@ main
 	MultiVector const soln{ vec + tri };
 
 	MultiVector const gotEqn{ equation(mv_a, mv_b, soln, mv_D) };
-	tst::checkGotExp(oss, gotEqn, expEqn, "soln(5)", tol);
+	tst::checkGotExp(oss, gotEqn, expEqn, "soln(1e)", tol);
+	}
+
+	// using b^-1 in derivation
+
+	{
+	double const scl{ 1./(bSq-aSq) };
+	MultiVector const top{ mv_D * mv_b - mv_a * mv_D };
+	MultiVector const soln{ scl * top };
+
+	MultiVector const gotEqn{ equation(mv_a, mv_b, soln, mv_D) };
+	tst::checkGotExp(oss, gotEqn, expEqn, "soln(2a)", tol);
 	}
 
 	return tst::finish(oss);
