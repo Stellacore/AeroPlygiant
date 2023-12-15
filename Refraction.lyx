@@ -3655,7 +3655,7 @@ Differential Algebraic Relationship
 So that overall, substitution into the refraction invariant
 \begin_inset Formula 
 \[
-\nu^{-1}\left(\nabla\nu\cdot t\right)\left(t\wedge g\right)+\dot{t}\wedge g+\sum_{j}\left(\nabla\gamma_{j}\cdot t\right)\left(t\wedge e_{j}\right)=0
+\nu^{-1}\left(g\cdot t\right)\left(t\wedge g\right)+\dot{t}\wedge g+\sum_{j}\left(\nabla\gamma_{j}\cdot t\right)\left(t\wedge e_{j}\right)=0
 \]
 
 \end_inset
@@ -3745,7 +3745,7 @@ The two equations can be combined as follows.
 First rearrange the refraction invariant
 \begin_inset Formula 
 \[
-\nu^{-1}\left(\nabla\nu\cdot t\right)\left(t\wedge g\right)-g\wedge\dot{t}+\sum_{j}\left(\nabla\gamma_{j}\cdot t\right)\left(t\wedge e_{j}\right)=0
+\nu^{-1}\left(g\cdot t\right)\left(t\wedge g\right)-g\wedge\dot{t}+\sum_{j}\left(\nabla\gamma_{j}\cdot t\right)\left(t\wedge e_{j}\right)=0
 \]
 
 \end_inset
@@ -3753,7 +3753,7 @@ First rearrange the refraction invariant
 
 \begin_inset Formula 
 \[
-g\wedge\dot{t}=\nu^{-1}\left(\nabla\nu\cdot t\right)\left(t\wedge g\right)+\sum_{j}\left(\nabla\gamma_{j}\cdot t\right)\left(t\wedge e_{j}\right)
+g\wedge\dot{t}=\nu^{-1}\left(g\cdot t\right)\left(t\wedge g\right)+\sum_{j}\left(\nabla\gamma_{j}\cdot t\right)\left(t\wedge e_{j}\right)
 \]
 
 \end_inset
@@ -3771,7 +3771,7 @@ Then multiply by
 ,
 \begin_inset Formula 
 \begin{align*}
-g\dot{t}-\dot{t}g & =2\nu^{-1}\left(\nabla\nu\cdot t\right)\left(t\wedge g\right)+2\sum_{j}\left(\nabla\gamma_{j}\cdot t\right)\left(t\wedge e_{j}\right)\\
+g\dot{t}-\dot{t}g & =2\nu^{-1}\left(g\cdot t\right)\left(t\wedge g\right)+2\sum_{j}\left(\nabla\gamma_{j}\cdot t\right)\left(t\wedge e_{j}\right)\\
 t\dot{t}+\dot{t}t & =0
 \end{align*}
 
@@ -3801,7 +3801,7 @@ t\dot{t}+g\dot{t}+\dot{t}t-\dot{t}g=2\nu^{-1}\left(\nabla\nu\cdot t\right)\left(
 
 \begin_inset Formula 
 \[
-\left(t+g\right)\dot{t}+\dot{t}\left(t-g\right)=2\left(\nu^{-1}\left(\nabla\nu\cdot t\right)\left(t\wedge g\right)+\sum_{j}\left(\nabla\gamma_{j}\cdot t\right)\left(t\wedge e_{j}\right)\right)
+\left(t+g\right)\dot{t}+\dot{t}\left(t-g\right)=2\left(\nu^{-1}\left(g\cdot t\right)\left(t\wedge g\right)+\sum_{j}\left(\nabla\gamma_{j}\cdot t\right)\left(t\wedge e_{j}\right)\right)
 \]
 
 \end_inset
@@ -3916,7 +3916,7 @@ Solution
 Consider equation of the form
 \begin_inset Formula 
 \[
-ax+xb=D
+aX+Xb=D
 \]
 
 \end_inset
@@ -3929,50 +3929,158 @@ where
 \begin_inset Formula $b=t-g$
 \end_inset
 
-, and 
-\begin_inset Formula $x$
-\end_inset
-
- are vectors, and 
+, are vectors and 
 \begin_inset Formula $D$
 \end_inset
 
  is a pure bivector grade element.
+ This is Sylvester's equation which has solution (
+\begin_inset Note Note
+status open
+
+\begin_layout Plain Layout
+TODO
 \end_layout
 
-\begin_layout Subsubsection
-Sylvester's Equation
-\end_layout
+\end_inset
 
-\begin_layout Standard
-Consider equation of the form
+/TBD - ref Sylvester.lyx document)
 \begin_inset Formula 
 \[
-ax+xb=D
+X=\frac{aD-Db}{a^{2}-b^{2}}
 \]
 
 \end_inset
 
-where 
-\begin_inset Formula $a=t+g$
+This may also be expressed as
+\begin_inset Formula 
+\[
+X=\frac{\left(a+b\right)\cdot D}{a^{2}-b^{2}}+\frac{\left(a-b\right)\wedge D}{a^{2}-b^{2}}
+\]
+
 \end_inset
 
-, 
-\begin_inset Formula $b=t-g$
-\end_inset
 
-, and 
-\begin_inset Formula $x$
-\end_inset
-
- are vectors, and 
-\begin_inset Formula $D$
-\end_inset
-
- is a pure bivector grade element.
 \end_layout
 
 \begin_layout Standard
+This equation may be associated with the application at hand by making the
+ identifications,
+\begin_inset Formula 
+\begin{align*}
+x & =\dot{t}\\
+a & =t+g\\
+b & =t-g\\
+D & =2\left(\nu^{-1}\left(g\cdot t\right)\left(t\wedge g\right)+\sum_{j}\left(\nabla\gamma_{j}\cdot t\right)\left(t\wedge e_{j}\right)\right)
+\end{align*}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The solution exists provided the denominator is not zero - i.e.
+ provided that 
+\begin_inset Formula $a^{2}\ne b^{2}$
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+The scalar denominator may be evaluated by noting that
+\begin_inset Formula 
+\[
+a^{2}=t^{2}+tg+gt+g^{2}=t^{2}+g^{2}+2t\cdot g
+\]
+
+\end_inset
+
+
+\begin_inset Formula 
+\[
+b^{2}=t^{2}-tg-gt+g^{2}=t^{2}+g^{2}-2t\cdot g
+\]
+
+\end_inset
+
+so that
+\begin_inset Formula 
+\[
+a^{2}-b^{2}=4t\cdot g
+\]
+
+\end_inset
+
+This is non zero provided that 
+\begin_inset Formula $t\ne0$
+\end_inset
+
+, 
+\begin_inset Formula $g\ne0$
+\end_inset
+
+, and 
+\begin_inset Formula $t$
+\end_inset
+
+ is not orthogonal to 
+\begin_inset Formula $g$
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+After substitution for 
+\begin_inset Formula $a+b=2t$
+\end_inset
+
+ and 
+\begin_inset Formula $a-b=2g$
+\end_inset
+
+ and the denominator, the solution may be expressed
+\begin_inset Formula 
+\[
+X=\frac{1}{2t\cdot g}\left(t\cdot D+g\wedge D\right)
+\]
+
+\end_inset
+
+
+\begin_inset Note Note
+status open
+
+\begin_layout Plain Layout
+TODO
+\end_layout
+
+\end_inset
+
+/TBD from the derivation above, it is expected that 
+\begin_inset Formula $X=\dot{t}$
+\end_inset
+
+ should be a pure vector.
+ However, this general solution may include trivector grade (unless 
+\begin_inset Formula $g$
+\end_inset
+
+ is parallel to the plane of 
+\begin_inset Formula $D$
+\end_inset
+
+).
+ TODO/TBD - resolve what's going on here.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Note Comment
+status collapsed
+
+\begin_layout Plain Layout
 In general, the solution, 
 \begin_inset Formula $\check{x}$
 \end_inset
@@ -4008,911 +4116,21 @@ In general, the solution,
  vanish identically).
 \end_layout
 
-\begin_layout Paragraph
-Case 1: Using 
-\begin_inset Formula $a^{-1}$
 \end_inset
 
 
 \end_layout
 
 \begin_layout Standard
-Assuming 
-\begin_inset Formula $a^{-1}$
-\end_inset
-
- exists, i.e.
- that 
-\begin_inset Formula $t+g\ne0$
-\end_inset
-
-, then
-\begin_inset Formula 
-\[
-x+a^{-1}xb=a^{-1}D
-\]
-
-\end_inset
-
-Multiply this from the right by 
-\begin_inset Formula $\overline{b}=-b$
-\end_inset
-
- to obtain
-\begin_inset Formula 
-\[
--xb-a^{-1}xb^{2}=-a^{-1}Db
-\]
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-Add this to the original equation to obtain
-\begin_inset Formula 
-\[
-ax+xb-xb-a^{-1}xb^{2}=D-a^{-1}Db
-\]
-
-\end_inset
-
-
-\begin_inset Formula 
-\[
-ax+\cancelto{0}{xb-xb}-a^{-1}b^{2}x=D-a^{-1}Db
-\]
-
-\end_inset
-
-
-\begin_inset Formula 
-\[
-\left(a-a^{-1}b^{2}\right)x=\left(D-a^{-1}Db\right)
-\]
-
-\end_inset
-
-such that
-\begin_inset Formula 
-\[
-x=\left(D-a^{-1}Db\right)\left(a-b^{2}a^{-1}\right)^{-1}
-\]
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-Noting that the vector inverse of 
-\begin_inset Formula $a$
-\end_inset
-
- is 
-\begin_inset Formula $a^{-1}=aa^{-2}$
-\end_inset
-
-, the factor to be inverted on the right may be expressed as
-\begin_inset Formula 
-\begin{align*}
-a-b^{2}a^{-1} & =a-b^{2}\frac{a}{a^{2}}\\
- & =a\left(\frac{a^{2}-b^{2}}{a^{2}}\right)
-\end{align*}
-
-\end_inset
-
-This is a scaled vector, for which the inverse is
-\begin_inset Formula 
-\begin{align*}
-\left(a-b^{2}a^{-1}\right)^{-1} & =a^{-1}\left(\frac{a^{2}-b^{2}}{a^{2}}\right)^{-1}\\
- & =\frac{a}{a^{2}}\frac{a^{2}}{a^{2}-b^{2}}\\
- & =\frac{a}{a^{2}-b^{2}}
-\end{align*}
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-Similarly the leading factor may be expressed as
-\begin_inset Formula 
-\begin{align*}
-D-a^{-1}Db & =a^{-1}\left(aD-Db\right)\\
- & =\frac{a}{a^{2}}\left(aD-Db\right)
-\end{align*}
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-Substitute this to express the solution as
-\begin_inset Formula 
-\[
-x=\frac{a}{a^{2}}\left(aD-Db\right)\frac{a}{a^{2}-b^{2}}
-\]
-
-\end_inset
-
-
-\begin_inset Formula 
-\[
-x=\frac{a\left(aD-Db\right)a}{a^{2}\left(a^{2}-b^{2}\right)}
-\]
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Paragraph
-Case 1: Using 
-\begin_inset Formula $b^{-1}$
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-Assuming 
-\begin_inset Formula $b^{-1}$
-\end_inset
-
- exists (
-\begin_inset Formula $b\ne0$
-\end_inset
-
-) or that 
-\begin_inset Formula $t-g\ne0$
-\end_inset
-
-, multiply from the right by 
-\begin_inset Formula $b^{-1}$
-\end_inset
-
-, to obtain
-\begin_inset Formula 
-\[
-axb^{-1}+xbb^{-1}=Db^{-1}
-\]
-
-\end_inset
-
-Then multiply from the left by 
-\begin_inset Formula $\overline{a}=-a$
+After substitution for 
+\begin_inset Formula $D$
 \end_inset
 
 ,
 \begin_inset Formula 
-\[
--aaxb^{-1}-axbb^{-1}=-aDb^{-1}
-\]
-
-\end_inset
-
-
-\begin_inset Formula 
-\[
--xa^{2}b^{-1}-ax=-aDb^{-1}
-\]
-
-\end_inset
-
-Add this to the original
-\begin_inset Formula 
-\[
-ax+xb-xa^{2}b^{-1}-ax=D-aDb^{-1}
-\]
-
-\end_inset
-
-
-\begin_inset Formula 
-\[
-xb-xa^{2}b^{-1}=D-aDb^{-1}
-\]
-
-\end_inset
-
-
-\begin_inset Formula 
-\[
-x\left(b-a^{2}b^{-1}\right)=D-aDb^{-1}
-\]
-
-\end_inset
-
-To obtain solution
-\begin_inset Formula 
-\[
-x=\left(D-aDb^{-1}\right)\left(b-a^{2}b^{-1}\right)^{-1}
-\]
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-Introducing 
-\begin_inset Formula $b^{-1}=bb^{-2}$
-\end_inset
-
-,
-\begin_inset Formula 
-\[
-x=\left(\left(Db-aD\right)b^{-1}\right)\left(\left(bb-a^{2}\right)b^{-1}\right)^{-1}
-\]
-
-\end_inset
-
-
-\begin_inset Formula 
-\[
-x=\left(b^{2}-a^{2}\right)^{-1}\left(\left(Db-aD\right)\left(b^{-1}\right)\right)\left(b^{-1}\right)^{-1}
-\]
-
-\end_inset
-
-
-\begin_inset Formula 
-\[
-x=\left(b^{2}-a^{2}\right)^{-1}\left(Db-aD\right)
-\]
-
-\end_inset
-
-
-\begin_inset Formula 
-\[
-x=\frac{Db-aD}{b^{2}-a^{2}}
-\]
-
-\end_inset
-
-Assuming, 
-\begin_inset Formula $\left(b=t-g\right)\ne0$
-\end_inset
-
- and that 
-\begin_inset Formula $\left(b^{2}-a^{2}=-4t\cdot g\right)\ne0$
-\end_inset
-
-.
-\end_layout
-
-\begin_layout Subsubsection
-Solution for 
-\begin_inset Formula $\dot{t}$
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-Sylvester's equation above,
-\begin_inset Formula 
-\[
-ax+xb=D
-\]
-
-\end_inset
-
-
-\begin_inset Formula 
-\[
-x_{a}=\frac{a\left(aD-Db\right)a}{a^{2}\left(a^{2}-b^{2}\right)}
-\]
-
-\end_inset
-
-
-\begin_inset Formula 
-\[
-x_{b}=\frac{Db-aD}{b^{2}-a^{2}}
-\]
-
-\end_inset
-
-may be associated with the application by making the identifications,
-\begin_inset Formula 
 \begin{align*}
-x & =\dot{t}\\
-a & =t+g\\
-b & =t-g\\
-D & =2\left(\nu^{-1}\left(\nabla\nu\cdot t\right)\left(t\wedge g\right)+\sum_{j}\left(\nabla\gamma_{j}\cdot t\right)\left(t\wedge e_{j}\right)\right)
-\end{align*}
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-Validity of the first solution, 
-\begin_inset Formula $x_{a}$
-\end_inset
-
-, depends on 
-\begin_inset Formula $a^{-1}$
-\end_inset
-
- existing which requires that 
-\begin_inset Formula $\left(a=t+g\right)\ne0$
-\end_inset
-
-.
- Validity of the second solution, 
-\begin_inset Formula $x_{b}$
-\end_inset
-
-, depends on 
-\begin_inset Formula $b^{-1}$
-\end_inset
-
- existing which requires the complementary condition that 
-\begin_inset Formula $\left(b=t-g\right)\ne0$
-\end_inset
-
-.
- Both solutions require that 
-\begin_inset Formula $\left(a^{2}-b^{2}=4t\cdot g\right)\ne0$
-\end_inset
-
- such that neither solution is valid if the tangent direction is orthogonal
- to the gradient direction.
-\end_layout
-
-\begin_layout Standard
-Consider the numerator
-\begin_inset Formula 
-\[
-x_{b}=\frac{D\left(t-g\right)-\left(t+g\right)D}{b^{2}-a^{2}}
-\]
-
-\end_inset
-
-note that 
-\begin_inset Formula $t$
-\end_inset
-
- anti commutes with both terms in 
-\begin_inset Formula $D$
-\end_inset
-
-, such that
-\begin_inset Formula 
-\[
-x_{b}=\frac{Dt-Dg-tD-gD}{b^{2}-a^{2}}
-\]
-
-\end_inset
-
-
-\begin_inset Formula 
-\[
-x_{b}=\frac{Dt-Dg+Dt-gD}{b^{2}-a^{2}}
-\]
-
-\end_inset
-
-
-\begin_inset Formula 
-\[
-x_{b}=\frac{2Dt-\left(Dg+gD\right)}{b^{2}-a^{2}}
-\]
-
-\end_inset
-
-
-\begin_inset Formula 
-\[
-x_{b}=\frac{2Dt-2\left(D\wedge g\right)}{b^{2}-a^{2}}
-\]
-
-\end_inset
-
-
-\begin_inset Formula 
-\[
-x_{b}=\frac{2D\cdot t+2D\wedge t-2\left(D\wedge g\right)}{b^{2}-a^{2}}
-\]
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-The denominator is 
-\begin_inset Formula $b^{2}-a^{2}=-4t\cdot g$
-\end_inset
-
-, so that
-\begin_inset Formula 
-\[
-x_{b}=\frac{2D\cdot t+2D\wedge t-2\left(D\wedge g\right)}{-4t\cdot g}
-\]
-
-\end_inset
-
-
-\begin_inset Formula 
-\[
-x_{b}=\frac{-D\cdot t-D\wedge t-D\wedge g}{2t\cdot g}
-\]
-
-\end_inset
-
-
-\begin_inset Formula 
-\[
-x_{b}=\frac{1}{2t\cdot g}\left\{ -D\cdot t-\left(D\wedge\left(t+g\right)\right)\right\} 
-\]
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-If 
-\begin_inset Formula $x_{b}$
-\end_inset
-
- is to be vector grade as expected, then the trivector term should vanish.
- 
-\begin_inset Note Note
-status open
-
-\begin_layout Plain Layout
-TODO
-\end_layout
-
-\end_inset
-
-/TBD - need to investigate/establish if this is true or not (in general,
- no, but for this application, perhaps there's something in the gradient
- or Hessian that makes this happen).
-\end_layout
-
-\begin_layout Subsection
-TODO to be organized
-\end_layout
-
-\begin_layout Standard
-The first case, can be avoided (TODO/TBD) by utilizing the alternate process
- for solving Sylvester's equation.
-\end_layout
-
-\begin_layout Standard
-TODO/TBD - Application: Note that both 
-\begin_inset Formula $t+g$
-\end_inset
-
- and 
-\begin_inset Formula $t-g$
-\end_inset
-
- anti commute with the first term in 
-\begin_inset Formula $D$
-\end_inset
-
- (i.e.
- with 
-\begin_inset Formula $t\wedge g$
-\end_inset
-
-).
- Note that 
-\begin_inset Formula $a+b=2t$
-\end_inset
-
- anti commutes with 
-\begin_inset Formula $D$
-\end_inset
-
-.
- Express the solution as
-\begin_inset Note Comment
-status collapsed
-
-\begin_layout Plain Layout
-\begin_inset Formula 
-\[
-x=\frac{a\left(a\cdot D+a\wedge D-D\cdot b-D\wedge b\right)a}{a^{2}\left(a^{2}-b^{2}\right)}
-\]
-
-\end_inset
-
-
-\begin_inset Formula 
-\[
-x=\frac{a\left(a\cdot D-D\cdot b+a\wedge D-D\wedge b\right)a}{a^{2}\left(a^{2}-b^{2}\right)}
-\]
-
-\end_inset
-
-
-\begin_inset Formula 
-\[
-x=\frac{a\left(a\cdot D+b\cdot D+a\wedge D-b\wedge D\right)a}{a^{2}\left(a^{2}-b^{2}\right)}
-\]
-
-\end_inset
-
-
-\begin_inset Formula 
-\[
-x=\frac{a\left(\left(a+b\right)\cdot D+\left(a-b\right)\wedge D\right)a}{a^{2}\left(a^{2}-b^{2}\right)}
-\]
-
-\end_inset
-
-
-\begin_inset Formula 
-\[
-x=\frac{a\left(\left(a+b\right)\cdot D\right)a}{a^{2}\left(a^{2}-b^{2}\right)}+\frac{a\left(\left(a-b\right)\wedge D\right)a}{a^{2}\left(a^{2}-b^{2}\right)}
-\]
-
-\end_inset
-
-
-\end_layout
-
-\end_inset
-
-
-\begin_inset Formula 
-\[
-x=\frac{a\left(\left(a+b\right)\cdot D\right)a}{a^{2}\left(a^{2}-b^{2}\right)}+\frac{\left(a-b\right)\wedge D}{a^{2}-b^{2}}
-\]
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-Noting that
-\begin_inset Formula 
-\[
-a+b=2t
-\]
-
-\end_inset
-
-
-\begin_inset Formula 
-\[
-a-b=2g
-\]
-
-\end_inset
-
-and
-\begin_inset Formula 
-\[
-a^{2}=t^{2}+g^{2}+2t\cdot g
-\]
-
-\end_inset
-
-
-\begin_inset Formula 
-\[
-b^{2}=t^{2}+g^{2}-2t\cdot g
-\]
-
-\end_inset
-
-with
-\begin_inset Formula 
-\begin{align*}
-a^{2}-b^{2} & =t^{2}+g^{2}+2t\cdot g-t^{2}-g^{2}+2t\cdot g\\
- & =4t\cdot g
-\end{align*}
-
-\end_inset
-
-The solution may be expressed as
-\begin_inset Formula 
-\begin{align*}
-x & =\frac{a\left(2t\cdot D\right)a}{a^{2}\left(4t\cdot g\right)}+\frac{2g\wedge D}{4t\cdot g}\\
- & =\frac{1}{2\left(t\cdot g\right)}\left[\frac{1}{a^{2}}a\left(t\cdot D\right)a+g\wedge D\right]
-\end{align*}
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-====
-\end_layout
-
-\begin_layout Standard
-=
-\end_layout
-
-\begin_layout Standard
-=
-\end_layout
-
-\begin_layout Standard
-=
-\end_layout
-
-\begin_layout Standard
-This is of the form
-\begin_inset Formula 
-\[
-ax+xb=D
-\]
-
-\end_inset
-
-where 
-\begin_inset Formula $a,$
-\end_inset
-
-
-\begin_inset Formula $b$
-\end_inset
-
-, and 
-\begin_inset Formula $x$
-\end_inset
-
- are vectors, and 
-\begin_inset Formula $D$
-\end_inset
-
- is a bivector.
-\end_layout
-
-\begin_layout Standard
-Note that 
-\begin_inset Formula $a=g+t$
-\end_inset
-
- should always be non zero in practice (unless 
-\begin_inset Formula $g=-t$
-\end_inset
-
- TODO/TBD - conditions for this?) such that 
-\begin_inset Formula $a^{-1}=aa^{-2}$
-\end_inset
-
- exists.
- Multiply from the left by 
-\begin_inset Formula $a^{-1}$
-\end_inset
-
- and from the right by 
-\begin_inset Formula $\overline{b}=-b$
-\end_inset
-
- to obtain
-\begin_inset Formula 
-\[
--xb+a^{-1}xb^{2}=-Db
-\]
-
-\end_inset
-
- and add this to the starting equation
-\begin_inset Formula 
-\[
-xb-xb+ax+a^{-1}xb^{2}=-Db
-\]
-
-\end_inset
-
-
-\begin_inset Formula 
-\[
-ax+b^{2}a^{-1}x=-Db
-\]
-
-\end_inset
-
-
-\begin_inset Formula 
-\[
-\left(a+b^{2}a^{-1}\right)x=-Db
-\]
-
-\end_inset
-
-such that
-\begin_inset Formula 
-\[
-x=-Db\left(a+b^{2}a^{-1}\right)^{-1}
-\]
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-Noting that the vector inverse of 
-\begin_inset Formula $a$
-\end_inset
-
- is 
-\begin_inset Formula $a^{-1}=aa^{-2}$
-\end_inset
-
-, the inverted factor on the right may be expressed as
-\begin_inset Formula 
-\begin{align*}
-a+b^{2}a^{-1} & =a+b^{2}\frac{a}{a^{2}}\\
- & =a\left(\frac{a^{2}+b^{2}}{a^{2}}\right)
-\end{align*}
-
-\end_inset
-
-This is a scaled vector, for which the inverse is
-\begin_inset Formula 
-\begin{align*}
-\left(a+b^{2}a^{-1}\right)^{-1} & =a^{-1}\left(\frac{a^{2}+b^{2}}{a^{2}}\right)^{-1}\\
- & =\frac{a}{a^{2}}\frac{a^{2}}{a^{2}+b^{2}}\\
- & =\frac{a}{a^{2}+b^{2}}
-\end{align*}
-
-\end_inset
-
-Substitute this to express the solution as
-\begin_inset Formula 
-\[
-x=-D\frac{ba}{a^{2}+b^{2}}
-\]
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-Associating with above,
-\begin_inset Formula 
-\begin{align*}
-x & =\dot{t}\\
-a & =t+g\\
-b & =t-g\\
-D & =2\left(\nu^{-1}\left(\nabla\nu\cdot t\right)\left(t\wedge g\right)+\sum_{j}\left(\nabla\gamma_{j}\cdot t\right)\left(t\wedge e_{j}\right)\right)
-\end{align*}
-
-\end_inset
-
-so that, after introducing the equivalence, -
-\begin_inset Formula $\left(t-g\right)=\left(g-t\right)$
-\end_inset
-
-
-\begin_inset Formula 
-\begin{align*}
-x= & -2\left(\nu^{-1}\left(\nabla\nu\cdot t\right)\left(t\wedge g\right)+\sum_{j}\left(\nabla\gamma_{j}\cdot t\right)\left(t\wedge e_{j}\right)\right)\\
- & \cdot\left(t-g\right)\left(\left(t+g\right)+\left(t-g\right)^{2}\left(t+g\right)^{-1}\right)^{-1}
-\end{align*}
-
-\end_inset
-
-
-\begin_inset Formula 
-\begin{align*}
-\dot{t}= & 2\left[\nu^{-1}\left(\nabla\nu\cdot t\right)\left(t\wedge g\right)+\sum_{j}\left(\nabla\gamma_{j}\cdot t\right)\left(t\wedge e_{j}\right)\right]\\
- & \cdot\left(g-t\right)\left(g+t+\left(g-t\right)^{2}\left(g+t\right)^{-1}\right)^{-1}
-\end{align*}
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-This can be simplified somewhat as follows.
-\end_layout
-
-\begin_layout Standard
-Start with the term
-\begin_inset Formula 
-\begin{align*}
-\left(g-t\right)^{2}\left(g+t\right)^{-1} & =\left(g-t\right)^{2}\frac{g+t}{\left(g+t\right)^{2}}\\
- & =\frac{\left(g-t\right)^{2}}{\left(g+t\right)^{2}}\left(g+t\right)
-\end{align*}
-
-\end_inset
-
-Use this to express the overall trailing inverse factor as
-\begin_inset Formula 
-\[
-g+t+\left(g-t\right)^{2}\left(g+t\right)^{-1}=\left(g+t\right)+\frac{\left(g-t\right)^{2}}{\left(g+t\right)^{2}}\left(g+t\right)
-\]
-
-\end_inset
-
-
-\begin_inset Formula 
-\[
-g+t+\left(g-t\right)^{2}\left(g+t\right)^{-1}=\left(g+t\right)\left(1+\frac{\left(g-t\right)^{2}}{\left(g+t\right)^{2}}\right)
-\]
-
-\end_inset
-
-
-\begin_inset Formula 
-\[
-g+t+\left(g-t\right)^{2}\left(g+t\right)^{-1}=\left(g+t\right)\left(\frac{\left(g+t\right)^{2}+\left(g-t\right)^{2}}{\left(g+t\right)^{2}}\right)
-\]
-
-\end_inset
-
-
-\begin_inset Formula 
-\[
-g+t+\left(g-t\right)^{2}\left(g+t\right)^{-1}=\frac{\left(g+t\right)}{\left(g+t\right)^{2}}\left(g^{2}+t^{2}+2g\cdot t+g^{2}+t^{2}-2g\cdot t\right)
-\]
-
-\end_inset
-
-
-\begin_inset Formula 
-\[
-g+t+\left(g-t\right)^{2}\left(g+t\right)^{-1}=2\left(g+t\right)^{-1}\left(g^{2}+t^{2}\right)
-\]
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-On the right, the inverse factor is a vector, and the others are scalars,
- so that the overall inverse may be expressed directly as,
-\begin_inset Formula 
-\[
-\left[g+t+\left(g-t\right)^{2}\left(g+t\right)^{-1}\right]^{-1}=\frac{1}{2}\left(g+t\right)\left(g^{2}+t^{2}\right)^{-1}
-\]
-
-\end_inset
-
-Combine this with the factor 
-\begin_inset Formula $\left(g-t\right)$
-\end_inset
-
-, to obtain
-\begin_inset Formula 
-\begin{align*}
-\left(g-t\right)\left[g+t+\left(g-t\right)^{2}\left(g+t\right)^{-1}\right]^{-1} & =\frac{1}{2}\left(g-t\right)\left(g+t\right)\left(g^{2}+t^{2}\right)^{-1}\\
- & =\frac{1}{2}\left(\frac{g^{2}-t^{2}+gt-tg}{g^{2}+t^{2}}\right)\\
- & =\frac{1}{2}\left(\frac{g^{2}-t^{2}+2g\wedge t}{g^{2}+t^{2}}\right)
-\end{align*}
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-Substitute this inverse into the above to obtain
-\begin_inset Formula 
-\begin{align*}
-\dot{t}= & 2\left[\nu^{-1}\left(\nabla\nu\cdot t\right)\left(t\wedge g\right)+\sum_{j}\left(\nabla\gamma_{j}\cdot t\right)\left(t\wedge e_{j}\right)\right]\frac{1}{2}\left(\frac{g^{2}-t^{2}+2g\wedge t}{g^{2}+t^{2}}\right)
-\end{align*}
-
-\end_inset
-
-
-\begin_inset Formula 
-\begin{align*}
-\dot{t}= & \left[\nu^{-1}\left(\nabla\nu\cdot t\right)\left(t\wedge g\right)+\sum_{j}\left(\nabla\gamma_{j}\cdot t\right)\left(t\wedge e_{j}\right)\right]\frac{g^{2}-t^{2}+2g\wedge t}{g^{2}+t^{2}}
+\dot{t} & =\frac{1}{t\cdot g}\left(t\cdot\left[\nu^{-1}\left(g\cdot t\right)\left(t\wedge g\right)+\sum_{j}\left(\nabla\gamma_{j}\cdot t\right)\left(t\wedge e_{j}\right)\right]\right)\\
+ & +\frac{1}{t\cdot g}\left(g\wedge\left[\nu^{-1}\left(g\cdot t\right)\left(t\wedge g\right)+\sum_{j}\left(\nabla\gamma_{j}\cdot t\right)\left(t\wedge e_{j}\right)\right]\right)
 \end{align*}
 
 \end_inset
@@ -4937,18 +4155,28 @@ Consider if
 \begin_inset Formula $\gamma_{j}=0$
 \end_inset
 
-), then
+), results in invalid solution case (denominator goes to zero - as does
+ numerator)
 \begin_inset Formula 
 \begin{align*}
-\dot{t}= & \left[\nu^{-1}\left(\nabla\nu\cdot t\right)\cancelto{0}{\left(t\wedge g\right)}+\sum_{j}\left(\cancelto{0}{\nabla\gamma_{j}}\cdot t\right)\left(t\wedge e_{j}\right)\right]\frac{\cancelto{0}{g^{2}}-t^{2}+2\cancelto{0}{g\wedge t}}{\cancelto{0}{g^{2}}+t^{2}}
+\dot{t} & =\frac{1}{t\cdot g}\left(t\cdot\left[\nu^{-1}\left(g\cdot t\right)\left(t\wedge g\right)\cancelto{0}{+\sum_{j}\left(\nabla\gamma_{j}\cdot t\right)\left(t\wedge e_{j}\right)}\right]\right)\\
+ & +\frac{1}{t\cdot g}\left(g\wedge\left[\nu^{-1}\left(g\cdot t\right)\left(t\wedge g\right)+\cancelto{0}{+\sum_{j}\left(\nabla\gamma_{j}\cdot t\right)\left(t\wedge e_{j}\right)}\right]\right)
 \end{align*}
 
 \end_inset
 
+Noting that the numerator terms are of order 
+\begin_inset Formula $\left|g\right|^{2}$
+\end_inset
 
+, while denominator is of order 
+\begin_inset Formula $\left|g\right|$
+\end_inset
+
+, it can be expected that this has limit case
 \begin_inset Formula 
 \[
-\dot{t}=\left[0+0\right]\frac{-t^{2}}{+t^{2}}=0
+\lim_{\left|g\right|\rightarrow0}\left\{ \dot{t}\right\} =0
 \]
 
 \end_inset
@@ -4972,26 +4200,8 @@ If
  so that
 \begin_inset Formula 
 \begin{align*}
-\dot{t}= & \left[\nu^{-1}\left(\nabla\nu\cdot t\right)\left(t\wedge g\right)+\sum_{j}\cancelto{0}{\left(\nabla\gamma_{j}\cdot t\right)}\left(t\wedge e_{j}\right)\right]\frac{g^{2}-t^{2}+2g\wedge t}{g^{2}+t^{2}}
-\end{align*}
-
-\end_inset
-
-
-\begin_inset Formula 
-\begin{align*}
-\dot{t}= & \left[\nu^{-1}\left(g\cdot t\right)\left(t\wedge g\right)\right]\frac{g^{2}-t^{2}+2g\wedge t}{g^{2}+t^{2}}
-\end{align*}
-
-\end_inset
-
-
-\begin_inset Formula 
-\begin{align*}
-\left(gt+tg\right)\left(tg-gt\right) & =gttg-gtgt+tgtg-tggt\\
- & =t^{2}g^{2}-gtgt+tgtg-t^{2}g^{2}\\
- & =tgtg-gtgt\\
- & =2g\wedge\left(tgt\right)
+\dot{t} & =\frac{1}{t\cdot g}\left(t\cdot\left[\nu^{-1}\left(g\cdot t\right)\left(t\wedge g\right)\cancelto{0}{+\sum_{j}\left(\nabla\gamma_{j}\cdot t\right)\left(t\wedge e_{j}\right)}\right]\right)\\
+ & +\frac{1}{t\cdot g}\left(g\wedge\left[\nu^{-1}\left(g\cdot t\right)\left(t\wedge g\right)+\cancelto{0}{+\sum_{j}\left(\nabla\gamma_{j}\cdot t\right)\left(t\wedge e_{j}\right)}\right]\right)
 \end{align*}
 
 \end_inset
@@ -4999,47 +4209,7 @@ If
 
 \end_layout
 
-\begin_layout Paragraph
-Incident Tangent (anti)Parallel to Gradient
-\end_layout
-
-\begin_layout Standard
-Consider if 
-\begin_inset Formula $t\parallel g$
-\end_inset
-
-, then 
-\begin_inset Formula $t\wedge g=0$
-\end_inset
-
-, so that
-\begin_inset Formula 
-\begin{align*}
-\dot{t} & =\left[\nu^{-1}\left(\nabla\nu\cdot t\right)\cancelto{0}{\left(t\wedge g\right)}+\sum_{j}\left(\nabla\gamma_{j}\cdot t\right)\left(t\wedge e_{j}\right)\right]\frac{g^{2}-t^{2}+2\cancelto{0}{g\wedge t}}{g^{2}+t^{2}}\\
- & =\left[\sum_{j}\left(\nabla\gamma_{j}\cdot t\right)\left(t\wedge e_{j}\right)\right]\frac{g^{2}-t^{2}}{g^{2}+t^{2}}
-\end{align*}
-
-\end_inset
-
-If the gradient is constant in this local area, the 
-\begin_inset Formula $\nabla\gamma_{j}=0$
-\end_inset
-
- (for locally constant gradient), such that 
-\begin_inset Formula $\dot{t}=0$
-\end_inset
-
-.
- If the gradient is not locally constant, then there remains an influence
- to change the path.
- I.e.
- the tangent may be aligned with the instantaneous gradient, while path
- direction still being influenced by the locally changing gradient direction.
- TODO/TBD - seems plausible but would be nice to formalize or at least explain
- better.
-\end_layout
-
-\begin_layout Subsection
+\begin_layout Section
 Differential Relationships
 \end_layout
 
