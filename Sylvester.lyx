@@ -1,0 +1,718 @@
+#LyX 2.3 created this file. For more info see http://www.lyx.org/
+\lyxformat 544
+\begin_document
+\begin_header
+\save_transient_properties true
+\origin unavailable
+\textclass IEEEtran
+\use_default_options true
+\maintain_unincluded_children false
+\language english
+\language_package default
+\inputencoding auto
+\fontencoding global
+\font_roman "default" "default"
+\font_sans "default" "default"
+\font_typewriter "default" "default"
+\font_math "auto" "auto"
+\font_default_family default
+\use_non_tex_fonts false
+\font_sc false
+\font_osf false
+\font_sf_scale 100 100
+\font_tt_scale 100 100
+\use_microtype false
+\use_dash_ligatures true
+\graphics default
+\default_output_format default
+\output_sync 0
+\bibtex_command default
+\index_command default
+\paperfontsize default
+\spacing single
+\use_hyperref false
+\papersize default
+\use_geometry false
+\use_package amsmath 1
+\use_package amssymb 1
+\use_package cancel 1
+\use_package esint 1
+\use_package mathdots 1
+\use_package mathtools 1
+\use_package mhchem 1
+\use_package stackrel 1
+\use_package stmaryrd 1
+\use_package undertilde 1
+\cite_engine biblatex
+\cite_engine_type authoryear
+\biblio_style plain
+\biblatex_bibstyle authoryear
+\biblatex_citestyle authoryear
+\use_bibtopic false
+\use_indices false
+\paperorientation portrait
+\suppress_date false
+\justification true
+\use_refstyle 1
+\use_minted 0
+\index Index
+\shortcut idx
+\color #008000
+\end_index
+\secnumdepth 3
+\tocdepth 3
+\paragraph_separation indent
+\paragraph_indentation default
+\is_math_indent 0
+\math_numbering_side default
+\quotes_style english
+\dynamic_quotes 0
+\papercolumns 1
+\papersides 1
+\paperpagestyle default
+\tracking_changes false
+\output_changes false
+\html_math_output 0
+\html_css_as_file 0
+\html_be_strict false
+\end_header
+
+\begin_body
+
+\begin_layout Title
+Sylvester's Equation in GA
+\end_layout
+
+\begin_layout Abstract
+This technical note provides a summary of the solution to Sylvester's equation
+ using Geometric Algebra.
+ It summarizes the general multivector solution by
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset CommandInset citation
+LatexCommand cite
+key "Chappell_3DFuncsPlos2015"
+literal "false"
+
+\end_inset
+
+ and then applies this to a bivector valued equation that arises in optical
+ refraction theory.
+ The expressions, including the special case, have been verified with a
+ s/w program
+\begin_inset Foot
+status open
+
+\begin_layout Plain Layout
+AeroPlygiant repository program test_Sylvester.cpp
+\end_layout
+
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Section
+Summary
+\end_layout
+
+\begin_layout Standard
+The following is a step by step explication of the solution presented in
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset CommandInset citation
+LatexCommand cite
+key "Chappell_3DFuncsPlos2015"
+literal "false"
+
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+Consider the multivector equation
+\begin_inset Formula 
+\begin{equation}
+AX+XB=D\label{eq:Orig}
+\end{equation}
+
+\end_inset
+
+in which all variables are general multivectors.
+\end_layout
+
+\begin_layout Subsection
+Case 1: Assuming 
+\begin_inset Formula $A^{-1}$
+\end_inset
+
+ Exists
+\end_layout
+
+\begin_layout Standard
+If 
+\begin_inset Formula $A$
+\end_inset
+
+ is invertible (i.e.
+ that 
+\begin_inset Formula $A^{-1}$
+\end_inset
+
+ exists), proceed as follows, multiply from the left by 
+\begin_inset Formula $A^{-1}$
+\end_inset
+
+ to obtain
+\begin_inset Formula 
+\[
+X+A^{-1}XB=A^{-1}D
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Next multiply from the right by the dirverse (Clifford conjugate), 
+\begin_inset Formula $\overline{B}$
+\end_inset
+
+, in which the vector and bivector grades are negated,
+\begin_inset Formula 
+\[
+X\overline{B}+A^{-1}XB\overline{B}=A^{-1}D\overline{B}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Note that 
+\begin_inset Formula $B\overline{B}$
+\end_inset
+
+ commutes with all elements (as does 
+\begin_inset Formula $B+\overline{B}$
+\end_inset
+
+ to be used next), so that
+\begin_inset Formula 
+\begin{equation}
+X\overline{B}+A^{-1}B\overline{B}X=A^{-1}D\overline{B}\label{eq:Sandwiched}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Add the original and sandwiched transformed equations to obtain
+\begin_inset Formula 
+\[
+AX+XB+X\overline{B}+A^{-1}B\overline{B}X=D+A^{-1}D\overline{B}
+\]
+
+\end_inset
+
+
+\begin_inset Formula 
+\[
+\left(A+A^{-1}B\overline{B}\right)X+X\left(B+\overline{B}\right)=D+A^{-1}D\overline{B}
+\]
+
+\end_inset
+
+Then using the commutativity of 
+\begin_inset Formula $B+\overline{B}$
+\end_inset
+
+,
+\begin_inset Formula 
+\[
+\left(A+A^{-1}B\overline{B}\right)X+\left(B+\overline{B}\right)X=D+A^{-1}D\overline{B}
+\]
+
+\end_inset
+
+
+\begin_inset Formula 
+\[
+\left(A+A^{-1}B\overline{B}+B+\overline{B}\right)X=\left(D+A^{-1}D\overline{B}\right)
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+If the leading coefficient is invertible (depends on the configuration and
+ values), then
+\begin_inset Formula 
+\[
+X=\left(A+A^{-1}B\overline{B}+B+\overline{B}\right)^{-1}\left(D+A^{-1}D\overline{B}\right)
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection
+Case 1: Assuming 
+\begin_inset Formula $B^{-1}$
+\end_inset
+
+ Exists
+\end_layout
+
+\begin_layout Standard
+If 
+\begin_inset Formula $B$
+\end_inset
+
+ is invertible (i.e.
+ that 
+\begin_inset Formula $B^{-1}$
+\end_inset
+
+ exists), start with the original equation
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:Orig"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+ then multiply from the right by 
+\begin_inset Formula $B^{-1}$
+\end_inset
+
+, and from the left by 
+\begin_inset Formula $\overline{A}$
+\end_inset
+
+ to obtain
+\begin_inset Formula 
+\[
+AX+XB=D
+\]
+
+\end_inset
+
+
+\begin_inset Formula 
+\[
+\overline{A}AXB^{-1}+\overline{A}XBB^{-1}=\overline{A}DB^{-1}
+\]
+
+\end_inset
+
+
+\begin_inset Formula 
+\[
+\overline{A}AXB^{-1}+\overline{A}X=\overline{A}DB^{-1}
+\]
+
+\end_inset
+
+The coefficient, 
+\begin_inset Formula $\overline{A}A$
+\end_inset
+
+ commutes with 
+\begin_inset Formula $X$
+\end_inset
+
+, so that
+\begin_inset Formula 
+\[
+X\overline{A}AB^{-1}+\overline{A}X=\overline{A}DB^{-1}
+\]
+
+\end_inset
+
+Add this to the original equation to obtain
+\begin_inset Formula 
+\[
+AX+XB+X\overline{A}AB^{-1}+\overline{A}X=D+\overline{A}DB^{-1}
+\]
+
+\end_inset
+
+
+\begin_inset Formula 
+\[
+\left(A+\overline{A}\right)X+X\left(B+\overline{A}AB^{-1}\right)=D+\overline{A}DB^{-1}
+\]
+
+\end_inset
+
+Since 
+\begin_inset Formula $A+\overline{A}$
+\end_inset
+
+ commutes with 
+\begin_inset Formula $X$
+\end_inset
+
+,
+\begin_inset Formula 
+\[
+X\left(A+\overline{A}\right)+X\left(B+\overline{A}AB^{-1}\right)=D+\overline{A}DB^{-1}
+\]
+
+\end_inset
+
+
+\begin_inset Formula 
+\[
+X\left(A+\overline{A}+B+\overline{A}AB^{-1}\right)=D+\overline{A}DB^{-1}
+\]
+
+\end_inset
+
+and
+\begin_inset Formula 
+\[
+X=\left(D+\overline{A}DB^{-1}\right)\left(A+\overline{A}+B+\overline{A}AB^{-1}\right)^{-1}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection
+Summary
+\end_layout
+
+\begin_layout Standard
+In general, the equation
+\begin_inset Formula 
+\[
+AX+XB=D
+\]
+
+\end_inset
+
+has solutions,
+\begin_inset Formula 
+\[
+X=\begin{cases}
+\left(A+A^{-1}B\overline{B}+B+\overline{B}\right)^{-1}\left(D+A^{-1}D\overline{B}\right)\\
+\left(D+\overline{A}DB^{-1}\right)\left(A+\overline{A}+B+\overline{A}AB^{-1}\right)^{-1}
+\end{cases}
+\]
+
+\end_inset
+
+provided that the respective inverse quantities exist.
+\end_layout
+
+\begin_layout Section
+Special Case
+\end_layout
+
+\begin_layout Standard
+If variables on the left or original equation are vectors, and 
+\begin_inset Formula $D$
+\end_inset
+
+ is a bivector, then
+\begin_inset Formula 
+\[
+aX+Xb=D
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection
+Case 
+\begin_inset Formula $a\ne0$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The general solution may be expressed as
+\begin_inset Formula 
+\[
+X=\left(a+a^{-1}b\left(-b\right)+b+\left(-b\right)\right)^{-1}\left(D+a^{-1}D\left(-b\right)\right)
+\]
+
+\end_inset
+
+
+\begin_inset Formula 
+\[
+X=\left(a-a^{-1}b^{2}\right)^{-1}\left(D-a^{-1}Db\right)
+\]
+
+\end_inset
+
+Factor the 
+\begin_inset Formula $a^{-1}$
+\end_inset
+
+ from each term,
+\begin_inset Formula 
+\[
+X=\left(a^{-1}\left(a^{2}-b^{2}\right)\right)^{-1}\left(a^{-1}\left(aD-Db\right)\right)
+\]
+
+\end_inset
+
+
+\begin_inset Formula 
+\[
+X=\left(a^{2}-b^{2}\right)^{-1}\left[\left(a^{-1}\right)^{-1}a^{-1}\right]\left(aD-Db\right)
+\]
+
+\end_inset
+
+
+\begin_inset Formula 
+\[
+X=\left(a^{2}-b^{2}\right)^{-1}\left(aD-Db\right)
+\]
+
+\end_inset
+
+
+\begin_inset Formula 
+\[
+X=\frac{aD-Db}{a^{2}-b^{2}}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection
+Case 
+\begin_inset Formula $b\ne0$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+In this case, the general solution may be expressed as
+\begin_inset Formula 
+\[
+X=\left(D+\left(-a\right)Db^{-1}\right)\left(a+\left(-a\right)+b+\left(-a\right)ab^{-1}\right)^{-1}
+\]
+
+\end_inset
+
+
+\begin_inset Formula 
+\[
+X=\left(D-aDb^{-1}\right)\left(b-a^{2}b^{-1}\right)^{-1}
+\]
+
+\end_inset
+
+Factor 
+\begin_inset Formula $b^{-1}$
+\end_inset
+
+ from each term,
+\begin_inset Formula 
+\[
+X=\left(Dbb^{-1}-aDb^{-1}\right)\left(bbb^{-1}-a^{2}b^{-1}\right)^{-1}
+\]
+
+\end_inset
+
+
+\begin_inset Formula 
+\[
+X=\left(\left(Db-aD\right)b^{-1}\right)\left(\left(b^{2}-a^{2}\right)b^{-1}\right)^{-1}
+\]
+
+\end_inset
+
+
+\begin_inset Formula 
+\[
+X=\left(b^{2}-a^{2}\right)^{-1}\left(\left(Db-aD\right)b^{-1}\right)\left(b^{-1}\right)^{-1}
+\]
+
+\end_inset
+
+
+\begin_inset Formula 
+\[
+X=\left(b^{2}-a^{2}\right)^{-1}\left(Db-aD\right)\left(b^{-1}\left(b^{-1}\right)^{-1}\right)
+\]
+
+\end_inset
+
+
+\begin_inset Formula 
+\[
+X=\frac{Db-aD}{b^{2}-a^{2}}
+\]
+
+\end_inset
+
+
+\begin_inset Formula 
+\[
+X=\frac{aD-Db}{a^{2}-b^{2}}
+\]
+
+\end_inset
+
+In agreement with the first approach.
+\end_layout
+
+\begin_layout Subsection
+Summary
+\end_layout
+
+\begin_layout Standard
+For bivector, 
+\begin_inset Formula $D$
+\end_inset
+
+, and two vectors, 
+\begin_inset Formula $a$
+\end_inset
+
+, 
+\begin_inset Formula $b$
+\end_inset
+
+, which do not have the same magnitude 
+\begin_inset Formula $a^{2}-b^{2}\ne0$
+\end_inset
+
+, the equation
+\begin_inset Formula 
+\[
+ax+xb=D
+\]
+
+\end_inset
+
+has solution,
+\begin_inset Formula 
+\[
+x=\frac{aD-Db}{a^{2}-b^{2}}\,;\,\left(a^{2}+b^{2}\right)\ne0
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsubsection
+Constituent Grades
+\end_layout
+
+\begin_layout Standard
+The solution expression may be decomposed into vector and trivector grades,
+ by noting that
+\begin_inset Formula 
+\begin{align*}
+aD & =a\cdot D+a\wedge D\\
+-Db & =-D\cdot b-D\wedge b=b\cdot D-b\wedge D
+\end{align*}
+
+\end_inset
+
+such that
+\begin_inset Formula 
+\begin{align*}
+X & =\left(a^{2}-b^{2}\right)^{-1}\left(a\cdot D-D\cdot b+a\wedge D-D\wedge b\right)\\
+ & =\left(a^{2}-b^{2}\right)^{-1}\left(a\cdot D+b\cdot D+a\wedge D-b\wedge D\right)\\
+ & =\left(a^{2}-b^{2}\right)^{-1}\left(\left(a+b\right)\cdot D+\left(a-b\right)\wedge D\right)
+\end{align*}
+
+\end_inset
+
+or
+\begin_inset Formula 
+\[
+X=\frac{\left(a+b\right)\cdot D}{a^{2}-b^{2}}+\frac{\left(a-b\right)\wedge D}{a^{2}-b^{2}}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+In general, 
+\begin_inset Formula $X$
+\end_inset
+
+, is an entity that comprises vector and trivector grades.
+\end_layout
+
+\begin_layout Standard
+For the special case, in which the difference vector, 
+\begin_inset Formula $a-b$
+\end_inset
+
+, is parallel to the plane of 
+\begin_inset Formula $D$
+\end_inset
+
+, the solution, 
+\begin_inset Formula $X$
+\end_inset
+
+, is a pure vector.
+ For the special case in which the sum 
+\begin_inset Formula $a+b$
+\end_inset
+
+ is orthogonal to 
+\begin_inset Formula $D$
+\end_inset
+
+, then 
+\begin_inset Formula $X$
+\end_inset
+
+ is a pure trivector.
+\end_layout
+
+\begin_layout Standard
+\begin_inset CommandInset bibtex
+LatexCommand bibtex
+btprint "btPrintCited"
+bibfiles "Papers"
+
+\end_inset
+
+
+\end_layout
+
+\end_body
+\end_document

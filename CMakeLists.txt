@@ -81,6 +81,9 @@ set(testProgs
 
 	test_test
 
+	# Algorithm checks
+	test_Sylvester
+
 	# env
 	test_IndexVolume
 
