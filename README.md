@@ -31,6 +31,10 @@ with which specific questions can be investigated by custom coding
 something using the available classes. Notwithstanding, some of the
 demonstration programs may be generally useful more or less as-is. E.g.
 
+* demoHotRoad - program to simulate refraction in a survey sighting
+made along the edge of a road associated with a bubble of low refraction
+index air.
+
 * demoExpAtmosphere - program to simulate refracting ray path from
 an airborne sensor platform using nominal (very)simplified exponential
 decay model for Earth atmospheric index of refraction.
