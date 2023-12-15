@@ -56,9 +56,11 @@ namespace road
 		nuInterval
 			()
 		{
+			constexpr double const dropAtCenter{ .01 };
+
 			double const nuGround{ aply::env::sEarth.theNuGround };
 			double const refractivity{ nuGround - 1. }; // refractivity (IoR-1.)
-			double const nuAxis{ 1. + .5*refractivity };
+			double const nuAxis{ nuGround - dropAtCenter*refractivity };
 			return aply::geom::Interval(nuAxis, nuGround);
 		}
 
@@ -126,10 +128,8 @@ main
 	static Vector const approxEndLoc{ length * obsDir };
 
 	// tracing configuration
-//	constexpr double propStepDist{ .001 }; // Propagation step size[m]
-//	constexpr double saveStepDist{ .001 }; // Data save step size[m]
-constexpr double propStepDist{  10. }; // Propagation step size[m]
-constexpr double saveStepDist{ 100. }; // Data save step size[m]
+	constexpr double propStepDist{ .001 }; // Propagation step size[m]
+	constexpr double saveStepDist{ 100. }; // Data save step size[m]
 
 	using namespace aply;
 
