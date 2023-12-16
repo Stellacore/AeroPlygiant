@@ -38,10 +38,104 @@
 #include <utility>
 
 
+namespace units
+{
+	//! \brief MillBars for value expressed in Pascal.
+	inline
+	double
+	mBarForPascal
+		( double const & pPascal
+		)
+	{
+		return .01 * pPascal;
+	}
+
+
+	//! \brief Kelvin for degrees Celsius.
+	inline
+	double
+	kelvinForC
+		( double const & degC
+		)
+	{
+		return 273.15 + degC;
+	}
+
+} // [units]
+
+namespace air
+{
+	//
+	// Standard conditions:
+	// -- https://en.wikipedia.org/wiki/Standard_temperature_and_pressure
+	//
+
+	//! Standard temperature [K]
+	constexpr double sStdTemperature{ 293.15 };
+
+	//! Standard pressure [Pa]
+	constexpr double sStdPressure{ 101325. };
+
+	//! Standard relative humidity [fraction]
+	constexpr double sStdRelHumidity{ 0.00 };
+
+	/*! \brief Index of Refraction for given temperature and pressure.
+	 *
+	 * Formula from Gyer 1996 (ref Paper.bib) eqn (13).
+	 *
+	 * Site:
+	 *   https://refractiveindex.info/
+	 * Python script for evaluating Ciddor equation:
+	 *   https://github.com/polyanskiy/refractiveindex.info-scripts/
+	 *   blob/master/scripts/Ciddor%201996%20-%20air.py
+	 *
+	 * Sample values from: https://emtoolbox.nist.gov/Wavelength/Ciddor.asp
+	 *
+	 * # Temp(C)  Pres(kPa)   IoR
+	 *
+	 *	-20    100.000    1.000310769  *uncertain
+	 *	  0    100.000    1.000287830
+	 *	 20    100.000    1.000267817
+	 *	 40    100.000    1.000249811
+	 *
+	 *	-20     80.000    1.000248567  *uncertain
+	 *	  0     80.000    1.000230213
+	 *	 20     80.000    1.000214152
+	 *	 40     80.000    1.000199587
+	 *
+	 *	-20     60.000    1.000186388
+	 *	  0     60.000    1.000172610
+	 *	 20     60.000    1.000160495
+	 *	 40     60.000    1.000149367
+	 */
+	inline
+	double
+	nuForTP
+		( double const & airTempK
+			//!< Temperature in Kelvin
+		, double const & airPresPa
+			//!< Pressure in Pascals (Newton per m^2)
+		)
+	{
+		double const & mBarPres{ .01 * airPresPa };
+		// formula from Gyer1996
+		double const refractivity{ .000078831 * (mBarPres / airTempK) };
+		double const nu{ 1. + refractivity };
+		return nu;
+	}
+
+} // [air]
+
+
 //! Utilities for supporting HotRoad demo
 namespace road
 {
-	//! \brief TODO
+	/*! \brief Cylindrical volume refactive index varying by radius.
+	 *
+	 * Intended to represent the changing index of refraction such as
+	 * due to hot air accumulating above and around a long straight road.
+	 *
+	 */
 	struct AirVolume : public aply::env::IndexVolume
 	{
 		//! Cylindrical tube of (linearly) varying air IoR
@@ -49,19 +143,27 @@ namespace road
 		//! Index of refraction gap from axis to outside radial edge
 		aply::geom::Interval const theNuInterval;
 
-		//! Create (fake) index of refraction gradient in radial direction
+		/*! \brief An index of refraction gradient in radial direction.
+		 *
+		 * Index of refraction is estimated based on provided air
+		 * temperatures at center (on axis) and edge of the cylinder.
+		 *
+		 * IoR formula extracted from Gyer 1996 PE&RS article. (Ref
+		 * Papers.bib).
+		 */
 		inline
 		static
 		aply::geom::Interval
 		nuInterval
-			()
+			( double const & airTempOnAxis
+			, double const & airTempAtEdge
+			)
 		{
-			constexpr double const dropAtCenter{ .01 };
-
-			double const nuGround{ aply::env::sEarth.theNuGround };
-			double const refractivity{ nuGround - 1. }; // refractivity (IoR-1.)
-			double const nuAxis{ nuGround - dropAtCenter*refractivity };
-			return aply::geom::Interval(nuAxis, nuGround);
+			double const nuAxis
+				{ air::nuForTP(airTempOnAxis, air::sStdPressure) };
+			double const nuEdge
+				{ air::nuForTP(airTempAtEdge, air::sStdPressure) };
+			return aply::geom::Interval(nuAxis, nuEdge);
 		}
 
 		//! Construct this shape and alignment
@@ -72,7 +174,12 @@ namespace road
 			)
 			: IndexVolume{}
 			, theTube{ tube }
-			, theNuInterval{ nuInterval() }
+			, theNuInterval
+				{ nuInterval
+					( units::kelvinForC(35.)
+					, units::kelvinForC(25.)
+					)
+				}
 		{ }
 
 		//! Index of refraction associated with radial gradient along cylinder
@@ -123,8 +230,11 @@ main
 	static Vector const axisDir{ e1 };
 	constexpr double hotRadius{ 10. }; // [m]
 	constexpr double length{ 1000. }; // [m]
-	static Vector const staDir{ -e2 }; // direction to station from origin
-	static Vector const obsDir{ axisDir }; // observation direction
+
+	static Vector const staLoc{           - 5.*e2 };
+	static Vector const tgtLoc{ length*e1 + 5.*e2 };
+
+	static Vector const obsDir{ direction(tgtLoc - staLoc) };
 	static Vector const approxEndLoc{ length * obsDir };
 
 	// tracing configuration
@@ -150,7 +260,7 @@ main
 
 	// setup ray start parallel to cylinder 'off to the side' of the 'road'
 	ray::Start const start
-		{ ray::Start::from(obsDir, .5*hotRadius*staDir + 1.e-6*e1) };
+		{ ray::Start::from(obsDir, staLoc + 1.e-6*e1) };
 
 	// construct propagator
 	ray::Propagator const prop{ &media, propStepDist };
