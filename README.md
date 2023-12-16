@@ -3,7 +3,7 @@
 
 ## Project Info
 
-AeroPlygiant is a C++ development toolset for investigating
+AeroPlygiant is a C++ development tool set for investigating
 general optical refraction behavior associated with arbitrarily complex
 three-dimensional (3D) atmospheric refraction conditions.
 
@@ -21,7 +21,7 @@ followed by ["pluh-g-yant"](https://www.howtopronounce.com/welsh/plygiant)
 
 AeroPlygiant supports analysis and simulation of basic atmospheric
 refraction effects such as those encountered in terrestrial surveying
-and airborne (or spaceborne) remote sensing applications.
+and airborne (and space) remote sensing applications.
 
 
 ## Applications
@@ -51,7 +51,7 @@ At the moment features include:
 
 * Ability (with a bit of coding) to propagate a ray path through a
 refractive volume of space in which the index of refraction can vary
-arbitrarily in all three diemensions.
+arbitrarily in all three dimensions.
 
 
 ## Resources
