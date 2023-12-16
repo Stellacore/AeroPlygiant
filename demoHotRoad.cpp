@@ -227,19 +227,20 @@ main
 	using namespace engabra::g3;
 
 	// scene configuration
-	static Vector const axisDir{ e1 };
+	static Vector const axisDir{ e2 };
+	static Vector const offsetDir{ e1 };
 	constexpr double hotRadius{ 10. }; // [m]
-	constexpr double length{ 1000. }; // [m]
+	constexpr double length{ 250. }; // [m]
 
-	static Vector const staLoc{           - 5.*e2 };
-	static Vector const tgtLoc{ length*e1 + 5.*e2 };
+	static Vector const staLoc{                - 5.*offsetDir };
+	static Vector const tgtLoc{ length*axisDir + 0.*offsetDir };
 
 	static Vector const obsDir{ direction(tgtLoc - staLoc) };
 	static Vector const approxEndLoc{ length * obsDir };
 
 	// tracing configuration
 	constexpr double propStepDist{ .001 }; // Propagation step size[m]
-	constexpr double saveStepDist{ 100. }; // Data save step size[m]
+	constexpr double saveStepDist{ length/16.}; // Data save step size[m]
 
 	using namespace aply;
 
@@ -260,7 +261,7 @@ main
 
 	// setup ray start parallel to cylinder 'off to the side' of the 'road'
 	ray::Start const start
-		{ ray::Start::from(obsDir, staLoc + 1.e-6*e1) };
+		{ ray::Start::from(obsDir, staLoc + 1.e-6*axisDir) };
 
 	// construct propagator
 	ray::Propagator const prop{ &media, propStepDist };
