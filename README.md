@@ -31,6 +31,10 @@ with which specific questions can be investigated by custom coding
 something using the available classes. Notwithstanding, some of the
 demonstration programs may be generally useful more or less as-is. E.g.
 
+* demoHotRoad - program to simulate refraction in a survey sighting
+made along the edge of a road associated with a bubble of low refraction
+index air.
+
 * demoExpAtmosphere - program to simulate refracting ray path from
 an airborne sensor platform using nominal (very)simplified exponential
 decay model for Earth atmospheric index of refraction.
@@ -104,7 +108,7 @@ In general creating a custom ray path involves the following.
 	path information (as a collection of ray::Node instance that
 	are saved every delta-length along the path). E.g.
 
-		ray::Path aPath(start, saveDeltaDistance);
+		ray::Path aPath(start, saveStepDist);
 
 	* Use the ray::Propagator to trace as many paths as desired. E.g.
 
@@ -115,10 +119,7 @@ In general creating a custom ray path involves the following.
 	* Retrieve desired data from ray::Path archive of ray::Node
 	instances. E.g.
 
-		for (ray::Node const & node : aPath.theNodes)
-		{
-			std::cout << node.infoBrief() << std::endl;
-		}
+		std::cout << ray::PathView(&aPath).infoCurvature() << std::endl;
 
 
 ## Project Development Environment
@@ -167,7 +168,7 @@ names and included options as appropriate for local system).
 		-DCMAKE_BUILD_TYPE=Release \
 		-DCMAKE_INSTALL_PREFIX=/tmpLocal/ \
 		-DCMAKE_PREFIX_PATH=/tmpLocal/ \
-		/repos/Refraction
+		/repos/AeroPlygiant
 	$ cmake --build . --target all -j `nproc`
 	$ # -- Run library unit tests
 	$ ctest -j `nproc`

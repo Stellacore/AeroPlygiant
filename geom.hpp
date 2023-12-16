@@ -22,31 +22,30 @@
 // SOFTWARE.
 // 
 
-#ifndef aply_env_INCL_
-#define aply_env_INCL_
+#ifndef aply_geom_INCL_
+#define aply_geom_INCL_
 
 /*! \file
  *
- * \brief Environment configuration parameters (related to Refraction)
+ * \brief Geometric utilities.
  *
  */
 
 
-#include "envIndexVolume.hpp"
-#include "envActiveVolume.hpp"
-#include "envPlanet.hpp"
+#include "geomInterval.hpp"
+#include "geomCylinder.hpp"
 
 
 namespace aply
 {
-/*! \brief Functions and classes for specifying ray propgation environment.
- *
+/*! \brief Classes and functions supporting geometry computation.
  */
-namespace env
+namespace geom
 {
 
-} // [env]
+} // geom
+
 } // [aply]
 
-#endif // aply_env_INCL_
+#endif // aply_geom_INCL_
 

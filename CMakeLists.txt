@@ -57,6 +57,7 @@ set(mainProgs
 	hello
 
 	demoExpAtmosphere
+	demoHotRoad
 	demoThickPlate
 
 	)
@@ -80,11 +81,21 @@ set(testProgs
 
 	test_test
 
+	# Algorithm checks
+	test_Sylvester
+
+	# env
 	test_IndexVolume
+
+	# ray
 	test_nextTangentDir
 	test_Path
 	test_Propagator
 	test_roundTrip
+
+	# geom
+	test_Cylinder
+	test_Interval
 
 	)
 

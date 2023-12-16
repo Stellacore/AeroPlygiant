@@ -22,8 +22,8 @@
 // SOFTWARE.
 // 
 
-#ifndef aply_env_INCL_
-#define aply_env_INCL_
+#ifndef aply_INCL_
+#define aply_INCL_
 
 /*! \file
  *
@@ -32,21 +32,16 @@
  */
 
 
-#include "envIndexVolume.hpp"
-#include "envActiveVolume.hpp"
-#include "envPlanet.hpp"
+#include "env.hpp"
+#include "ray.hpp"
 
 
-namespace aply
-{
-/*! \brief Functions and classes for specifying ray propgation environment.
+/*! \brief Project containing namespace.
  *
  */
-namespace env
+namespace aply
 {
-
-} // [env]
 } // [aply]
 
-#endif // aply_env_INCL_
+#endif // aply_INCL_
 
