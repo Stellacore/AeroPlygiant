@@ -3113,14 +3113,14 @@ where
 \begin_inset Formula $\Delta_{\nu}$
 \end_inset
 
- is the small change in refraction
+ is a scalar small change in refraction
 \end_layout
 
 \begin_layout Itemize
 \begin_inset Formula $\Delta_{t}$
 \end_inset
 
- is the change in direction or propagation.
+ is a vector change in direction or propagation.
  NOTE in order to not change the length of the tangent vector, 
 \begin_inset Formula $t$
 \end_inset
@@ -3140,7 +3140,7 @@ where
 \begin_inset Formula $\Delta_{g}$
 \end_inset
 
- is the change in the gradient of refraction.
+ is a vector change in the gradient of refraction.
  TODO/TBD Snel's law assumes a constant gradient of refraction.
  Therefore, this term represents and extension to the domain of validity
  of Snel's relationship.
@@ -3305,7 +3305,7 @@ previous
 ) as,
 \begin_inset Formula 
 \begin{align}
-\dot{\nu}t\wedge g+v\dot{t}\wedge g+\nu t\wedge\dot{g} & =0\label{eq:RefractInvariant}\\
+\dot{\nu}t\wedge g+\nu\dot{t}\wedge g+\nu t\wedge\dot{g} & =0\label{eq:RefractInvariant}\\
 \dot{t}\cdot t & =0\label{eq:RefractConstraint}
 \end{align}
 
@@ -3398,6 +3398,367 @@ TODO
 \end_inset
 
 /TBD - do they?
+\end_layout
+
+\begin_layout Subsection
+=== Solve Temp
+\end_layout
+
+\begin_layout Standard
+Express equations
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:RefractInvariant"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+ and
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:RefractConstraint"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+ as
+\begin_inset Formula 
+\begin{align*}
+2g\wedge\dot{t} & =2\nu^{-1}\dot{\nu}t\wedge g+2t\wedge\dot{g}\\
+2t\cdot\dot{t} & =0
+\end{align*}
+
+\end_inset
+
+
+\begin_inset Formula 
+\begin{align*}
+g\dot{t}-\dot{t}g & =2\nu^{-1}\dot{\nu}t\wedge g+2t\wedge\dot{g}\\
+t\dot{t}+\dot{t}t & =0
+\end{align*}
+
+\end_inset
+
+Note that this does NOT constraint the scalar grade of 
+\begin_inset Formula $g\dot{t}$
+\end_inset
+
+.
+ I.e.
+ 
+\begin_inset Formula $g\cdot\dot{t}$
+\end_inset
+
+ is free to be any scalar value.
+ 
+\end_layout
+
+\begin_layout Standard
+Add these
+\begin_inset Formula 
+\[
+\left(t+g\right)\dot{t}+\dot{t}\left(t-g\right)=2\nu^{-1}\dot{\nu}t\wedge g+2t\wedge\dot{g}
+\]
+
+\end_inset
+
+
+\begin_inset Formula 
+\[
+\left(t+g\right)\dot{t}+\dot{t}\left(t-g\right)=2t\wedge\left(\frac{\dot{\nu}}{\nu}g+\dot{g}\right)
+\]
+
+\end_inset
+
+
+\begin_inset Note Comment
+status collapsed
+
+\begin_layout Plain Layout
+\begin_inset Formula 
+\[
+2g\wedge\dot{t}+\dot{t}\cdot t=2t\wedge\left(\frac{\dot{\nu}}{\nu}g+\dot{g}\right)
+\]
+
+\end_inset
+
+
+\begin_inset Formula 
+\[
+2\dot{t}\wedge g=-2t\wedge\left(\frac{\dot{\nu}}{\nu}g+\dot{g}\right)
+\]
+
+\end_inset
+
+
+\begin_inset Formula 
+\[
+\dot{t}\wedge g=-t\wedge\left(\frac{\dot{\nu}}{\nu}g+\dot{g}\right)
+\]
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+Then use
+\begin_inset Formula 
+\[
+\dot{\nu}=\frac{\partial\nu}{\partial\lambda}=\sum_{k}\frac{\partial\nu}{\partial\rho_{k}}\frac{\partial\rho_{k}}{\partial\lambda}=\nabla\nu\cdot\dot{r}=\nabla\nu\cdot t=g\cdot t
+\]
+
+\end_inset
+
+
+\begin_inset Formula 
+\begin{align*}
+\dot{g} & =\sum_{j}e_{j}\nabla\gamma_{j}\cdot t
+\end{align*}
+
+\end_inset
+
+To obtain
+\begin_inset Formula 
+\[
+\left(t+g\right)\dot{t}+\dot{t}\left(t-g\right)=2t\wedge\left(\frac{g\cdot t}{\nu}g+\sum_{j}e_{j}\nabla\gamma_{j}\cdot t\right)
+\]
+
+\end_inset
+
+
+\begin_inset Formula 
+\[
+\left(t+g\right)\dot{t}+\dot{t}\left(t-g\right)=D
+\]
+
+\end_inset
+
+where
+\begin_inset Formula 
+\[
+D=2t\wedge\left(\frac{g\cdot t}{\nu}g+\sum_{j}e_{j}\nabla\gamma_{j}\cdot t\right)
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Note that the first term in 
+\begin_inset Formula $D$
+\end_inset
+
+ is directed along 
+\begin_inset Formula $g$
+\end_inset
+
+ such that the trivector grade is zero, i.e.
+ 
+\begin_inset Formula $g\wedge\left(t\wedge\frac{g\cdot t}{\nu}g\right)=0$
+\end_inset
+
+.
+ For the second term,
+\end_layout
+
+\begin_layout Standard
+Could consider, 
+\begin_inset Formula $t\wedge e_{j}$
+\end_inset
+
+ 
+\begin_inset Formula 
+\begin{align*}
+t\wedge e_{1} & =\left(\tau_{1}e_{1}+\tau_{2}e_{2}+\tau_{3}e_{3}\right)\wedge e_{1}\\
+ & =\tau_{2}e_{21}+\tau_{3}e_{31}\\
+ & =-\tau_{2}e_{12}+\tau_{3}e_{31}
+\end{align*}
+
+\end_inset
+
+
+\begin_inset Formula 
+\begin{align*}
+t\wedge e_{2} & =\left(\tau_{1}e_{1}+\tau_{2}e_{2}+\tau_{3}e_{3}\right)\wedge e_{2}\\
+ & =\tau_{1}e_{12}-\tau_{3}e_{23}
+\end{align*}
+
+\end_inset
+
+
+\begin_inset Formula 
+\begin{align*}
+t\wedge e_{3} & =\left(\tau_{1}e_{1}+\tau_{2}e_{2}+\tau_{3}e_{3}\right)\wedge e_{3}\\
+ & =-\tau_{1}e_{31}+\tau_{2}e_{23}
+\end{align*}
+
+\end_inset
+
+Then 
+\begin_inset Formula $t\wedge e_{j}\left(v_{j}\cdot t\right)$
+\end_inset
+
+for 
+\begin_inset Formula $v_{1,2,3}=a,b,c$
+\end_inset
+
+
+\begin_inset Formula 
+\[
+a\cdot t=\sum_{k}\alpha_{k}\tau_{k}
+\]
+
+\end_inset
+
+etc
+\begin_inset Formula 
+\begin{align*}
+t\wedge e_{1}\left(a\cdot t\right) & =\left(-\tau_{2}e_{12}+\tau_{3}e_{31}\right)\left(\alpha_{1}\tau_{1}+\alpha_{2}\tau_{2}+\alpha_{3}\tau_{3}\right)
+\end{align*}
+
+\end_inset
+
+
+\begin_inset Formula 
+\[
+t\wedge e_{2}\left(b\cdot t\right)=\left(\tau_{1}e_{12}-\tau_{3}e_{23}\right)\left(\beta_{1}\tau_{1}+\beta_{2}\tau_{2}+\beta_{3}\tau_{3}\right)
+\]
+
+\end_inset
+
+
+\begin_inset Formula 
+\[
+t\wedge e_{3}\left(c\cdot t\right)=\left(-\tau_{1}e_{31}+\tau_{2}e_{23}\right)\left(\gamma_{1}\tau_{1}+\gamma_{2}\tau_{2}+\gamma_{3}\tau_{3}\right)
+\]
+
+\end_inset
+
+For the sum of these, the nine 
+\begin_inset Formula $\alpha_{k}$
+\end_inset
+
+, 
+\begin_inset Formula $\beta_{k}$
+\end_inset
+
+, and 
+\begin_inset Formula $\gamma_{k}$
+\end_inset
+
+ scalars (determined by the Hessian of the IoR scalar field) can take on
+ values such that the bivector sum contains an arbitrary direction (such
+ as 
+\begin_inset Formula $g$
+\end_inset
+
+).
+\begin_inset Formula 
+\[
+t\wedge\left(e_{1}\left(a\cdot t\right)+e_{2}\left(b\cdot t\right)+e_{3}\left(c\cdot t\right)\right)=0
+\]
+
+\end_inset
+
+
+\begin_inset Formula 
+\begin{align*}
+0= & -\tau_{2}\left(a\cdot t\right)e_{12}+\tau_{3}\left(a\cdot t\right)e_{31}\\
+ & +\tau_{1}\left(b\cdot t\right)e_{12}-\tau_{3}\left(b\cdot t\right)e_{23}\\
+ & -\tau_{1}\left(c\cdot t\right)e_{31}+\tau_{2}\left(c\cdot t\right)e_{23}
+\end{align*}
+
+\end_inset
+
+
+\begin_inset Formula 
+\begin{align*}
+0= & +\tau_{2}\left(c\cdot t\right)e_{23}-\tau_{3}\left(b\cdot t\right)e_{23}\\
+ & +\tau_{3}\left(a\cdot t\right)e_{31}-\tau_{1}\left(c\cdot t\right)e_{31}\\
+ & +\tau_{1}\left(b\cdot t\right)e_{12}-\tau_{2}\left(a\cdot t\right)e_{12}
+\end{align*}
+
+\end_inset
+
+
+\begin_inset Formula 
+\begin{align*}
+0= & +\left(\tau_{2}\left(c\cdot t\right)-\tau_{3}\left(b\cdot t\right)\right)e_{23}\\
+ & +\left(\tau_{3}\left(a\cdot t\right)-\tau_{1}\left(c\cdot t\right)\right)e_{31}\\
+ & +\left(\tau_{1}\left(b\cdot t\right)-\tau_{2}\left(a\cdot t\right)\right)e_{12}
+\end{align*}
+
+\end_inset
+
+
+\begin_inset Formula 
+\begin{align*}
+0= & +\left(\tau_{2}\left(\gamma_{1}\tau_{1}+\gamma_{2}\tau_{2}+\gamma_{3}\tau_{3}\right)-\tau_{3}\left(\beta_{1}\tau_{1}+\beta_{2}\tau_{2}+\beta_{3}\tau_{3}\right)\right)e_{23}\\
+ & +\left(\tau_{3}\left(\alpha_{1}\tau_{1}+\alpha_{2}\tau_{2}+\alpha_{3}\tau_{3}\right)-\tau_{1}\left(\gamma_{1}\tau_{1}+\gamma_{2}\tau_{2}+\gamma_{3}\tau_{3}\right)\right)e_{31}\\
+ & +\left(\tau_{1}\left(\beta_{1}\tau_{1}+\beta_{2}\tau_{2}+\beta_{3}\tau_{3}\right)-\tau_{2}\left(\alpha_{1}\tau_{1}+\alpha_{2}\tau_{2}+\alpha_{3}\tau_{3}\right)\right)e_{12}
+\end{align*}
+
+\end_inset
+
+
+\begin_inset Formula 
+\begin{align*}
+0= & +\left(\gamma_{1}\tau_{1}\tau_{2}+\gamma_{2}\tau_{2}\tau_{2}+\gamma_{3}\tau_{2}\tau_{3}-\beta_{1}\tau_{3}\tau_{1}-\beta_{2}\tau_{2}\tau_{3}-\beta_{3}\tau_{3}\tau_{3}\right)e_{23}\\
+ & +\left(\alpha_{1}\tau_{3}\tau_{1}+\alpha_{2}\tau_{2}\tau_{3}+\alpha_{3}\tau_{3}\tau_{3}-\gamma_{1}\tau_{1}\tau_{1}-\gamma_{2}\tau_{1}\tau_{2}-\gamma_{3}\tau_{3}\tau_{1}\right)e_{31}\\
+ & +\left(\beta_{1}\tau_{1}\tau_{1}+\beta_{2}\tau_{1}\tau_{2}+\beta_{3}\tau_{3}\tau_{1}-\alpha_{1}\tau_{1}\tau_{2}-\alpha_{2}\tau_{2}\tau_{2}-\alpha_{3}\tau_{2}\tau_{3}\right)e_{12}
+\end{align*}
+
+\end_inset
+
+
+\begin_inset Formula 
+\begin{align*}
+0= & +\left(\gamma_{1}\tau_{1}\tau_{2}+\gamma_{2}\tau_{2}^{2}+\gamma_{3}\tau_{2}\tau_{3}-\beta_{1}\tau_{3}\tau_{1}-\beta_{2}\tau_{2}\tau_{3}-\beta_{3}\tau_{3}^{2}\right)e_{23}\\
+ & +\left(\alpha_{1}\tau_{3}\tau_{1}+\alpha_{2}\tau_{2}\tau_{3}+\alpha_{3}\tau_{3}^{2}-\gamma_{1}\tau_{1}^{2}-\gamma_{2}\tau_{1}\tau_{2}-\gamma_{3}\tau_{3}\tau_{1}\right)e_{31}\\
+ & +\left(\beta_{1}\tau_{1}^{2}+\beta_{2}\tau_{1}\tau_{2}+\beta_{3}\tau_{3}\tau_{1}-\alpha_{1}\tau_{1}\tau_{2}-\alpha_{2}\tau_{2}^{2}-\alpha_{3}\tau_{2}\tau_{3}\right)e_{12}
+\end{align*}
+
+\end_inset
+
+
+\begin_inset Formula 
+\begin{align*}
+0= & +\left(\gamma_{2}\tau_{2}^{2}-\beta_{3}\tau_{3}^{2}+\left(\gamma_{3}-\beta_{2}\right)\tau_{2}\tau_{3}-\beta_{1}\tau_{3}\tau_{1}+\gamma_{1}\tau_{1}\tau_{2}\right)e_{23}\\
+ & +\left(-\gamma_{1}\tau_{1}^{2}+\alpha_{3}\tau_{3}^{2}+\alpha_{2}\tau_{2}\tau_{3}+\left(\alpha_{1}-\gamma_{3}\right)\tau_{3}\tau_{1}-\gamma_{2}\tau_{1}\tau_{2}\right)e_{31}\\
+ & +\left(\beta_{1}\tau_{1}^{2}-\alpha_{2}\tau_{2}^{2}-\alpha_{3}\tau_{2}\tau_{3}+\beta_{3}\tau_{3}\tau_{1}+\left(\beta_{2}-\alpha_{1}\right)\tau_{1}\tau_{2}\right)e_{12}
+\end{align*}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Effectively this represents an implicit constraint on the values of 
+\begin_inset Formula $\tau_{k}$
+\end_inset
+
+ which must satisfy this relationship so that there is no trivector term
+ in the differential equation for 
+\begin_inset Formula $\dot{t}$
+\end_inset
+
+.
 \end_layout
 
 \begin_layout Subsection
@@ -3571,7 +3932,7 @@ The derivative of the scalar index of refraction field, may be expressed
  in terms of Cartesian decomposition of vector as,
 \begin_inset Formula 
 \[
-\dot{\nu}=\frac{\partial\nu}{\partial\lambda}=\sum_{k}\frac{\partial\nu}{\partial\rho_{k}}\frac{\partial\rho_{k}}{\partial\lambda}=\nabla\nu\cdot\dot{r}=\nabla\nu\cdot t
+\dot{\nu}=\frac{\partial\nu}{\partial\lambda}=\sum_{k}\frac{\partial\nu}{\partial\rho_{k}}\frac{\partial\rho_{k}}{\partial\lambda}=\nabla\nu\cdot\dot{r}=\nabla\nu\cdot t=g\cdot t
 \]
 
 \end_inset
@@ -3641,6 +4002,49 @@ The path length derivative of the gradient (a second rank tensor) may be
 \dot{g} & =\sum_{j}e_{j}\nabla\gamma_{j}\cdot\dot{r}\\
  & =\sum_{j}e_{j}\nabla\gamma_{j}\cdot t
 \end{align*}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsubsection
+Evaluation of 
+\begin_inset Formula $\nabla\gamma_{j}$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+g=\nabla\nu=\sum_{j}\frac{\partial\nu}{\partial\rho_{j}}e_{j}=\sum_{j}\gamma_{j}e_{j}
+\]
+
+\end_inset
+
+
+\begin_inset Formula 
+\[
+\gamma_{j}\equiv\frac{\partial\nu}{\partial\rho_{j}}
+\]
+
+\end_inset
+
+
+\begin_inset Formula 
+\[
+\nabla\gamma_{j}=\sum_{k}\frac{\partial\gamma_{j}}{\partial\rho_{k}}e_{k}
+\]
+
+\end_inset
+
+
+\begin_inset Formula 
+\[
+\nabla\gamma_{j}=\sum_{k}\frac{\partial\left(\frac{\partial\nu}{\partial\rho_{j}}\right)}{\partial\rho_{k}}e_{k}=\sum_{k}\frac{\partial^{2}}{\partial\rho_{k}\partial\rho_{j}}e_{k}
+\]
 
 \end_inset
 
@@ -4074,6 +4478,36 @@ TODO
 
 ).
  TODO/TBD - resolve what's going on here.
+ Possibly 
+\begin_inset Formula $D$
+\end_inset
+
+ is of a form that ends up always including the direction, 
+\begin_inset Formula $g$
+\end_inset
+
+.
+ (true for the first term in 
+\begin_inset Formula $D$
+\end_inset
+
+).
+\end_layout
+
+\begin_layout Standard
+Since 
+\begin_inset Formula $X=\dot{t}$
+\end_inset
+
+ is required to be a pure vector, (by formulation and construction in developing
+ the original equation), this enforces the condition that the trivector
+ grade of the last term vanish identically, i.e.
+ 
+\begin_inset Formula $g\wedge D=0$
+\end_inset
+
+.
+ This is effectively an implicit constraint on the differential relationship.
 \end_layout
 
 \begin_layout Standard
@@ -4130,12 +4564,43 @@ After substitution for
 \begin_inset Formula 
 \begin{align*}
 \dot{t} & =\frac{1}{t\cdot g}\left(t\cdot\left[\nu^{-1}\left(g\cdot t\right)\left(t\wedge g\right)+\sum_{j}\left(\nabla\gamma_{j}\cdot t\right)\left(t\wedge e_{j}\right)\right]\right)\\
- & +\frac{1}{t\cdot g}\left(g\wedge\left[\nu^{-1}\left(g\cdot t\right)\left(t\wedge g\right)+\sum_{j}\left(\nabla\gamma_{j}\cdot t\right)\left(t\wedge e_{j}\right)\right]\right)
+ & +\frac{1}{t\cdot g}\left(\left[\nu^{-1}\left(g\cdot t\right)\cancelto{0}{g\wedge\left(t\wedge g\right)}+g\wedge\sum_{j}\left(\nabla\gamma_{j}\cdot t\right)\left(t\wedge e_{j}\right)\right]\right)
 \end{align*}
 
 \end_inset
 
 
+\begin_inset Formula 
+\begin{align*}
+\dot{t} & =\frac{1}{t\cdot g}\left(t\cdot\left[\nu^{-1}\left(g\cdot t\right)\left(t\wedge g\right)+\sum_{j}\left(\nabla\gamma_{j}\cdot t\right)\left(t\wedge e_{j}\right)\right]\right)\\
+ & +\frac{1}{t\cdot g}\left(g\wedge\sum_{j}\left(\nabla\gamma_{j}\cdot t\right)\left(t\wedge e_{j}\right)\right)
+\end{align*}
+
+\end_inset
+
+for which the trivector grade on the second line must vanish I.e.
+ this is a constrained differential equation system of the form,
+\begin_inset Formula 
+\begin{align*}
+\dot{t} & =\frac{1}{t\cdot g}\left(t\cdot\left[\nu^{-1}\left(g\cdot t\right)\left(t\wedge g\right)+\sum_{j}\left(\nabla\gamma_{j}\cdot t\right)\left(t\wedge e_{j}\right)\right]\right)\\
+0 & =\frac{1}{t\cdot g}\left(g\wedge\sum_{j}\left(\nabla\gamma_{j}\cdot t\right)\left(t\wedge e_{j}\right)\right)
+\end{align*}
+
+\end_inset
+
+The constraint is a condition on 
+\begin_inset Formula $t$
+\end_inset
+
+ (not on 
+\begin_inset Formula $\dot{t}$
+\end_inset
+
+).
+ Could it be that this wouldn't affect the solution to the first equation
+ (e.g.
+ that some sort of 'complementary' criterion is already incorporated into
+ the first equation?
 \end_layout
 
 \begin_layout Subsubsection
