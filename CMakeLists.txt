@@ -82,6 +82,7 @@ set(testProgs
 	test_test
 
 	# Algorithm checks
+	test_Hessian
 	test_Sylvester
 
 	# env
