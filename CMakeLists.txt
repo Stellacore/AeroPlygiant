@@ -56,6 +56,8 @@ set(mainProgs
 
 	hello
 
+	demoAeroPlygiant
+
 	demoExpAtmosphere
 	demoHotRoad
 	demoThickPlate
