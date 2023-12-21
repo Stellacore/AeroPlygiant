@@ -25,26 +25,37 @@
 
 /*! \file
  *
- * \brief Demonstrate a basic AeroPlygiant ray path solution.
+ * \brief Demonstration example of basic AeroPlygiant use.
  *
  */
 
 
+#include "envActiveVolume.hpp" // Defines limits of ray propagation
+#include "envIndexVolume.hpp" // Base class for expressing IoR media
+#include "rayPath.hpp" // Data structure for storing propagated ray path
+#include "rayPropagator.hpp" // Functions to compute ray path
+#include "rayStart.hpp" // Initial conditions (tangent dir and location)
 
-#include "envActiveVolume.hpp"
-#include "envIndexVolume.hpp"
-#include "rayPath.hpp"
-#include "rayPropagator.hpp"
-#include "rayStart.hpp"
-
+#include <functional>
 #include <iostream>
 
 
 namespace
 {
-	//! \brief Example of optical refractive medium 3D region
+	// [DoxyExampleMedia]
+	/*! \brief Example of optical refractive medium 3D region.
+	 *
+	 * Overload the (abstract) baseclass to implement any arbitrary
+	 * Index of Refraction (IoR) scalar field.
+	 *
+	 * Note that the baseclass accepts a shared pointer to an
+	 * env::ActiveVolume instance, which is used to "clip" the media
+	 * to this volume (ray propagation computations will stop when
+	 * encountering the edge of the active volume).
+	 */
 	struct Media : public aply::env::IndexVolume
 	{
+		//! Attach env::ActiveVolume to define boundaries of the IoR field.
 		explicit
 		Media
 			( std::shared_ptr<aply::env::ActiveVolume> const & ptVolume
@@ -52,70 +63,99 @@ namespace
 			: IndexVolume(ptVolume)
 		{ }
 
-		//! Create a double convex lens in "air" (with decentered surfaces)
+		/*! \brief Specify the IoR scalar field specific to problem at hand.
+		 *
+		 * For this example, model a double convex lens in air. The "lens"
+		 * is formed computationally by considering the intersection of
+		 * two spheres. When inside this intersection, an IoR value of
+		 * 1.500 is returned (approximately that of glass). If outside the
+		 * sphere overlap, an index of 1.000 is returned (approximately
+		 * that of air).
+		 */
 		inline
 		double
 		nuValue
 			( engabra::g3::Vector const & rVec
 			) const
 		{
-			using namespace engabra::g3;
-			// set index of refraction value based on optical system geometry
-			double nu{ 1. }; // air like
-			constexpr double r1Sq{ sq(11.) };
-			static Vector const c1{ -10., 0., 0. };
-			constexpr double r2Sq{ sq(21.) };
-			static Vector const c2{  20., 0., 1. };
-			if ((magSq(rVec - c1) < r1Sq) && (magSq(rVec - c2) < r2Sq))
+			double nu{ 1.000 }; // default values is near that of air
+
+			// define a double convex lens as intrsection of two spheres
+			std::function<bool(engabra::g3::Vector const &)> const inLens
+				{ [] (engabra::g3::Vector const & rVec)
+					{
+						using namespace engabra::g3;
+						constexpr double r1Sq{ sq(11.) };
+						static Vector const c1{ -10., 0., 0. };
+						constexpr double r2Sq{ sq(21.) };
+						static Vector const c2{  20., 0., 0. };
+						bool const in1{ (magSq(rVec - c1) < r1Sq) };
+						bool const in2{ (magSq(rVec - c2) < r2Sq) };
+						return (in1 && in2);
+					}
+				};
+
+			if (inLens(rVec))
 			{
-				// inside the "lens" set IoR to be glass-like
-				nu = 1.5;
+				nu = 1.500; // inside the "lens" set IoR to be glass-like
 			}
 			return nu;
 		}
 
 	}; // Media
+	// [DoxyExampleMedia]
 }
 
 
-/*! \brief Unit test for CN
+/*! \brief Provides a complete example of AeroPlygiant use.
+ *
+ * \include demoAeroPlygiant.cpp
  */
 int
 main
 	()
 {
-	// define working volume
+	// Define an active volume that is of interest to the situation at hand.
 	std::shared_ptr<aply::env::ActiveVolume> const ptVolume
 		{ std::make_shared<aply::env::ActiveBox>
 			( engabra::g3::Vector{ -5., -10., -10. }
 			, engabra::g3::Vector{  5.,  10.,  10. }
 			)
 		};
-	// use volume to "clip" media
+	// Specity this volume as a clipping region in the base class
+	// (ref aply::env::IndexVolume::qualifiedNuValue() method).
 	Media const media(ptVolume);
 
-	// specify initial conditions
-	using namespace engabra::g3;
-	Vector const tBeg{ direction(Vector{ 1., .2, .3 }) };
-	Vector const rBeg{ -5., 0., 0. };
-	Vector const approxEndLoc{ 10., 0., 0. };
-	aply::ray::Start const start{ aply::ray::Start::from(tBeg, rBeg) };
+	// Specify initial conditions (tangent direction and first point on path)
+	using engabra::g3::Vector;
+	Vector const tanBeg{ direction(Vector{ 1., .2, .3 }) }; // tangent dir
+	Vector const locBeg{ -5., 0., 0. }; // first point on ray
+	aply::ray::Start const start{ aply::ray::Start::from(tanBeg, locBeg) };
 
-	// propagate ray forward
+	// Configure propagation step size and specify path save interval
 	constexpr double propStepDist{ 1./1024. };
 	constexpr double saveStepDist{ 1./16. };
 
-	// configure propagor and trace path
-	aply::ray::Propagator const prop{ &media, propStepDist };
+	// An approximate end point can be used in ray::Path ctor to
+	// estimate and allocate path storage space. This is useful if
+	// ray path is nominally follows a smooth "kind of straight" curve.
+	// Alternatively, can use ray::Path::reserve() function to
+	// explicitly allocate a specific amount of space (in which case
+	// the ctor default argument approxEndLoc=null<Vector>() is used.
+	Vector const approxEndLoc{ 10., 0., 0. };
 	aply::ray::Path path(start, saveStepDist, approxEndLoc);
+
+	// Create propagor engine and request it to trace path
+	// Same "prop" instance can be used for many paths.
+	aply::ray::Propagator const prop{ &media, propStepDist };
 	prop.tracePath(&path);
 
-	// display ray path (saved nodes)
+	// Access individual nodes in traced path.
 	for (aply::ray::Node const & node : path.theNodes)
 	{
+		// Here, just display brief summary of individual node information
 		std::cout << node.infoBrief() << std::endl;
 	}
-	std::cout << "# path.size: " << path.theNodes.size() << std::endl;
 
 	return 0;
 }

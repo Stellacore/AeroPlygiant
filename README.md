@@ -70,56 +70,18 @@ is generated as part of the project build process.
 
 ## General Use
 
-TODO - incorporate these steps into example program e.g. demoAeroPlygiant.cpp
+The demonstration program provides a good overview of these steps.
 
-In general creating a custom ray path involves the following.
+* The demoAeroPlygiant.cpp [example program](demoAeroPlygiant.cpp)
+provides a complete example including definition of a custome index
+of refraction environment, then tracing and reporting a ray path.
 
-* Define a refractive environment:
+In general producing a custom path trace involves the following steps:
 
-	* Derive a class from env::IndexVolume that provides the
-	index of refraction values through a volume of space. E.g.
-
-		TODO
-
-	* In general, also derive a class from env::ActiveVolume that
-	specifies the region of interest (such that ray propagation
-	terminates at boundaries of the active volume). E.g.
-
-		TODO
-
-	* Construct an instance of the refractive media volume. E.g.
-
-		tst::Slab const opticalMedium(....);
-
-* Configure initial ray path boundary conditions:
-
-	* Construct a ray::Start object to define the incident tangent
-	direction and an initial point on the ray path. e.g.
-
-		ray::Start const start{ ray::Start::from(tanBeg, locBeg) };
-
-	* Construct a ray::Propagator instance. E.g.
-
-		ray::Propagator const prop{ &opticalMedium, propStepDist };
-
-* Use the ray::Propagator to trace as many rays as desired:
-
-	* Construct a ray::Path instance that will hold the traced
-	path information (as a collection of ray::Node instance that
-	are saved every delta-length along the path). E.g.
-
-		ray::Path aPath(start, saveStepDist);
-
-	* Use the ray::Propagator to trace as many paths as desired. E.g.
-
-		prop.tracePath(&aPath);
-
-* Retrieve path data:
-
-	* Retrieve desired data from ray::Path archive of ray::Node
-	instances. E.g.
-
-		std::cout << ray::PathView(&aPath).infoCurvature() << std::endl;
+* Define a refractive environment (override aply::env::IndexVolume)
+* Specify initial aply::ray::Start geometry (inital condition)
+* Use the aply::ray::Propagator to trace path forward
+* Access aply::ray::Path data for reporting/output
 
 
 ## Project Development Environment

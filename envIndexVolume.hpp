@@ -52,9 +52,22 @@ namespace env
 	 * simulate continuous changes in index of refraction or discrete
 	 * shapes.
 	 * 
-	 * \note the boundaries (of interest) are indicated by returning
-	 * a null value for refraction index from method nuValue().
+	 * \note the boundaries (of interest) are indicated by either one
+	 * of two conditions occurring.
+	 * \arg Returning a null value for refraction index from method
+	 * nuValue().
+	 * \arg If location is outside the env::ActiveVolume instance
+	 * provided to this baseclass constructor.
 	 *
+	 * The qualifiedNuValue() method combines these two conditions. It
+	 * first checks if the evaluation location is inside the active
+	 * volume (provided in the ctor). If the location is within the
+	 * active volume, then the (derived class') nuValue() method is
+	 * called to obtain the IoR value (which the derived class may also
+	 * set to null<double>() to indicate outside of the IoR field.
+	 *
+	 * Example derived class:
+	 * \snippet demoAeroPlygiant.cpp DoxyExampleMedia
 	 */
 	struct IndexVolume
 	{
