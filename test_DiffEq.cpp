@@ -32,6 +32,7 @@
 
 #include "envActiveVolume.hpp"
 #include "envIndexVolume.hpp"
+#include "math.hpp"
 #include "rayPath.hpp"
 #include "rayPropagator.hpp"
 #include "rayStart.hpp"
@@ -120,6 +121,27 @@ namespace tst
 			return (1.000 + rfy);
 		}
 
+		//! Functor access to nuValue
+		inline
+		double
+		operator()
+			( engabra::g3::Vector const & rVec
+			) const
+		{
+			return nuValue(rVec);
+		}
+
+		//! Hessian matrix numerical approximation at rVec
+		inline
+		aply::math::Matrix
+		nuHessian
+			( Vector const & rVec
+			, double const relStepDist
+			) const
+		{
+			return aply::math::hessianOf(*this, rVec, relStepDist);
+		}
+
 	}; // MediaBlobs
 
 } // [tst]
@@ -182,8 +204,8 @@ namespace
 			Vector const grad{ thePtrMedia->nuGradient(loc, sPropStepDist) };
 
 			// Get the Hessian values at this location
-		//	Matrix const hess{ Hessian(...) };
-std::vector<std::vector<double> > const hess;
+			aply::math::Matrix const hess
+				{ thePtrMedia->nuHessian(loc, sPropStepDist) };
 
 			Vector const tgSum{ tan + grad };
 			Vector const tgDif{ tan - grad };
@@ -196,7 +218,7 @@ std::vector<std::vector<double> > const hess;
 
 			MultiVector const lhs1{ tgSum * dTan };
 			MultiVector const lhs2{ dTan * tgDif };
-			MultiVector const bigD{ 2. * (tan * (v1 + v2)) };
+			MultiVector const bigD{ 2. * (tan * (v1 + v2)).theBiv };
 
 			MultiVector const lhs{ lhs1 + lhs2 };
 			MultiVector const rhs{ bigD };
@@ -205,7 +227,7 @@ std::vector<std::vector<double> > const hess;
 
 std::cout << "lhs: " << io::fixed(lhs) << '\n';
 std::cout << "rhs: " << io::fixed(rhs) << '\n';
-std::cout << "eqn: " << io::fixed(eqn) << '\n';
+//std::cout << "eqn: " << io::fixed(eqn) << '\n';
 
 			return eqn;
 		}
@@ -228,18 +250,25 @@ std::cout << "eqn: " << io::fixed(eqn) << '\n';
 
 		// evaluate equation at each node
 		DiffEq const eqn{ ptrMedia };
+		bool isFirst{ true };
 		for (aply::ray::Node const & node : ptrPath->theNodes)
 		{
 std::cout << '\n';
-			using namespace engabra::g3;
-			MultiVector const gap{ eqn(node) };
-
-std::cout << "gap: " << io::fixed(gap) << '\n';
-
 			// Here, just display brief summary of individual node information
 			std::cout << node.infoBrief() << std::endl;
-		}
 
+			using namespace engabra::g3;
+			MultiVector const gap{ eqn(node) };
+std::cout << "gap: " << io::fixed(gap) << '\n';
+			if (! (magnitude(gap) < 1.e-6))
+			{
+				if (! isFirst)
+				{
+					break;
+				}
+				isFirst = false;
+			}
+		}
 	}
 }
 
