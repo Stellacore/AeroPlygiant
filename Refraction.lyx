@@ -3559,6 +3559,63 @@ D=2t\wedge\left(\frac{g\cdot t}{\nu}g+\sum_{j}e_{j}\nabla\gamma_{j}\cdot t\right
 \end_layout
 
 \begin_layout Standard
+In summary,
+\begin_inset Formula 
+\begin{align*}
+e_{j}\nabla\gamma_{j}\cdot t & =\left(\sum_{k}\mathrm{H}_{jk}\tau_{k}\right)e_{j}\\
+\mathrm{H}_{jk} & \equiv\frac{\partial^{2}\nu}{\partial\rho_{j}\partial\rho_{k}}
+\end{align*}
+
+\end_inset
+
+
+\begin_inset Formula 
+\[
+g=\sum_{k}\frac{\partial\nu}{\partial\rho_{k}}e_{k}
+\]
+
+\end_inset
+
+
+\begin_inset Formula 
+\[
+D=2t\wedge\left(\frac{\sum_{k}\frac{\partial\nu}{\partial\rho_{k}}\tau_{k}}{\nu}\left(\sum_{j}\frac{\partial\nu}{\partial\rho_{j}}e_{j}\right)+\sum_{j}\left(\sum_{k}\mathrm{H}_{jk}\tau_{k}\right)e_{j}\right)
+\]
+
+\end_inset
+
+
+\begin_inset Formula 
+\[
+D=2t\wedge\left[\sum_{j}\left(\frac{1}{\nu}\frac{\partial\nu}{\partial\rho_{j}}\sum_{k}\frac{\partial\nu}{\partial\rho_{k}}\tau_{k}+\sum_{k}\frac{\partial^{2}\nu}{\partial\rho_{j}\partial\rho_{k}}\tau_{k}\right)e_{j}\right]
+\]
+
+\end_inset
+
+
+\begin_inset Formula 
+\[
+D=2t\wedge\left[\sum_{j}\left(\frac{1}{\nu}g_{j}\sum_{k}g_{k}\tau_{k}+\sum_{k}\mathrm{H}_{jk}\tau_{k}\right)e_{j}\right]
+\]
+
+\end_inset
+
+
+\begin_inset Formula 
+\[
+D=2\left[\sum_{j}\left(\frac{1}{\nu}g_{j}\sum_{k}g_{k}\tau_{k}+\sum_{k}\mathrm{H}_{jk}\tau_{k}\right)t\wedge e_{j}\right]
+\]
+
+\end_inset
+
+where 
+\begin_inset Formula $\mathrm{H}$
+\end_inset
+
+ is the Hessian matrix for the index of refraction scalar field.
+\end_layout
+
+\begin_layout Standard
 Note that the first term in 
 \begin_inset Formula $D$
 \end_inset
