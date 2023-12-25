@@ -285,6 +285,7 @@ namespace ray
 
 				// propagate until path approximate reaches requested length
 				// or encounteres a NaN value for index of refraction
+				bool isFirstNode{ true }; // use to set path start values
 				while (ptConsumer->size() < ptConsumer->capacity())
 				{
 					// determine propagation change at this step
@@ -302,6 +303,12 @@ namespace ray
 					// propagate ray to next node location
 					Vector const rNext{ nextLocation(rCurr, tNext) };
 
+					if (isFirstNode)
+					{
+						tPrev = tNext;
+						nuPrev = nuNext;
+					}
+
 					// give consumer opportunity to record node data
 					Node const nextNode
 						{ tPrev, nuPrev, rCurr, nuNext, tNext, change };
@@ -311,6 +318,7 @@ namespace ray
 					tPrev = tNext;
 					rCurr = rNext;
 					nuPrev = nuNext;
+					isFirstNode = false;
 				}
 			}
 		}

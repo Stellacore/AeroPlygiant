@@ -1,0 +1,1307 @@
+#LyX 2.3 created this file. For more info see http://www.lyx.org/
+\lyxformat 544
+\begin_document
+\begin_header
+\save_transient_properties true
+\origin unavailable
+\textclass scrartcl
+\use_default_options true
+\maintain_unincluded_children false
+\language english
+\language_package default
+\inputencoding auto
+\fontencoding global
+\font_roman "default" "default"
+\font_sans "default" "default"
+\font_typewriter "default" "default"
+\font_math "auto" "auto"
+\font_default_family default
+\use_non_tex_fonts false
+\font_sc false
+\font_osf false
+\font_sf_scale 100 100
+\font_tt_scale 100 100
+\use_microtype false
+\use_dash_ligatures true
+\graphics default
+\default_output_format default
+\output_sync 0
+\bibtex_command default
+\index_command default
+\paperfontsize default
+\spacing single
+\use_hyperref false
+\papersize default
+\use_geometry false
+\use_package amsmath 1
+\use_package amssymb 1
+\use_package cancel 1
+\use_package esint 1
+\use_package mathdots 1
+\use_package mathtools 1
+\use_package mhchem 1
+\use_package stackrel 1
+\use_package stmaryrd 1
+\use_package undertilde 1
+\cite_engine biblatex
+\cite_engine_type authoryear
+\biblio_style plain
+\biblatex_bibstyle authoryear
+\biblatex_citestyle authoryear
+\use_bibtopic false
+\use_indices false
+\paperorientation portrait
+\suppress_date false
+\justification true
+\use_refstyle 1
+\use_minted 0
+\index Index
+\shortcut idx
+\color #008000
+\end_index
+\secnumdepth 3
+\tocdepth 3
+\paragraph_separation indent
+\paragraph_indentation default
+\is_math_indent 0
+\math_numbering_side default
+\quotes_style english
+\dynamic_quotes 0
+\papercolumns 1
+\papersides 1
+\paperpagestyle default
+\tracking_changes false
+\output_changes false
+\html_math_output 0
+\html_css_as_file 0
+\html_be_strict false
+\end_header
+
+\begin_body
+
+\begin_layout Title
+Differential Form of Snell's Law
+\end_layout
+
+\begin_layout Abstract
+Summary from article in LibreTexts Physics by Jeremy Tatum of University
+ of Victoria
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset CommandInset citation
+LatexCommand cite
+key "Tatum:DiffEqRefraction"
+literal "false"
+
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Section
+Introduction
+\end_layout
+
+\begin_layout Standard
+Tatum
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset CommandInset citation
+LatexCommand cite
+key "Tatum:DiffEqRefraction"
+literal "false"
+
+\end_inset
+
+ develops differential equation relationships for describing a refraction
+ through a continuously varying index of refraction associated with a planar
+ geometry.
+ The relationships are restricted to propagation path that stays in a single
+ plane.
+\end_layout
+
+\begin_layout Standard
+The article starts by differentiating Snell's law to obtain a differential
+ equation expressing the relationships between changes in path (zenith)
+ angle as a function of changes in the index of refraction (assuming propagation
+ in a vertical plane).
+ This differential equation is integrated (e.g.
+ using tables) to obtain a function expressing path angle as a function
+ of path height location - i.e.
+ a path direction relationship.
+ E.g.
+ of the form
+\begin_inset Formula 
+\[
+f^{\prime}\left(\psi\right)=g^{\prime}\left(y\right)
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+An example of a linearly varying index of refraction field is given and
+ used to develop a first order (separable, non linear) differential equation
+ that represents the path shape.
+ E.g.
+ of the form
+\begin_inset Formula 
+\[
+n=n\left(y\right)
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The second equation is constructed by inserting local Cartesian differential
+ relationships in place of the trigonometric functions within the path direction
+ relationship (e.g.
+ of the idea 
+\begin_inset Formula $\tan\psi=\frac{dy}{dx}$
+\end_inset
+
+) and using basic algebra to produce a separated differential relationship
+ - here of the form
+\begin_inset Formula 
+\[
+\frac{dy}{f\left(y\right)}=\frac{dx}{g\left(x\right)}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Integration of both sides, then leads to a function describing the shape
+ of the path (e.g.
+ 
+\begin_inset Formula $h\left(x,y\right)=0$
+\end_inset
+
+)
+\end_layout
+
+\begin_layout Standard
+The article web page
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset CommandInset citation
+LatexCommand cite
+key "Tatum:DiffEqRefraction"
+literal "false"
+
+\end_inset
+
+ is rather terse.
+ The following sections follow provide additional detail between the steps
+ presented in Tatum's article.
+\end_layout
+
+\begin_layout Section
+General Relationship
+\end_layout
+
+\begin_layout Standard
+Start with
+\begin_inset Formula 
+\[
+n\sin\vartheta=\kappa
+\]
+
+\end_inset
+
+and differentiate
+\begin_inset Formula 
+\[
+\dot{n}\sin\vartheta+n\cos\vartheta\dot{\vartheta}=0
+\]
+
+\end_inset
+
+rearrange as
+\begin_inset Formula 
+\[
+\frac{\dot{n}}{n}\tan\vartheta=-\dot{\vartheta}
+\]
+
+\end_inset
+
+or
+\begin_inset Formula 
+\[
+\cot\vartheta\dot{\vartheta}=-\frac{\dot{n}}{n}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Change variables to complementary angle
+\begin_inset Formula 
+\[
+\psi+\vartheta=\pi
+\]
+
+\end_inset
+
+Noting that
+\begin_inset Formula 
+\[
+\cot\vartheta=\tan\psi
+\]
+
+\end_inset
+
+The derivatives are related by
+\begin_inset Formula 
+\[
+\dot{\psi}+\dot{\vartheta}=0
+\]
+
+\end_inset
+
+
+\begin_inset Formula 
+\[
+\dot{\vartheta}=-\dot{\psi}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The refraction condition then may be expressed as
+\begin_inset Formula 
+\[
+\left(\tan\psi\right)\left(-\dot{\psi}\right)=-\frac{\dot{n}}{n}
+\]
+
+\end_inset
+
+
+\begin_inset Formula 
+\[
+\tan\psi\dot{\psi}=\frac{1}{n}\dot{n}
+\]
+
+\end_inset
+
+
+\begin_inset Note Comment
+status collapsed
+
+\begin_layout Plain Layout
+On the surface, integrating both sides should lead to
+\begin_inset Formula 
+\[
+-\ln\left|\cos\psi\right|=\ln\left(n\right)\,;\,\psi\le\frac{\pi}{2}
+\]
+
+\end_inset
+
+suggesting
+\begin_inset Formula 
+\[
+e^{-\ln\left|\cos\psi\right|}=e^{\ln n}
+\]
+
+\end_inset
+
+
+\begin_inset Formula 
+\[
+\left|\cos\psi\right|^{-1}=n
+\]
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Section
+Linear Planar IoR Model
+\end_layout
+
+\begin_layout Subsection
+Angle vs Height
+\end_layout
+
+\begin_layout Standard
+Assume IoR field model as a function of linear coordinate, 
+\begin_inset Formula $y$
+\end_inset
+
+,
+\end_layout
+
+\begin_layout Standard
+In general,
+\begin_inset Formula 
+\[
+n=\alpha+\beta y
+\]
+
+\end_inset
+
+
+\begin_inset Formula 
+\[
+\frac{1}{n}=\frac{1}{\alpha+\beta y}
+\]
+
+\end_inset
+
+
+\begin_inset Formula 
+\[
+\dot{n}=\beta\dot{y}
+\]
+
+\end_inset
+
+and
+\begin_inset Formula 
+\[
+\frac{\dot{n}}{n}=\beta\frac{\dot{y}}{\alpha+\beta y}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Insert this into the refraction equation,
+\begin_inset Formula 
+\[
+\tan\psi\dot{\psi}=\beta\frac{\dot{y}}{\alpha+\beta y}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Integrate both sides
+\begin_inset Formula 
+\[
+-\ln\left|\cos\psi\right|+\gamma_{1}=\beta\frac{1}{\beta}\ln\left|\alpha+\beta y\right|+\gamma_{2}
+\]
+
+\end_inset
+
+Simplifying and combining constants of integration 
+\begin_inset Formula $\left(\gamma_{2}-\gamma_{1}=-\ln\gamma\right)$
+\end_inset
+
+
+\begin_inset Note Comment
+status collapsed
+
+\begin_layout Plain Layout
+\begin_inset Formula 
+\[
+-\ln\left|\cos\psi\right|=\ln\left|\alpha+\beta y\right|-\ln\gamma
+\]
+
+\end_inset
+
+
+\begin_inset Formula 
+\[
+e^{\ln\left|\cos\psi\right|^{-1}}=e^{\ln\left|\alpha+\beta y\right|}e^{\ln\gamma^{-1}}
+\]
+
+\end_inset
+
+
+\begin_inset Formula 
+\[
+\left|\cos\psi\right|^{-1}=\left|\alpha+\beta y\right|\gamma^{-1}
+\]
+
+\end_inset
+
+
+\begin_inset Formula 
+\[
+\cos\psi=\frac{\gamma}{\alpha+\beta y}
+\]
+
+\end_inset
+
+
+\begin_inset Formula 
+\[
+\alpha+\beta y=\frac{\gamma}{\cos\psi}
+\]
+
+\end_inset
+
+
+\begin_inset Formula 
+\[
+y=\frac{1}{\beta}\left(\frac{\gamma}{\cos\psi}-\alpha\right)
+\]
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\begin_inset Formula 
+\[
+\ln\left|\alpha+\beta y\right|+\ln\left|\cos\psi\right|-\ln\gamma=0
+\]
+
+\end_inset
+
+Exponentiation of this leads to
+\begin_inset Formula 
+\[
+e^{\ln\left|\alpha+\beta y\right|}e^{\ln\left|\cos\psi\right|}e^{-\ln\gamma}=1
+\]
+
+\end_inset
+
+such that
+\begin_inset Formula 
+\[
+\left|\alpha+\beta y\right|\left|\cos\psi\right|=\gamma
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+For 
+\begin_inset Formula $\psi\le\frac{\pi}{2}$
+\end_inset
+
+, and assuming, 
+\begin_inset Formula $0\le\alpha+\beta y$
+\end_inset
+
+, then
+\begin_inset Formula 
+\[
+\cos\psi=\frac{\gamma}{\alpha+\beta y}
+\]
+
+\end_inset
+
+or, in terms of height as a function of angle, as
+\begin_inset Note Comment
+status collapsed
+
+\begin_layout Plain Layout
+\begin_inset Formula 
+\[
+\alpha+\beta y=\frac{\gamma}{\cos\psi}
+\]
+
+\end_inset
+
+
+\begin_inset Formula 
+\[
+y=\frac{1}{\beta}\left(\frac{\gamma}{\cos\psi}-\alpha\right)
+\]
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\begin_inset Formula 
+\[
+y=\frac{1}{\beta}\left(\frac{\gamma}{\cos\psi}-\alpha\right)
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Note that this becomes horizontal 
+\begin_inset Formula $\psi=0\rightarrow\cos\psi=1$
+\end_inset
+
+, at
+\begin_inset Formula 
+\[
+y=\frac{1}{\beta}\left(\gamma-\alpha\right)
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+To determine the value for integration constant, 
+\begin_inset Formula $\gamma$
+\end_inset
+
+, assume initial conditions, 
+\begin_inset Formula $\psi=\psi_{0}$
+\end_inset
+
+ at 
+\begin_inset Formula $y=0$
+\end_inset
+
+, the constant is determined via
+\begin_inset Formula 
+\[
+0=\frac{1}{\beta}\left(\frac{\gamma}{\cos\psi_{0}}-\alpha\right)
+\]
+
+\end_inset
+
+
+\begin_inset Formula 
+\[
+\gamma=\alpha\cos\psi_{0}
+\]
+
+\end_inset
+
+The solution functions may therefore be expressed as
+\begin_inset Formula 
+\begin{align*}
+\cos\psi & =\frac{\alpha\cos\psi_{0}}{\alpha+\beta y}\\
+y & =\frac{\alpha}{\beta}\left(\frac{\cos\psi_{0}}{\cos\psi}-1\right)
+\end{align*}
+
+\end_inset
+
+with the horizontal condition as
+\begin_inset Formula 
+\[
+y=\frac{\alpha}{\beta}\left(\cos\psi_{0}-1\right)
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsubsection
+Example
+\end_layout
+
+\begin_layout Standard
+E.g.
+ for Tatum's example
+\begin_inset Formula 
+\[
+n=n_{0}-\frac{n_{0}-1}{a}y
+\]
+
+\end_inset
+
+
+\begin_inset Formula 
+\begin{align*}
+\alpha & =n_{0}\\
+\beta & =-\frac{n_{0}-1}{a}\\
+\frac{\alpha}{\beta} & =\frac{-an_{0}}{n_{0}-1}
+\end{align*}
+
+\end_inset
+
+so that
+\begin_inset Formula 
+\begin{align*}
+\cos\psi & =\frac{n_{0}\cos\psi_{0}}{n_{0}-\frac{n_{0}-1}{a}y}=\frac{an_{0}\cos\psi_{0}}{an_{0}-\left(n_{0}-1\right)y}\\
+y & =\frac{-an_{0}}{n_{0}-1}\left(\frac{\cos\psi_{0}}{\cos\psi}-1\right)=\frac{an_{0}}{n_{0}-1}\left(1-\frac{\cos\psi_{0}}{\cos\psi}\right)
+\end{align*}
+
+\end_inset
+
+and horizontal at
+\begin_inset Formula 
+\[
+y=\frac{-an_{0}}{n_{0}-1}\left(\cos\psi_{0}-1\right)=\frac{an_{0}}{n_{0}-1}\left(1-\cos\psi_{0}\right)
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Note Comment
+status collapsed
+
+\begin_layout Plain Layout
+====
+\end_layout
+
+\begin_layout Plain Layout
+Tatum's algebraic solution:
+\end_layout
+
+\begin_layout Plain Layout
+Substitute variables, via
+\begin_inset Formula 
+\[
+\mu=n-1
+\]
+
+\end_inset
+
+so that
+\begin_inset Formula 
+\[
+n-1=n_{0}-1-\frac{n_{0}-1}{a}y
+\]
+
+\end_inset
+
+
+\begin_inset Formula 
+\[
+\mu=\mu_{0}-\frac{\mu_{0}}{a}y
+\]
+
+\end_inset
+
+
+\begin_inset Formula 
+\[
+\mu=\mu_{0}\left(1-\frac{y}{a}\right)
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+Inverse substitution is
+\begin_inset Formula 
+\[
+n=\mu+1
+\]
+
+\end_inset
+
+
+\begin_inset Formula 
+\[
+\dot{n}=\dot{\mu}=-\frac{\mu_{0}}{a}\dot{y}
+\]
+
+\end_inset
+
+so that
+\begin_inset Formula 
+\[
+\tan\psi\dot{\psi}=\frac{1}{\mu+1}\dot{\mu}=\frac{1}{\mu+1}\left(-\frac{\mu_{0}}{a}\dot{y}\right)
+\]
+
+\end_inset
+
+
+\begin_inset Formula 
+\[
+\tan\psi\dot{\psi}=-\frac{1}{\mu+1}\frac{\mu_{0}}{a}\dot{y}
+\]
+
+\end_inset
+
+
+\begin_inset Formula 
+\[
+\tan\psi\dot{\psi}=-\frac{1}{\mu_{0}-\frac{\mu_{0}}{a}y+1}\frac{\mu_{0}}{a}\dot{y}
+\]
+
+\end_inset
+
+
+\begin_inset Formula 
+\[
+\tan\psi\dot{\psi}=-\mu_{0}\frac{1}{a\mu_{0}-\mu_{0}y+a}\dot{y}
+\]
+
+\end_inset
+
+
+\begin_inset Formula 
+\[
+\tan\psi\dot{\psi}=-\frac{1}{\left(\frac{a\mu_{0}+a}{\mu_{0}}\right)-y}\dot{y}
+\]
+
+\end_inset
+
+
+\begin_inset Formula 
+\[
+\tan\psi\dot{\psi}=-\frac{1}{\left(a\frac{\mu_{0}+1}{\mu_{0}}\right)-y}\dot{y}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+Integrating both sides, leads to
+\begin_inset Formula 
+\[
+-\ln\left|\cos\psi\right|=-\frac{1}{-1}\ln\left|\left(a\frac{\mu_{0}+1}{\mu_{0}}\right)-y\right|+c
+\]
+
+\end_inset
+
+for scalar constant of integration, 
+\begin_inset Formula $c$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+Let
+\begin_inset Formula 
+\[
+k=a\frac{\mu_{0}+1}{\mu_{0}}=a\frac{n_{0}}{\mu_{0}}=\frac{a}{n_{0}-1}n_{0}
+\]
+
+\end_inset
+
+
+\begin_inset Formula 
+\[
+-\ln\left|\cos\psi\right|=\ln\left|k-y\right|+c
+\]
+
+\end_inset
+
+Exponentiation of both sides
+\begin_inset Formula 
+\[
+e^{\ln\left(\left|\cos\psi\right|^{-1}\right)}=e^{\ln c}e^{\ln\left(k-y\right)}
+\]
+
+\end_inset
+
+suggests
+\begin_inset Formula 
+\[
+\left|\cos\psi\right|^{-1}=c\left(k-y\right)
+\]
+
+\end_inset
+
+
+\begin_inset Formula 
+\[
+y=k-\frac{c}{\cos\psi}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+The 
+\emph on
+constant of integration
+\emph default
+ is determined by initial conditions, e.g.
+ at 
+\begin_inset Formula $y=y_{0}$
+\end_inset
+
+, 
+\begin_inset Formula $\psi=\alpha$
+\end_inset
+
+, so that
+\begin_inset Formula 
+\[
+c=\cos\psi\left(k-y\right)
+\]
+
+\end_inset
+
+
+\begin_inset Formula 
+\[
+c=\cos\alpha\left(k-y_{0}\right)
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+The particular solution is therefore
+\begin_inset Formula 
+\[
+y=k-\frac{\left(k-y_{0}\right)\cos\alpha}{\cos\psi}
+\]
+
+\end_inset
+
+If 
+\begin_inset Formula $y_{0}=0$
+\end_inset
+
+, then
+\begin_inset Formula 
+\[
+y=k\left(1-\frac{\cos\alpha}{\cos\psi}\right)
+\]
+
+\end_inset
+
+
+\begin_inset Formula 
+\[
+y\cos\psi=k\left(\cos\psi-\cos\alpha\right)
+\]
+
+\end_inset
+
+
+\begin_inset Formula 
+\[
+y\cos\psi-k\cos\psi=-k\cos\alpha
+\]
+
+\end_inset
+
+
+\begin_inset Formula 
+\[
+\cos\psi=-\frac{k\cos\alpha}{y-k}
+\]
+
+\end_inset
+
+
+\begin_inset Formula 
+\[
+\cos\psi=\frac{k\cos\alpha}{k-y}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+Horizontal (
+\begin_inset Formula $\psi=0\rightarrow\cos\psi=1$
+\end_inset
+
+) such that
+\begin_inset Formula 
+\[
+k-y_{h}=k\cos\alpha
+\]
+
+\end_inset
+
+
+\begin_inset Formula 
+\[
+y_{h}=k\left(1-\cos\alpha\right)
+\]
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection
+Cartesian Coordinates
+\end_layout
+
+\begin_layout Standard
+The differential equation in the angle vs.
+ height model can be converted to a differential equation in Cartesian coordinat
+es by starting with the angle vs height solution,
+\begin_inset Formula 
+\[
+\cos\psi=\frac{\alpha\cos\psi_{0}}{\alpha+\beta y}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Express the left hand side in terms of Cartesian differential quantities,
+\begin_inset Formula 
+\[
+\cos\psi=\frac{dx}{\sqrt{\left(dx\right)^{2}+\left(dy\right)^{2}}}=\frac{1}{\sqrt{1+\left(\frac{dy}{dx}\right)^{2}}}
+\]
+
+\end_inset
+
+to obtain
+\begin_inset Formula 
+\[
+\frac{1}{\sqrt{1+\left(\frac{dy}{dx}\right)^{2}}}=\frac{\alpha\cos\psi_{0}}{\alpha+\beta y}
+\]
+
+\end_inset
+
+Reciprocal and squaring of each side
+\begin_inset Formula 
+\[
+1+\left(\frac{dy}{dx}\right)^{2}=\left(\frac{\alpha+\beta y}{\alpha\cos\psi_{0}}\right)^{2}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Let
+\begin_inset Formula 
+\[
+\lambda\equiv\alpha\cos\psi_{0}
+\]
+
+\end_inset
+
+to express this as
+\begin_inset Formula 
+\[
+1+\left(\frac{dy}{dx}\right)^{2}=\frac{\left(\alpha+\beta y\right)^{2}}{\lambda^{2}}
+\]
+
+\end_inset
+
+
+\begin_inset Formula 
+\[
+\left(\frac{dy}{dx}\right)^{2}=\frac{\left(\alpha+\beta y\right)^{2}-\lambda^{2}}{\lambda^{2}}
+\]
+
+\end_inset
+
+
+\begin_inset Formula 
+\[
+\frac{dy}{dx}=\sqrt{\frac{\left(\alpha+\beta y\right)^{2}-\lambda^{2}}{\lambda^{2}}}
+\]
+
+\end_inset
+
+
+\begin_inset Formula 
+\[
+\frac{dy}{dx}=\frac{1}{\lambda}\sqrt{\left(\alpha+\beta y\right)^{2}-\lambda^{2}}
+\]
+
+\end_inset
+
+
+\begin_inset Formula 
+\[
+\frac{dy}{\sqrt{\left(\alpha+\beta y\right)^{2}-\lambda^{2}}}=\lambda^{-1}dx
+\]
+
+\end_inset
+
+
+\begin_inset Formula 
+\[
+\frac{dy}{dx}=\frac{\beta}{\lambda}\sqrt{\left(\alpha\beta^{-1}+y\right)^{2}-\beta^{-2}\lambda^{2}}
+\]
+
+\end_inset
+
+
+\begin_inset Formula 
+\[
+\frac{dy}{dx}=\frac{\beta}{\lambda}\sqrt{y^{2}+2\alpha\beta^{-1}y+\beta^{-2}\left(\alpha^{2}-\lambda^{2}\right)}
+\]
+
+\end_inset
+
+
+\begin_inset Formula 
+\[
+\frac{dy}{\sqrt{y^{2}+2\alpha\beta^{-1}y+\beta^{-2}\left(\alpha^{2}-\lambda^{2}\right)}}=\frac{\beta}{\lambda}dx
+\]
+
+\end_inset
+
+Integrating both sides using
+\begin_inset Formula 
+\begin{align*}
+Y^{\frac{1}{2}} & \equiv\left(ay^{2}+by+c\right)^{\frac{1}{2}}\\
+\int\frac{dy}{Y^{\frac{1}{2}}} & =\frac{1}{\sqrt{a}}\ln\left|2\sqrt{a}X^{\frac{1}{2}}+2ay+b\right|+\gamma
+\end{align*}
+
+\end_inset
+
+valid for 
+\begin_inset Formula $0<a$
+\end_inset
+
+.
+ For 
+\begin_inset Formula $a=1$
+\end_inset
+
+ (the case here)
+\begin_inset Formula 
+\[
+\int\frac{dy}{Y^{\frac{1}{2}}}=\ln\left|2X^{\frac{1}{2}}+2y+b\right|+\gamma
+\]
+
+\end_inset
+
+with
+\begin_inset Formula 
+\begin{align*}
+b & =2\alpha\beta^{-1}
+\end{align*}
+
+\end_inset
+
+ 
+\end_layout
+
+\begin_layout Standard
+Leads to
+\begin_inset Formula 
+\[
+\int\frac{dy}{Y^{\frac{1}{2}}}=\ln\left|2\sqrt{y^{2}+2\alpha\beta^{-1}y+\beta^{-2}\left(\alpha^{2}-\lambda^{2}\right)}+2y+2\alpha\beta^{-1}\right|+\gamma
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Inserting this into the double integral refraction equations
+\begin_inset Formula 
+\[
+\frac{\beta}{\lambda}x+\gamma_{3}=\ln\left|2\sqrt{y^{2}+2\alpha\beta^{-1}y+\beta^{-2}\left(\alpha^{2}-\lambda^{2}\right)}+2y+2\alpha\beta^{-1}\right|
+\]
+
+\end_inset
+
+
+\begin_inset Formula 
+\[
+\frac{\beta}{\lambda}x+\gamma_{3}=\ln\left|2\left(\sqrt{\left(y^{2}+2\alpha\beta^{-1}y+\beta^{-2}\alpha^{2}\right)-\beta^{-2}\lambda^{2}}+y+\alpha\beta^{-1}\right)\right|
+\]
+
+\end_inset
+
+
+\begin_inset Formula 
+\[
+\frac{\beta}{\lambda}x+\gamma_{3}=\ln\left|2\left(\sqrt{\left(y+\alpha\beta^{-1}\right)^{2}-\beta^{-2}\lambda^{2}}+\left(y+\alpha\beta^{-1}\right)\right)\right|
+\]
+
+\end_inset
+
+
+\begin_inset Formula 
+\[
+\frac{\beta}{\lambda}x+\gamma_{3}=\ln\left|2\left(\left(y+\alpha\beta^{-1}\right)+\sqrt{\left(y+\alpha\beta^{-1}\right)^{2}-\beta^{-2}\lambda^{2}}\right)\right|
+\]
+
+\end_inset
+
+Combine the constant
+\begin_inset Formula 
+\[
+\frac{\beta}{\lambda}x=\ln\left|2\left(\left(y+\alpha\beta^{-1}\right)+\sqrt{\left(y+\alpha\beta^{-1}\right)^{2}-\beta^{-2}\lambda^{2}}\right)\right|+\ln\left(e^{-\gamma_{3}}\right)
+\]
+
+\end_inset
+
+
+\begin_inset Formula 
+\[
+\frac{\beta}{\lambda}x=\ln\left|2e^{-\gamma_{3}}\left(\left(y+\alpha\beta^{-1}\right)+\sqrt{\left(y+\alpha\beta^{-1}\right)^{2}-\beta^{-2}\lambda^{2}}\right)\right|
+\]
+
+\end_inset
+
+
+\begin_inset Formula 
+\[
+x=\frac{\lambda}{\beta}\ln\left|2e^{-\gamma_{3}}\left(\left(y+\alpha\beta^{-1}\right)+\sqrt{\left(y+\alpha\beta^{-1}\right)^{2}-\beta^{-2}\lambda^{2}}\right)\right|
+\]
+
+\end_inset
+
+Use initial condition, that 
+\begin_inset Formula $y=0\rightarrow x=0$
+\end_inset
+
+
+\begin_inset Formula 
+\begin{align*}
+e^{0}=1 & =\exp\left(\frac{\lambda}{\beta}\right)\left|2e^{-\gamma_{3}}\left(\left(\alpha\beta^{-1}\right)+\sqrt{\left(\alpha\beta^{-1}\right)^{2}-\beta^{-2}\lambda^{2}}\right)\right|\\
+ & =2\exp\left(\frac{\lambda}{\beta}\right)e^{-\gamma_{3}}\left(\alpha\beta^{-1}+\beta^{-1}\sqrt{\left(\alpha^{2}-\lambda^{2}\right)}\right)\\
+ & =2\exp\left(\frac{\lambda}{\beta}\right)\beta^{-1}e^{-\gamma_{3}}\left(\alpha+\sqrt{\alpha^{2}-\lambda^{2}}\right)
+\end{align*}
+
+\end_inset
+
+or
+\begin_inset Formula 
+\[
+e^{\gamma_{3}}=2\exp\left(\frac{\lambda}{\beta}\right)\beta^{-1}\left(\alpha+\sqrt{\alpha^{2}-\lambda^{2}}\right)
+\]
+
+\end_inset
+
+
+\begin_inset Formula 
+\[
+e^{-\gamma_{3}}=\frac{\beta}{2e^{\frac{\lambda}{\beta}}\left(\alpha+\sqrt{\alpha^{2}-\lambda^{2}}\right)}
+\]
+
+\end_inset
+
+Substitute into the integrated equation
+\begin_inset Formula 
+\[
+x=\frac{\lambda}{\beta}\ln\left|2\frac{\beta}{2e^{\frac{\lambda}{\beta}}\left(\alpha+\sqrt{\alpha^{2}-\lambda^{2}}\right)}\left(\left(y+\alpha\beta^{-1}\right)+\sqrt{\left(y+\alpha\beta^{-1}\right)^{2}-\beta^{-2}\lambda^{2}}\right)\right|
+\]
+
+\end_inset
+
+
+\begin_inset Formula 
+\[
+x=\frac{\lambda}{\beta}\ln\left|\frac{\left(y+\alpha\beta^{-1}\right)+\sqrt{\left(y+\alpha\beta^{-1}\right)^{2}-\beta^{-2}\lambda^{2}}}{\beta^{-1}e^{\frac{\lambda}{\beta}}\left(\alpha+\sqrt{\alpha^{2}-\lambda^{2}}\right)}\right|
+\]
+
+\end_inset
+
+The term
+\begin_inset Formula 
+\begin{align*}
+\alpha^{2}-\lambda^{2} & =\alpha^{2}-\alpha^{2}\cos^{2}\psi_{0}\\
+ & =\alpha^{2}\left(1-\cos^{2}\psi_{0}\right)\\
+ & =\alpha^{2}\sin^{2}\psi_{0}
+\end{align*}
+
+\end_inset
+
+so that
+\begin_inset Formula 
+\[
+x=\frac{\lambda}{\beta}\ln\left|\frac{\left(y+\alpha\beta^{-1}\right)+\sqrt{\left(y+\alpha\beta^{-1}\right)^{2}-\beta^{-2}\lambda^{2}}}{\beta^{-1}\alpha e^{\frac{\lambda}{\beta}}\left(1+\sin\psi_{0}\right)}\right|
+\]
+
+\end_inset
+
+
+\begin_inset Formula 
+\[
+x=-\frac{\alpha\cos\psi_{0}}{\beta}\ln\left|\frac{\alpha\beta^{-1}e^{\frac{\lambda}{\beta}}\left(1+\sin\psi_{0}\right)}{\left(y+\alpha\beta^{-1}\right)+\sqrt{\left(y+\alpha\beta^{-1}\right)^{2}-\beta^{-2}\lambda^{2}}}\right|
+\]
+
+\end_inset
+
+
+\begin_inset Formula 
+\[
+x=-\frac{\alpha\cos\psi_{0}}{\beta}\ln\left|e^{\frac{\lambda}{\beta}}\frac{\alpha\beta^{-1}\left(1+\sin\psi_{0}\right)}{\left(y+\alpha\beta^{-1}\right)+\sqrt{\left(y+\alpha\beta^{-1}\right)^{2}-\beta^{-2}\lambda^{2}}}\right|
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Section
+Observations
+\end_layout
+
+\begin_layout Standard
+The refraction modeling process starts with Snell's law.
+ This is inherently a curvature condition associated with the path and therefore
+ represents a second order differential relationship - i.e.
+ a change in direction of a path for which direction is a change in position
+ along the path.
+ As such two integration steps can be expected.
+\end_layout
+
+\begin_layout Standard
+The first integration step in this approach is to use the refraction invariant
+ relationships (the derivative of Snell's constant function) to express
+ a differential equation in curvature that can be solved to provide a differenti
+al equation in direction (here cosine of elevation angle of the path as
+ a function of vertical position).
+\end_layout
+
+\begin_layout Standard
+The second integration step is to solve the direction differential equation
+ to obtain a function representing position relationships that must be satisfied
+ by points on the path (e.g.
+ here, the horizontal coordinate as a function of the vertical coordinate).
+\end_layout
+
+\begin_layout Standard
+\begin_inset CommandInset bibtex
+LatexCommand bibtex
+btprint "btPrintCited"
+bibfiles "Papers"
+
+\end_inset
+
+
+\end_layout
+
+\end_body
+\end_document

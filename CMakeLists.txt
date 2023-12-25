@@ -84,6 +84,7 @@ set(testProgs
 	test_test
 
 	# Algorithm checks
+#	test_DiffEq # needs work
 	test_Hessian
 	test_Sylvester
 
