@@ -2944,6 +2944,387 @@ and for Cartesian expression of
 \end_layout
 
 \begin_layout Subsection
+Another New Try
+\end_layout
+
+\begin_layout Standard
+At a spatially sharp boundary location (e.g.
+ at path length, 
+\begin_inset Formula $\lambda$
+\end_inset
+
+), the incident tangent vector, 
+\begin_inset Formula $t_{p}$
+\end_inset
+
+, is deflected by a small amount 
+\begin_inset Formula $\Delta_{t}$
+\end_inset
+
+ to become the exiting tangent direction, 
+\begin_inset Formula $t_{n}$
+\end_inset
+
+.
+ The deflection is in accordance with Snel's law in association with the
+ values of refraction on either side of the boundary, and with the direction
+ of the gradient at the boundary location.
+\begin_inset Formula 
+\[
+\nu_{p}\left(t_{p}\wedge g\right)=\nu_{n}\left(t_{n}\wedge g\right)
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Consider the ideal boundary interface to be centered on a thin layer with
+ edges a distance, 
+\begin_inset Formula $\pm\delta_{\lambda}$
+\end_inset
+
+, along the curving path.
+\end_layout
+
+\begin_layout Standard
+The above 
+\begin_inset Quotes eld
+\end_inset
+
+previous-next
+\begin_inset Quotes erd
+\end_inset
+
+ relationship describes the behavior of the path leaving this layer at path
+ distance, 
+\begin_inset Formula $\lambda+\delta_{\lambda}$
+\end_inset
+
+, relative to the behavior entering the thin layer (at 
+\begin_inset Formula $\lambda-\delta_{\lambda}$
+\end_inset
+
+).
+\end_layout
+
+\begin_layout Standard
+The tangent direction at the entrance/exit of this thin layer can be expressed
+ in terms of the tangent direction at the boundary, 
+\begin_inset Formula $t$
+\end_inset
+
+, and the rate of change of the tangent direction with respect to path length
+ 
+\begin_inset Formula $\lambda$
+\end_inset
+
+.
+ I.e.
+\begin_inset Formula 
+\begin{align*}
+t_{p} & =t-\dot{t}\delta_{\lambda}\\
+t_{n} & =t+\dot{t}\delta_{\lambda}
+\end{align*}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The index of refraction at the entrance/exit of the layer can be expressed
+ by evaluating the IoR field function at the boundary layer and then estimating
+ its value based on the rate of change of the IoR field w.r.t.
+ path length,
+\begin_inset Formula 
+\begin{align*}
+\nu_{p} & =\nu-\dot{\nu}\delta_{\lambda}\\
+\nu_{n} & =\nu+\dot{\nu}\delta_{\lambda}
+\end{align*}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Note Comment
+status collapsed
+
+\begin_layout Plain Layout
+The index of refraction at the entrance/exit of the layer can be expressed
+ by evaluating the IoR field function at locations that are 
+\begin_inset Formula $\pm\delta_{\lambda}$
+\end_inset
+
+ distance along the path from the location of a point on the boundary, 
+\begin_inset Formula $r$
+\end_inset
+
+.
+ I.e.
+\begin_inset Formula 
+\begin{align*}
+\nu_{p} & =\nu\left(r_{p}\right)=\nu\left(r-t\delta_{\lambda}\right)\\
+\nu_{n} & =\nu\left(r_{n}\right)=\nu\left(r+t\delta_{\lambda}\right)
+\end{align*}
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Insert these values into the finite refraction relationship
+\begin_inset Formula 
+\[
+\left(\nu-\dot{\nu}\delta_{\lambda}\right)\left(\left(t-\dot{t}\delta_{\lambda}\right)\wedge g\right)=\left(\nu+\dot{\nu}\delta_{\lambda}\right)\left(\left(t+\dot{t}\delta_{\lambda}\right)\wedge g\right)
+\]
+
+\end_inset
+
+After expanding and rearranging this, the terms not involving 
+\begin_inset Formula $\delta_{\lambda}$
+\end_inset
+
+ cancel from the left and right sides.
+ Then gathering like terms together, yields
+\begin_inset Note Comment
+status collapsed
+
+\begin_layout Plain Layout
+Rearrange this
+\begin_inset Formula 
+\[
+\nu t\wedge g-\nu\delta_{\lambda}\dot{t}\wedge g-\dot{\nu}\delta_{\lambda}\left(t\wedge g-\delta_{\lambda}\dot{t}\wedge g\right)=\nu t\wedge g+\nu\delta_{\lambda}\dot{t}\wedge g+\dot{\nu}\delta_{\lambda}\left(t\wedge g+\delta_{\lambda}\dot{t}\wedge g\right)
+\]
+
+\end_inset
+
+The first term on each side cancel.
+ After rearranging the remaining terms
+\begin_inset Formula 
+\[
+\nu\delta_{\lambda}\dot{t}\wedge g+\dot{\nu}\delta_{\lambda}\left(t\wedge g+\delta_{\lambda}\dot{t}\wedge g\right)+\nu\delta_{\lambda}\dot{t}\wedge g+\dot{\nu}\delta_{\lambda}\left(t\wedge g-\delta_{\lambda}\dot{t}\wedge g\right)=0
+\]
+
+\end_inset
+
+
+\begin_inset Formula 
+\[
+2\nu\delta_{\lambda}\dot{t}\wedge g+2\dot{\nu}\delta_{\lambda}\left(t\wedge g+\delta_{\lambda}\dot{t}\wedge g\right)=0
+\]
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\begin_inset Formula 
+\[
+2\delta_{\lambda}\left(\nu\dot{t}\wedge g+\dot{\nu}t\wedge g\right)+2\delta_{\lambda}^{2}\left(\dot{\nu}\dot{t}\wedge g\right)=0
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+This represents the finite refraction change that occurs over the thin layer
+ having a thickness of about 
+\begin_inset Formula $2\delta_{\lambda}$
+\end_inset
+
+.
+ As 
+\begin_inset Formula $\delta_{\lambda}\rightarrow0$
+\end_inset
+
+, the second term becomes relatively insignificant compared with the first.
+ For the first term to be zero, for small but otherwise arbitrary 
+\begin_inset Formula $\delta_{\lambda}$
+\end_inset
+
+ values, requires that
+\begin_inset Formula 
+\[
+\nu\dot{t}\wedge g+\dot{\nu}t\wedge g=0
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Note that the IoR and gradient values are evaluated at the same location
+ as 
+\begin_inset Formula $t$
+\end_inset
+
+ and 
+\begin_inset Formula $\dot{t}$
+\end_inset
+
+, so that this is an 
+\begin_inset Quotes eld
+\end_inset
+
+instantaneously true
+\begin_inset Quotes erd
+\end_inset
+
+ relationship.
+\end_layout
+
+\begin_layout Standard
+Overall,
+\begin_inset Formula 
+\[
+\dot{t}\wedge g=\dot{\nu}\nu^{-1}t\wedge g
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Next require that the change in tangent be orthogonal to the tangent (requiring
+ 
+\begin_inset Formula $\lambda$
+\end_inset
+
+ to change such that 
+\begin_inset Formula $t$
+\end_inset
+
+ is constant magnitude).
+ Then also
+\begin_inset Formula 
+\[
+\dot{t}\cdot t=0
+\]
+
+\end_inset
+
+Expanding the wedge and dot products
+\begin_inset Formula 
+\begin{align*}
+\dot{t}g-g\dot{t} & =2\dot{\nu}\nu^{-1}t\wedge g\\
+\dot{t}t+t\dot{t} & =0
+\end{align*}
+
+\end_inset
+
+Add these
+\begin_inset Formula 
+\[
+\left(t-g\right)\dot{t}+\dot{t}\left(t+g\right)=2\dot{\nu}\nu^{-1}t\wedge g
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+This is Sylvester's equation (cf Appendix
+\begin_inset space ~
+\end_inset
+
+TODO) which has solution
+\begin_inset Formula 
+\begin{align*}
+\dot{t} & =\frac{Db-aD}{b^{2}-a^{2}}\\
+a & \equiv t-g\\
+b & \equiv t+g\\
+D & \equiv2\dot{\nu}\nu^{-1}t\wedge g
+\end{align*}
+
+\end_inset
+
+Here
+\begin_inset Formula 
+\begin{align*}
+a^{2} & =t^{2}+g^{2}-2t\cdot g\\
+b^{2} & =t^{2}+g^{2}+2t\cdot g
+\end{align*}
+
+\end_inset
+
+so that
+\begin_inset Formula 
+\[
+b^{2}-a^{2}=4t\cdot g
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Overall,
+\begin_inset Formula 
+\[
+\dot{t}=\frac{1}{4t\cdot g}\left[\left(2\dot{\nu}\nu^{-1}t\wedge g\right)\left(t+g\right)-\left(t-g\right)\left(2\dot{\nu}\nu^{-1}t\wedge g\right)\right]
+\]
+
+\end_inset
+
+
+\begin_inset Formula 
+\[
+\dot{t}=\frac{\dot{\nu}\nu^{-1}}{2t\cdot g}\left[\left(t\wedge g\right)\left(t+g\right)-\left(t-g\right)\left(t\wedge g\right)\right]
+\]
+
+\end_inset
+
+Since 
+\begin_inset Formula $t$
+\end_inset
+
+ and 
+\begin_inset Formula $g$
+\end_inset
+
+ are in the plane of 
+\begin_inset Formula $t\wedge g$
+\end_inset
+
+, they both anti-commute such that
+\begin_inset Formula 
+\[
+\dot{t}=\frac{\dot{\nu}\nu^{-1}}{2t\cdot g}\left[\left(t\wedge g\right)\left(t+g\right)--\left(t\wedge g\right)\left(t-g\right)\right]
+\]
+
+\end_inset
+
+
+\begin_inset Formula 
+\[
+\dot{t}=\frac{\dot{\nu}\nu^{-1}}{t\cdot g}\left[\left(t\wedge g\right)\left(t+g\right)\right]
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection
 A New Try
 \end_layout
 
@@ -3110,6 +3491,31 @@ Divide by the corresponding small change in path length,
 
 \end_inset
 
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Note Note
+status open
+
+\begin_layout Plain Layout
+Try verification here
+\end_layout
+
+\end_inset
+
+
+\begin_inset Formula 
+\[
+\dot{\nu}\left(t\wedge u\right)+\nu\left(\dot{t}\wedge u\right)+\nu\left(t\wedge\dot{u}\right)+\delta_{\lambda}^{2}\left[\dot{\nu}\left(\dot{t}\wedge\dot{u}\right)\right]=0
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
 In the limit 
 \begin_inset Formula $\delta_{\lambda}\rightarrow0$
 \end_inset
@@ -3122,6 +3528,78 @@ In the limit
 \begin_inset Formula 
 \[
 \dot{\nu}\left(t\wedge u\right)+\nu\left(\dot{t}\wedge u\right)+\nu\left(t\wedge\dot{u}\right)=0
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Gradient
+\begin_inset Formula 
+\[
+g=\gamma u
+\]
+
+\end_inset
+
+therefore
+\begin_inset Formula 
+\[
+\dot{g}=\dot{\gamma}u+\gamma\dot{u}
+\]
+
+\end_inset
+
+From appendix
+\begin_inset Formula 
+\[
+\dot{u}=\gamma^{-1}\left(\dot{g}\wedge u\right)u
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+So that,
+\begin_inset Formula 
+\[
+\dot{\nu}\left(t\wedge u\right)+\nu\left(\dot{t}\wedge u\right)+\nu\left(t\wedge\left(\gamma^{-1}\left(\dot{g}\wedge u\right)u\right)\right)=0
+\]
+
+\end_inset
+
+or
+\begin_inset Formula 
+\[
+\dot{u}=\gamma^{-1}\left(\dot{g}-\dot{\gamma}u\right)=\gamma^{-1}\left(\dot{g}-\left(\dot{g}\cdot u\right)u\right)
+\]
+
+\end_inset
+
+
+\begin_inset Formula 
+\[
+\dot{\nu}\left(t\wedge u\right)+\nu\left(\dot{t}\wedge u\right)+\nu\left(t\wedge\gamma^{-1}\left(\dot{g}-\left(\dot{g}\cdot u\right)u\right)\right)=0
+\]
+
+\end_inset
+
+
+\begin_inset Formula 
+\[
+\dot{\nu}\left(t\wedge u\right)+\nu\left(\dot{t}\wedge u\right)+\nu\gamma^{-1}\left(t\wedge\dot{g}-\left(\dot{g}\cdot u\right)t\wedge u\right)=0
+\]
+
+\end_inset
+
+
+\begin_inset Formula 
+\[
+\nu\left(\dot{t}\wedge u\right)+\left(\dot{\nu}-\nu\gamma^{-1}\left(\dot{g}\cdot u\right)\right)\left(t\wedge u\right)+\nu\gamma^{-1}\left(t\wedge\dot{g}\right)=0
 \]
 
 \end_inset
