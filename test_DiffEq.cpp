@@ -286,56 +286,50 @@ namespace
 
 			double const & nuPrev = node.thePrevNu;
 			Vector const & tanPrev = node.thePrevTan;
+			Vector const & currLoc = node.theCurrLoc;
 			double const & nuNext = node.theNextNu;
 			Vector const & tanNext = node.theNextTan;
+
+			{
+			BiVector const biv1{ nuDot * wedge(tVal, uVal) };
+			BiVector const biv2{ nuVal * wedge(tDot, uVal) };
+			value = biv1 + biv2;
+std::cout << "biv1: " << io::fixed(biv1) << '\n';
+std::cout << "biv2: " << io::fixed(biv2) << '\n';
+return value; // TODO complete test
+			}
 			/*
 			*/
 
 			// okay
-			/*
+			// Finite difference definition used in path propagation
 			BiVector const biv1{ nuPrev * (tanPrev * gVal).theBiv };
 			BiVector const biv2{ nuNext * (tanNext * gVal).theBiv };
 			value = biv1 - biv2;
 std::cout << "biv1: " << io::fixed(biv1) << '\n';
 std::cout << "biv2: " << io::fixed(biv2) << '\n';
-			*/
 
-			// okay
+return value; // TODO complete test
+
+			// Evaluate with finite difference relationships
 			double const nuDelta{ nuNext - nuPrev };
 			Vector const tanDelta{ tanNext - tanPrev };
 			Vector const normDelta
-				{ thePtrMedia->nuValue(nodeDiff.theLoc + .5*dL*tanNext)
-				- thePtrMedia->nuValue(nodeDiff.theLoc + .5*dL*tanPrev)
+				{ thePtrMedia->nuGradient(currLoc + .5*dL*tanNext, .125*dL)
+				- thePtrMedia->nuGradient(currLoc - .5*dL*tanPrev, .125*dL)
 				};
-
-			double const dnuDelta{ dL * (gDot*tVal).theSca[0] };
-			Vector const dtanDelta{ dL * tDot };
-			Vector const dnormDelta{ dL * uDot };
-
-std::cout << "        dL: " << io::fixed(dL) << '\n';
-std::cout << "   nuDelta: " << io::fixed(nuDelta) << '\n';
-std::cout << "  dnuDelta: " << io::fixed(dnuDelta) << '\n';
-std::cout << "  tanDelta: " << io::fixed(tanDelta) << '\n';
-std::cout << " dtanDelta: " << io::fixed(dtanDelta) << '\n';
-std::cout << " normDelta: " << io::fixed(normDelta) << '\n';
-std::cout << "dnormDelta: " << io::fixed(dnormDelta) << '\n';
-
 			BiVector const bivN{ nuDelta * wedge(tVal, (uVal)) };
 			BiVector const bivT{ nuVal * wedge(tanDelta, (uVal)) };
 			BiVector const bivU{ nuVal * wedge(tVal, normDelta) };
-
 			BiVector const bivNT{ (nuDelta) * wedge(tanDelta, (uVal)) };
 			BiVector const bivNU{ (nuDelta) * wedge(tVal, normDelta) };
 			BiVector const bivTU{ nuVal * wedge(tanDelta, normDelta) };
-
 			BiVector const bivNTU{ (nuDelta) * wedge(tanDelta, normDelta) };
-
 			value =
 				- bivN - bivT - bivU
 				- bivNT - bivNU - bivTU
 				- bivNTU
 				;
-
 std::cout << "  bivN: " << io::fixed(bivN) << '\n';
 std::cout << "  bivT: " << io::fixed(bivT) << '\n';
 std::cout << "  bivU: " << io::fixed(bivU) << '\n';
@@ -343,46 +337,20 @@ std::cout << " bivNT: " << io::fixed(bivNT) << '\n';
 std::cout << " bivNU: " << io::fixed(bivNU) << '\n';
 std::cout << " bivTU: " << io::fixed(bivTU) << '\n';
 std::cout << "bivNTU: " << io::fixed(bivNTU) << '\n';
-std::cout << '\n';
-			/*
-			*/
 
-			/*
-			BiVector const biv1
-				{ (nuVal + nuDot) * wedge((tVal+tDot),(uVal+uDot)) };
-			BiVector const biv2
-				{ (nuVal - nuDot) * wedge((tVal-tDot),(uVal-uDot)) };
-			value = biv1 - biv2;
-std::cout << "biv1: " << io::fixed(biv1) << '\n';
-std::cout << "biv2: " << io::fixed(biv2) << '\n';
-			*/
+			// Estimate finite difference based on derivative values
+			double const dnuDelta{ dL * (gDot*tVal).theSca[0] };
+			Vector const dtanDelta{ dL * tDot };
+			Vector const dnormDelta{ dL * uDot };
+std::cout << "  dnuDelta: " << io::fixed(dnuDelta) << '\n';
+std::cout << " dtanDelta: " << io::fixed(dtanDelta) << '\n';
+std::cout << "dnormDelta: " << io::fixed(dnormDelta) << '\n';
 
+std::cout << "        dL: " << io::fixed(dL) << '\n';
+std::cout << "   nuDelta: " << io::fixed(nuDelta) << '\n';
+std::cout << "  tanDelta: " << io::fixed(tanDelta) << '\n';
+std::cout << " normDelta: " << io::fixed(normDelta) << '\n';
 
-			/*
-			BiVector const biv1{ nuDot * wedge(tVal, uVal) };
-			BiVector const biv2{ nuVal * wedge(tDot, uVal) };
-			BiVector const biv3{ nuVal * wedge(tVal, uDot) };
-			BiVector const biv4{ sq(dL) * nuDot * wedge(tDot, uDot) };
-
-			value = biv1 + biv2 + biv3 + biv4;
-
-std::cout << "biv1: " << io::fixed(biv1) << '\n';
-std::cout << "biv2: " << io::fixed(biv2) << '\n';
-std::cout << "biv3: " << io::fixed(biv3) << '\n';
-std::cout << "biv4: " << io::fixed(biv4) << '\n';
-			*/
-
-/*
-Vector const theLoc{ null<Vector>() };
-double const theNuVal{ null<double>() };
-double const theNuDot{ null<double>() };
-Vector const theGradVal{ null<Vector>() };
-Vector const theGradDot{ null<Vector>() };
-Vector const theNormVal{ null<Vector>() };
-Vector const theNormDot{ null<Vector>() };
-Vector const theTanVal{ null<Vector>() };
-Vector const theTanDot{ null<Vector>() };
-*/
 
 			return  value;
 		}
@@ -405,6 +373,7 @@ Vector const theTanDot{ null<Vector>() };
 			const ptrPath{ numericalPath(ptrMedia, reserveNodeSize) };
 
 		// evaluate equation at each node
+oss << "Failure: Need to resolve what is expected from differential eqn\n";
 		DiffEq const equation{ ptrMedia };
 		std::vector<aply::ray::Node> const & nodes = ptrPath->theNodes;
 		std::size_t const numNodes{ nodes.size() };
@@ -413,19 +382,26 @@ Vector const theTanDot{ null<Vector>() };
 			bool isFirst{ true };
 			for (std::size_t nn{0u} ; nn < numNodes ; ++nn)
 			{
+std::cout << '\n';
 				aply::ray::Node const & node = nodes[nn];
 				std::cout << node.infoBrief() << std::endl;
 
 				using namespace engabra::g3;
 				BiVector const gap{ equation(node) };
-std::cout << "gap: " << io::fixed(gap) << '\n';
+// TODO adjust tolerance
 				if (! (magnitude(gap) < 1.e-6))
 				{
 					if (! isFirst)
 					{
-						break;
+					//	break;
 					}
 					isFirst = false;
+
+					if (isFirst)
+					{
+						oss << "Failure of gap test\n";
+						oss << "first gap: " << io::fixed(gap, 2u, 9u) << '\n';
+					}
 				}
 			}
 		}
@@ -443,7 +419,6 @@ main
 
 	test0(oss);
 
-oss << "Failure code me\n";
 	return tst::finish(oss);
 }
 
