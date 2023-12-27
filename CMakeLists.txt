@@ -56,6 +56,8 @@ set(mainProgs
 
 	hello
 
+	demoIntegrate
+
 	demoAeroPlygiant
 
 	demoExpAtmosphere
