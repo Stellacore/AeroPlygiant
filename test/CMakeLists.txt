@@ -29,7 +29,8 @@ set(mainProgs
 	test_Cylinder
 	test_Interval
 
-	# refraction computations
+	# Atmospheric refraction code from Stellacore
+	test_Atmosphere
 	test_Refraction
 
 	)
@@ -48,6 +49,7 @@ foreach(mainProg ${mainProgs})
 		${mainProg}
 		PRIVATE
 			engabra::engabra
+			${aProjLib}  # TODO AeroPlygiantLib::AeroPlygiantLib
 		)
 	add_test(NAME ${mainProg} COMMAND ${mainProg})
 
