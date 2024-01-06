@@ -33,6 +33,10 @@
 
 #include "tst.hpp"
 
+#include "envPlanet.hpp"
+
+#include <Engabra>
+
 /*
 #include "libgeo/Refraction.h"
 
@@ -52,6 +56,7 @@
 #include <numeric>
 #include <sstream>
 #include <vector>
+
 
 namespace
 {
@@ -106,19 +111,20 @@ test0
 
 	// Make sure there's an infoString
 	(void)null.infoString("null");
+*/
 
 // ExampleStart
 	// quantities typical of remote sensing geometry
-	double const angleSensor(math::pi / 4.0);
+	double const angleSensor(engabra::g3::pi / 4.0);
 	double const highSensor(2000.);
 	double const highGround( 500.);
 
 	// convert to geocentric values for refraction computation
-	double const radiusEarth
-		(geo::Ellipsoid::WGS84().averageSemiAxisMag());
+	double const radiusEarth{ aply::env::sEarth.theRadGround };
 	double const radiusSensor(radiusEarth + highSensor);
 	double const radiusGround(radiusEarth + highGround);
 
+/*
 	geo::Refraction refractDown(radiusEarth, radiusSensor, angleSensor);
 	double const angleGround(refractDown.angleAt(radiusGround));
 // ExampleEnd
@@ -175,7 +181,7 @@ test0
 	}
 */
 
-	oss << "Failure: restore test0\n";
+	oss << "\nFailure: restore test0\n";
 
 	return oss.str();
 }
