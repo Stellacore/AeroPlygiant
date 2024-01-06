@@ -31,9 +31,9 @@
 
 
 #include "tst.hpp"
-#include "tstModels.hpp"
 
 #include "env.hpp"
+#include "envModels.hpp"
 #include "ray.hpp"
 
 #include <Engabra>
@@ -50,7 +50,7 @@ namespace tst
 	//! Evaluate index of refraction on line through media
 	void
 	showMedia
-		( env::IndexVolume const & media
+		( aply::env::IndexVolume const & media
 		)
 	{
 		constexpr double stepDist{ 1./ 4. };
@@ -87,7 +87,7 @@ namespace
 			{ std::make_shared<env::ActiveBox>
 				(zero<Vector>(), Vector{10., 10., 10.})
 			};
-		tst::Slab const media
+		env::Slab const media
 			( e1   // 'x' direction
 			, 4.   // xBeg
 			, 6.   // xEnd

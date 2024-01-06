@@ -30,8 +30,7 @@
  */
 
 
-#include "tstModels.hpp"
-
+#include "envModels.hpp"
 #include "ray.hpp"
 
 #include <Engabra>
@@ -160,7 +159,7 @@ main
 	// environment volume of interest and index medium
 	std::shared_ptr<env::ActiveVolume> const ptVolume
 		{ std::make_shared<env::ActiveBox>(minCorner, maxCorner) };
-	tst::Slab const media
+	env::Slab const media
 		( e3   // 'z' normal direction
 		, 4.5  // zBeg
 		, 5.5  // zEnd
