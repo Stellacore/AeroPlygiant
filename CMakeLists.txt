@@ -69,6 +69,10 @@ set(mainProgs
 foreach(mainProg ${mainProgs})
 
 	add_executable (${mainProg} ${mainProg}.cpp)
+	target_include_directories(
+		${mainProg}
+		PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include # public interface
+		)
 	target_link_libraries(
 		${mainProg}
 		PRIVATE
@@ -108,6 +112,11 @@ set(testProgs
 foreach(testProg ${testProgs})
 
 	add_executable(${testProg} ${testProg}.cpp)
+	target_include_directories(
+		${testProg}
+		PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include # public interface
+		PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}  # local test code includes
+		)
 	target_link_libraries(
 		${testProg}
 		PRIVATE
