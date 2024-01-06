@@ -23,8 +23,8 @@
 // 
 
 
-#ifndef Refraction_tstModels_INCL_
-#define Refraction_tstModels_INCL_
+#ifndef Refraction_envModels_INCL_
+#define Refraction_envModels_INCL_
 
 
 /*! \file
@@ -39,8 +39,10 @@
 #include <Engabra>
 
 
+namespace aply
+{
 
-namespace tst
+namespace env
 {
 	using namespace engabra::g3;
 	using namespace aply;
@@ -51,7 +53,7 @@ namespace tst
 	 * Classic "thick plate" refraction model
 	 *
 	 */
-	struct Slab : public env::IndexVolume
+	struct Slab : public IndexVolume
 	{
 		Vector const theNormDir{ null<Vector>() };
 		double const theBegDot{ null<double>() };
@@ -70,8 +72,8 @@ namespace tst
 			, double const & nuPrev
 			, double const & nuCurr
 			, double const & nuNext
-			, std::shared_ptr<env::ActiveVolume>
-				const & ptVolume = env::sPtAllSpace
+			, std::shared_ptr<ActiveVolume>
+				const & ptVolume = sPtAllSpace
 			)
 			: IndexVolume(ptVolume)
 			, theNormDir{ direction(normDir) }
@@ -116,7 +118,7 @@ namespace tst
 
 	/*! \brief Simple example of a spherical shape with constant index.
 	 */
-	struct Sphere : public env::IndexVolume
+	struct Sphere : public IndexVolume
 	{
 		Vector const theCenter{ null<Vector>() };
 		double const theRadius{ null<double>() };
@@ -131,8 +133,8 @@ namespace tst
 			, double const & radius
 			, double const & nuCenter = 1.5
 			, double const & nuEdge = 1.
-			, std::shared_ptr<env::ActiveVolume>
-				const & ptVolume = env::sPtAllSpace
+			, std::shared_ptr<ActiveVolume>
+				const & ptVolume = sPtAllSpace
 			)
 			: IndexVolume(ptVolume)
 			, theCenter{ center }
@@ -299,7 +301,7 @@ namespace tst
 
 
 	//! Atmospheric model : nu = alpha*exp(-beta*radius)
-	struct AtmModel : public env::IndexVolume
+	struct AtmModel : public IndexVolume
 	{
 		std::pair<double, double> const the_v0r0{}; //!< 1st boundary loc/val
 		std::pair<double, double> const the_v1r1{}; //!< 2nd boundary loc/val
@@ -325,9 +327,9 @@ namespace tst
 		//! Construct model to match environment constants
 		inline
 		AtmModel
-			( env::Planet const & planet
-			, std::shared_ptr<env::ActiveVolume>
-				const & ptVolume = env::sPtAllSpace
+			( Planet const & planet
+			, std::shared_ptr<ActiveVolume>
+				const & ptVolume = sPtAllSpace
 			)
 			: IndexVolume(ptVolume)
 			, the_v0r0{ planet.theNuGround, planet.theRadGround }
@@ -398,7 +400,9 @@ namespace tst
 	}; // AtmModel
 
 
-} // [tst]
+} // [env]
 
-#endif // Refraction_tstModels_INCL_
+} // [aply]
+
+#endif // Refraction_envModels_INCL_
 

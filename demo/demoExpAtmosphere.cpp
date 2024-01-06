@@ -31,9 +31,8 @@
 
 
 #include "env.hpp"
+#include "envModels.hpp"
 #include "ray.hpp"
-
-#include "tstModels.hpp"
 
 #include <Engabra>
 #include <vector>
@@ -62,7 +61,7 @@ main
 	// math/algebra foundation
 	using namespace engabra::g3; // for basis vectors, e1,e2,...
 
-	tst::AtmModel const atm(env::sEarth);
+	env::AtmModel const atm(env::sEarth);
 	// std::cout << atm.infoString("atm") << std::endl;
 
 	// location on Earth

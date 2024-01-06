@@ -32,8 +32,8 @@
 #include "tst.hpp"
 
 #include "env.hpp"
+#include "envModels.hpp"
 #include "ray.hpp"
-#include "tstModels.hpp"
 
 #include <Engabra>
 #include <vector>
@@ -50,7 +50,7 @@ main
 	using namespace aply;
 	using namespace engabra::g3;
 
-	tst::AtmModel const atm(env::sEarth);
+	env::AtmModel const atm(env::sEarth);
 	std::size_t const pathSize{ 8u };
 
 	constexpr double propStepDist{ 1./16. }; // meters

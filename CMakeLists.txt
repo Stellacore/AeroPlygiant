@@ -49,71 +49,14 @@ message(aProjLib: ${aProjLib})
 # 	)
 
 # ===
-# === Main Programs
+# === Demonstrations
 # ===
 
-set(mainProgs
-
-	hello
-
-	demoIntegrate
-
-	demoAeroPlygiant
-
-	demoExpAtmosphere
-	demoHotRoad
-	demoThickPlate
-
-	)
-
-foreach(mainProg ${mainProgs})
-
-	add_executable (${mainProg} ${mainProg}.cpp)
-	target_link_libraries(
-		${mainProg}
-		PRIVATE
-			engabra::engabra
-		)
-
-endforeach(mainProg)
+add_subdirectory(demo)
 
 # ===
-# === Unit tests
+# === Test programs
 # ===
 
-set(testProgs
-
-	test_test
-
-	# Algorithm checks
-#	test_DiffEq # needs work
-	test_Hessian
-	test_Sylvester
-
-	# env
-	test_IndexVolume
-
-	# ray
-	test_nextTangentDir
-	test_Path
-	test_Propagator
-	test_roundTrip
-
-	# geom
-	test_Cylinder
-	test_Interval
-
-	)
-
-foreach(testProg ${testProgs})
-
-	add_executable(${testProg} ${testProg}.cpp)
-	target_link_libraries(
-		${testProg}
-		PRIVATE
-			engabra::engabra
-		)
-	add_test(NAME ${testProg} COMMAND ${testProg})
-
-endforeach(testProg)
+add_subdirectory(test)
 
