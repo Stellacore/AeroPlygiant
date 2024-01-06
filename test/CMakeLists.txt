@@ -29,6 +29,9 @@ set(mainProgs
 	test_Cylinder
 	test_Interval
 
+	# refraction computations
+	test_Refraction
+
 	)
 
 foreach(mainProg ${mainProgs})
