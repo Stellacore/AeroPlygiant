@@ -48,51 +48,15 @@ message(aProjLib: ${aProjLib})
 # add_library(aProjLib
 # 	)
 
+# ===
+# === Demonstrations
+# ===
 
 add_subdirectory(demo)
 
 # ===
-# === Unit tests
+# === Test programs
 # ===
 
-set(testProgs
-
-	test_test
-
-	# Algorithm checks
-#	test_DiffEq # needs work
-	test_Hessian
-	test_Sylvester
-
-	# env
-	test_IndexVolume
-
-	# ray
-	test_nextTangentDir
-	test_Path
-	test_Propagator
-	test_roundTrip
-
-	# geom
-	test_Cylinder
-	test_Interval
-
-	)
-
-foreach(testProg ${testProgs})
-
-	add_executable(${testProg} ${testProg}.cpp)
-	target_include_directories(
-		${testProg}
-		PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include # public interface
-		PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}  # local test code includes
-		)
-	target_link_libraries(
-		${testProg}
-		PRIVATE
-			engabra::engabra
-		)
-	add_test(NAME ${testProg} COMMAND ${testProg})
-
-endforeach(testProg)
+add_subdirectory(test)
 
