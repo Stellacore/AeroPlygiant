@@ -30,6 +30,7 @@ set(mainProgs
 	test_Interval
 
 	# Atmospheric refraction code from Stellacore
+	test_DiffEqSolve
 	test_Atmosphere
 	test_Refraction
 
