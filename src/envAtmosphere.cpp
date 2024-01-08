@@ -86,7 +86,7 @@ namespace env
 // COESA1976
 //
 Atmosphere
-Atmosphere::COESA1976
+Atmosphere :: COESA1976
 	()
 {
 	Atmosphere res;

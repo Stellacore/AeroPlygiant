@@ -44,7 +44,7 @@ namespace aply
 namespace math
 {
 
-DiffEqSolve::DiffEqSolve
+DiffEqSolve :: DiffEqSolve
 	( double const & stepSize
 	)
 	: theStep(stepSize)
@@ -52,7 +52,7 @@ DiffEqSolve::DiffEqSolve
 }
 
 std::pair<double, std::vector<double> >
-DiffEqSolve::solutionFor
+DiffEqSolve :: solutionFor
 	( double const & xValue
 	, DiffEqSystem const & equations
 	) const
@@ -73,7 +73,7 @@ DiffEqSolve::solutionFor
 }
 
 int
-DiffEqSolve::rk4
+DiffEqSolve :: rk4
 	( double const & stop
 	, DiffEqSystem const & functor
 	, std::pair<double, std::vector<double> > & result
@@ -264,7 +264,7 @@ DiffEqSolve::rk4
 // infoString
 //
 std::string
-DiffEqSolve::infoString
+DiffEqSolve :: infoString
 	( std::string const & title
 	, std::string const & fmt
 	) const
