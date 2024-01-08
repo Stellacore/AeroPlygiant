@@ -39,10 +39,64 @@
 
 namespace
 {
+
+	/*! \brief Implementation of Gyer paper Eqn[13] integration.
+ 	*/
 	struct RefractGyer : public aply::math::DiffEqSystem
 	{
-		/*! \brief TODO
+		//! \brief Refraction constant (invariant along ray).
+		double const theRefConst{ engabra::g3::null<double>() };
+
+		/*! \brief Initial conditions comprising....
 		 *
+		 *	- .first: starting height (relative to Earth \b center)
+		 *	- .second: vector of size one
+		 *		- : constant of integration for Theta_c
+		 *
+		 */
+		std::pair<double, std::vector<double> > const theInitValues
+			{ std::make_pair
+				( engabra::g3::null<double>()
+				, std::vector<double>{}
+				)
+			};
+
+		//! \brief Atmosphere model in location of interest.
+		aply::env::Atmosphere const theAtmosphere{ };
+
+		//! \brief Radius of Earth in vicinity of location of interest.
+		double const theRadEarth{ engabra::g3::null<double>() };
+
+
+		//! \brief Value ctor.
+		explicit
+		RefractGyer
+			( double const & refConst
+			, std::pair<double, std::vector<double> > const & initValues
+			, aply::env::Atmosphere const & atmosphere
+			, double const & radEarth
+			)
+			: DiffEqSystem{}
+			, theRefConst{ refConst }
+			, theInitValues{ initValues }
+			, theAtmosphere{ atmosphere }
+			, theRadEarth{ radEarth }
+		{ }
+
+		//! \brief No-op dtor.
+		virtual
+		~RefractGyer
+			() = default;
+
+
+		/*! \brief Single ODE from Gyer Eqn[12].
+		 *
+		 * Implements integration of Eqn(12) in Gyer's paper
+		 *   https://www.asprs.org/wp-content/uploads/
+		 *     pers/1996journal/mar/1996_mar_301-310.pdf
+		 *
+		 * I.e.
+		 * \arg Theta_c = integral{ k / (r*sqrt(n*n*r*r - k*k)) * dr };
 		 */
 		virtual
 		std::vector<double>
@@ -50,75 +104,38 @@ namespace
 			( std::pair<double, std::vector<double> > const & in
 			) const
 		{
-			return {}; // TODO
+			std::vector<double> derivFuncs(1u);
+
+			// Current evaluation functions
+			double const currRad(in.first);
+			// std::vector<double> const & currRnFuncs = in.second;
+
+			// height relative to Earth radius
+			double const elev{ currRad - theRadEarth };
+			double const currIoR{ theAtmosphere.indexOfRefraction(elev) };
+			using engabra::g3::sq;
+			double const radicand{ sq(currRad*currIoR) - sq(theRefConst) };
+			double const denom{ currRad * std::sqrt(radicand) };
+
+			// Derivative function values
+			double const r0Prime{ theRefConst / denom }; // integrand
+
+			// Derivative function values
+			return std::vector<double>
+				{ r0Prime
+				};
 		}
 
-		/*! \brief TODO
-		 *
-		 */
+		//! \brief Start height and inital 'Theta_c' value (generally 0.)
 		virtual
 		std::pair<double, std::vector<double> >
 		initValues
 			() const
 		{
-			return {}; // TODO
+			return theInitValues;
 		}
 
 	}; // RefractGyer
-
-	//! \brief Refraction solver system of equations.
-	struct RefractionSystem : public aply::math::DiffEqSystem
-	{
-		aply::ray::Refraction const & theRefraction;
-
-		//! Attach #theRefraction member to consumer class' Refraction instance.
-		RefractionSystem
-			( aply::ray::Refraction const & refraction
-			)
-			: theRefraction{ refraction }
-		{
-		}
-
-		/*! \brief TODO
- 		*
- 		*/
-		virtual
-		std::vector<double>
-		operator()
-			( std::pair<double, std::vector<double> > const & in
-			) const
-		{
-			std::vector<double> derivatives;
-
-			double const pointRadius(in.first);
-
-			double const & refractiveInvariant
-				= theRefraction.theRefractiveInvariant;
-			double const elev // elevation relative to Earth radius
-				{ pointRadius - theRefraction.theRadiusEarth };
-			double const refraction
-				{ theRefraction.theAtmosphere.indexOfRefraction(elev) };
-			using engabra::g3::sq;
-			double const radicand
-				{ sq(pointRadius*refraction) - sq(refractiveInvariant) };
-
-			derivatives.push_back
-				(refractiveInvariant / pointRadius / std::sqrt(radicand));
-
-			return derivatives;
-		}
-
-		/*! \brief TODO
- 		*
- 		*/
-		virtual
-		std::pair<double, std::vector<double> >
-		initValues
-			() const
-		{
-			return theRefraction.theInitValues;
-		}
-	};
 
 } // [anon]
 
@@ -163,8 +180,15 @@ Refraction :: angleAt
 	) const
 {
 	math::DiffEqSolve solver(50.0); // reasonable step
-	theInitValues = solver.solutionFor(radius, RefractionSystem(*this));
-	return theInitValues.second[0];
+	RefractGyer const refractionSystem
+		( theRefractiveInvariant
+		, theInitValues
+		, theAtmosphere
+		, theRadiusEarth
+		);
+	std::pair<double, std::vector<double> > const endValues
+		{ solver.solutionFor(radius, refractionSystem) };
+	return endValues.second[0];
 }
 
 double
