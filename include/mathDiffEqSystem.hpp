@@ -44,7 +44,28 @@ namespace aply
 namespace math
 {
 
+	/* TODO - maybe useful idea, but needs explained better and demonstrated.
+	To include the independent parameter in equation system, introduce a 
+	function of this variable and insert it into the simultaneous system.
+	x' = 1.
+
+	If you need to include x itself in the equations, you can make it into a
+	a dependent variable x' = 1. For the initial value, you should repeat the 
+	value of the independant parameter as the value of x.
+	*/
+
 /*! \brief Abstract class for system of first order differential equations.
+
+\b Summary:
+
+In general, the functor must transform (y1, y2, y3, ...) into (y1', y2',
+y3', ...) and the init function must be initialized with values (y1,
+y2, y3, ...) at a specified initial value for the (assumed) independent
+parameters, x.
+
+System may be solved with aply::math::DiffEqSolve.
+
+\b Detail:
 
 Let x be an independent parameter (e.g. often time or distance). Also
 let y=y(x) be the function of interest (i.e. the solution function). Let
@@ -69,6 +90,11 @@ y[n-2] = (y[n-1])'
 y[2] = y'' = (y')' = y[1]'
 y[1] = y'  = (y)'  = desired answer function
 \endcode
+
+
+If you have an ODE y' = x^2, add x' = 1 to this to make a system of two
+equations. From the functor you would return (1.0, in[0] * in[0]) if you put
+x first.
 
 \par Scalar first-order equation
 A single, first order differential equation is represented as

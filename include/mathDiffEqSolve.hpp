@@ -45,63 +45,19 @@ namespace aply
 namespace math
 {
 
-/*! \brief This class uses numerical methods to solve ordinary
-differential equations.
+/*! \brief This class solves ordinary differential equations numerically.
 
-The function is provided via a function object that evaluates a set of
-simultaneous first-order differential equations. The input to the functions
-is a pair that contains the independent parameter and corresponding collection
-of dependent parameter values.
+The ODE equation system is provided via a function object that evaluates
+a set of simultaneous first-order differential equations. The input
+to the functions is a pair that contains the independent parameter and
+corresponding collection of dependent parameter values.
+
+Compatible equation systems may be implemented by inheriting from the
+abstract baseclass, aply::math::DiffEqSystem.
 
 \par Example
-\dontinclude testmath/uDiffEqSolve.cpp
-\skip ExampleStart
-\until ExampleEnd
+\snippet test/test_DiffEqSolve.cpp DoxyExample00
 
-XXX  -- update comments from here
-
-Here note that you must specify the step size used by the iterative method.
-Additionally, you must specify initial values to fix the solution.
-
-You must write a functor to specify the differential equation. The
-implied prototype of the functor is std::vector<double>
-functor(std::vector<double> const & in). For a first-order ODE
-that does not use x (the independent parameter), the input vector is of size 1
-and contains the value of y. The functor must return a vector of size 1
-containing the value of y'. So for the differential equation y' = y, you
-would return a vector ( in[0] ).
-
-You also must use the init function to specify the value of the function at
-a point to fix the solution. Here, you could use the point 0.0 and require
-the value to be 1.0, which will fix the function as exp(x).
-
-For higher-order ODEs (again assuming x is not used), you must rewrite the
-ODE as a system of first-order ODEs. So, given y'' = -y, rewrite this as
-y' = z and z' = -y. Any system can be straightforwardly converted in this
-fashion.
-
-Now the functor will be passed a vector (y, z) of the two function values.
-You must return the vector (y', z'). For this example, you would return
-(-in[1], in[0] ). For the initial values, you specify the values (y, z) at a
-given point. So you could use the point 0.0 and pass in (0.0, 1.0). This
-specifies that y(0) = 0 and that z(0) = 1. Since z = y', this means that
-y'(0) = 1. This fixes the function as sin(x).
-
-To vary the phase and amplitude, you can return (0.0, amplitude) using a
-point "phase" where you want the curve to be 0. This will specify the function
-as amplitude * sin(x - phase).
-
-In general, the functor must transform (y1, y2, y3, ...) into
-(y1', y2', y3', ...) and the init function must be initialized with values
-(y1, y2, y3, ...) at the point x.
-
-If you need to include x itself in the equations, you can make it into a
-a dependent variable x' = 1. For the initial value, you should repeat the 
-value of the independant parameter as the value of x.
-
-If you have an ODE y' = x^2, add x' = 1 to this to make a system of two
-equations. From the functor you would return (1.0, in[0] * in[0]) if you put
-x first.
 */
 
 class DiffEqSolve
