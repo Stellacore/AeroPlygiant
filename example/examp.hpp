@@ -1,7 +1,3 @@
-//
-// Original Code:
-//  Copyright (c) 2007 Stellacore Corporation.
-//  Donated to AeroPlygiant Open Source project 2024.
 // 
 // MIT License
 // 
@@ -26,71 +22,30 @@
 // SOFTWARE.
 // 
 
-#ifndef aply_env_AtmosphereParameters_INCL_
-#define aply_env_AtmosphereParameters_INCL_
-
+#ifndef aply_examp_INCL_
+#define aply_examp_INCL_
 
 /*! \file
-\brief Declarations for geo::AtmosphereParameters
-*/
-
-
-#include <map>
-#include <string>
+ *
+ * \brief Example classes for differential equation systems.
+ *
+ */
 
 
 namespace aply
 {
-namespace env
+/*! \brief Namespace containing example classes and functions.
+ *
+ * Contents of this namespace are used:
+ * \arg in examples in documentation
+ * \arg for coding demonstration programs
+ * \arg by test programs
+ */
+namespace examp
 {
 
-/*! \brief Contain raw information about an atmosphere.
-
-\par Example
-\dontinclude testgeo/test_Atmosphere.cpp
-\skip ExampleStart
-\until ExampleEnd
-*/
-
-class AtmosphereParameters
-{
-
-public: // data
-
-	double theHigh; //!< meters
-	double theTemp; //!< kelvins
-	double thePressure; //!< millibars
-	double theRefIndex; //!< index of refraction
-
-public: // methods
-
-	//! default null oncstructor
-	AtmosphereParameters();
-
-	//! value constructor
-	AtmosphereParameters
-		( double const & high
-		, double const & temp
-		, double const & pressure
-		, double const & refIndex
-		);
-
-	//! Check if instance is valid
-	bool
-	isValid
-		() const;
-
-	//! Descriptive information about this instance.
-	std::string
-	infoString
-		( std::string const & title=std::string()
-		, std::string const & fmt="%20.15g"
-		) const;
-
-};
-
-} // [env]
+} // [examp]
 } // [aply]
 
-#endif // aply_env_AtmosphereParameters_INCL_
+#endif // aply_examp_INCL_
 

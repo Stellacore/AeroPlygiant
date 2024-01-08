@@ -30,6 +30,7 @@ foreach(mainProg ${mainProgs})
 			${CMAKE_CURRENT_SOURCE_DIR}/../include # public interface
 		PRIVATE
 			${CMAKE_CURRENT_SOURCE_DIR} # module specific includes
+			${CMAKE_CURRENT_SOURCE_DIR}/..  # project level code (e.g. example)
 		)
 	target_link_libraries(
 		${mainProg}

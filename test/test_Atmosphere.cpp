@@ -55,6 +55,15 @@ test0
 	// Make sure there's an infoString
 	(void)null.infoString("null");
 
+{ // TODO add indexOfRefraction function (and meaningful test).
+	double const elev{ 0. };
+	double const gotIndex{ null.indexOfRefraction(elev) };
+	if (! (0. < gotIndex))
+	{
+		oss << "Failure: indexOfRefraction() must be positive\n";
+	}
+}
+
 // ExampleStart
 	aply::env::Atmosphere const coesa1976
 		{ aply::env::Atmosphere::COESA1976() };

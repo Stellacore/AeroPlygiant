@@ -48,7 +48,7 @@ namespace env
 This algorithm uses a set of data points and linearly interpolates them.
 
 \par Example
-\dontinclude test/uAtmosphere.cpp
+\dontinclude test/test_Atmosphere.cpp
 \skip ExampleStart
 \until ExampleEnd
 */
@@ -79,6 +79,16 @@ public: // methods
 	parametersForHeight
 		( double const & high
 		) const;
+
+// TODO
+	inline
+	double
+	indexOfRefraction
+		( double const & pointElevation
+		) const
+	{
+		return -1.; // TODO
+	}
 
 	//! Check if instance is valid
 	bool

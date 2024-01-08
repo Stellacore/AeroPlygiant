@@ -23,8 +23,8 @@
 // 
 
 
-#ifndef Refraction_envModels_INCL_
-#define Refraction_envModels_INCL_
+#ifndef aply_examp_indexModel_INCL_
+#define aply_examp_indexModel_INCL_
 
 
 /*! \file
@@ -43,6 +43,9 @@ namespace aply
 {
 
 namespace env
+{
+
+namespace index
 {
 	using namespace engabra::g3;
 	using namespace aply;
@@ -399,10 +402,10 @@ namespace env
 
 	}; // AtmModel
 
+} // [index]
 
 } // [env]
-
 } // [aply]
 
-#endif // Refraction_envModels_INCL_
+#endif // aply_examp_indexModel_INCL_
 
