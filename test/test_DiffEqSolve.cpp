@@ -33,7 +33,7 @@
 #include "mathDiffEqSolve.hpp"
 #include "mathDiffEqSystem.hpp"
 
-#include "../example/exampDiffEqSystem.hpp"
+#include "../example/diffeqSystem.hpp"
 #include "tst.hpp"
 
 #include <Engabra>
