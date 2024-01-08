@@ -38,18 +38,6 @@
 
 #include <Engabra>
 
-/*
-
-#include "libbase/Tests.h"
-#include "libgeo/Atmosphere.h"
-#include "libgeo/Ellipsoid.h"
-#include "libmath/Ellipsoid.h"
-#include "libmath/EllipsoidRay.h"
-#include "libmath/math.h"
-#include "libmath/Ray3D.h"
-#include "libmath/Vector3D.h"
-*/
-
 #include <algorithm>
 #include <cmath>
 #include <functional>
@@ -104,50 +92,63 @@ test0
 	// Use for outputting errors
 	oss.precision(20);
 
+	// for convenience
+	using engabra::g3::nearlyEquals;
+	using engabra::g3::io::fixed;
+
 // ExampleStart
+
 	// quantities typical of remote sensing geometry
-	double const angleSensor(engabra::g3::pi / 4.0);
-	double const highSensor(2000.);
-	double const highGround( 500.);
+	constexpr double angleSensor{ engabra::g3::piQtr };
+	constexpr double highSensor{  2000. };
+	constexpr double highGround{   500. };
 
 	// convert to geocentric values for refraction computation
-	double const radiusEarth{ aply::env::sEarth.theRadGround };
-	double const radiusSensor(radiusEarth + highSensor);
-	double const radiusGround(radiusEarth + highGround);
+	double const radEarth{ aply::env::sEarth.theRadGround };
+	double const radSen{ radEarth + highSensor };
+	double const radGnd{ radEarth + highGround };
 
-	aply::ray::Refraction const refractDown
-		(radiusEarth, radiusSensor, angleSensor);
-	double const angleGround(refractDown.angleAt(radiusGround));
+	aply::ray::Refraction const refractDown(radEarth, radSen, angleSensor);
+	double const angleGround{ refractDown.angleAt(radGnd) };
+
+std::cout << "highSensor: " << fixed(highSensor) << '\n';
+std::cout << "highGround: " << fixed(highGround) << '\n';
+std::cout << "radEarth: " << fixed(radEarth) << '\n';
+std::cout << "radSen: " << fixed(radSen) << '\n';
+std::cout << "radGnd: " << fixed(radGnd) << '\n';
+
+std::cout << "angleSensor: " << fixed(angleSensor) << '\n';
+std::cout << "angleGround: " << fixed(angleGround) << '\n';
+
 // ExampleEnd
 
 	aply::env::Atmosphere earthAtmosphere
 		{ aply::env::Atmosphere::COESA1976() };
 
+std::cout << "earthAtmosphere: " << earthAtmosphere.infoContents() << '\n';
+
 	// Compute angle from vertical using a version of Snell's law
-	double const angleVerticalGround(std::asin
-		( earthAtmosphere.indexOfRefraction(highSensor)
-		/ earthAtmosphere.indexOfRefraction(highGround)
-		* radiusSensor / radiusEarth
-		* std::sin(angleSensor)));
+	double const atSenIoR{ earthAtmosphere.indexOfRefraction(highSensor) };
+	double const atGndIoR{ earthAtmosphere.indexOfRefraction(highGround) };
+	double const sinAngAtSen{ std::sin(angleSensor) };
+	double const angleVerticalGround
+		{ std::asin((atSenIoR/atGndIoR) * (radSen/radEarth) * sinAngAtSen) };
 
 	aply::ray::Refraction const refractUp
-		(radiusEarth, radiusGround, angleVerticalGround);
-	double const gotVal(refractUp.angleAt(radiusSensor));
-	double const expVal(-angleGround);
+		(radEarth, radGnd, angleVerticalGround);
+	double const gotVal{ refractUp.angleAt(radSen) };
+	double const expVal{ -angleGround };
 
 	// Test displacement
 
-	double const gotDisplacement(refractDown.displacementAt(radiusGround));
-	double const expDisplacement
-		(radiusGround * angleGround);
+	double const gotDisplacement{ refractDown.displacementAt(radGnd) };
+	double const expDisplacement{ radGnd * angleGround };
 
 	// Test zero refraction for zero inclination angle
-	aply::ray::Refraction const zeroRefract(radiusEarth, radiusSensor, 0.0);
-	double const gotZero(zeroRefract.angleAt(radiusGround));
+	aply::ray::Refraction const zeroRefract(radEarth, radSen, 0.0);
+	double const gotZero(zeroRefract.angleAt(radGnd));
 	double const expZero(0.0);
 
-	using engabra::g3::nearlyEquals;
-	using engabra::g3::io::fixed;
 	if (! nearlyEquals(gotVal, expVal))
 	{
 		oss << "failure of symmetry test:" << std::endl;
