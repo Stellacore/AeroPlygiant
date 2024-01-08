@@ -96,11 +96,13 @@ public: // methods
 	isValid
 		() const;
 
-	/*! Determine angle deviation with center of earth at origin,
-		at a certain radius.
+	/*! \brief Determine angle 'Theta_c' deviation.
+	 *
+	 * Theata is the angle subtended from center of earth between
+	 * direction to sensor location and direction to point along ray.
 	*/
 	double
-	angleAt
+	thetaAngleAt
 		( double const & radius
 		) const;
 

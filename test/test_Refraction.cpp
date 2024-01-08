@@ -109,7 +109,7 @@ test0
 	double const radGnd{ radEarth + highGround };
 
 	aply::ray::Refraction const refractDown(radEarth, radSen, angleSensor);
-	double const angleGround{ refractDown.angleAt(radGnd) };
+	double const angleGround{ refractDown.thetaAngleAt(radGnd) };
 
 std::cout << "highSensor: " << fixed(highSensor) << '\n';
 std::cout << "highGround: " << fixed(highGround) << '\n';
@@ -136,7 +136,7 @@ std::cout << "earthAtmosphere: " << earthAtmosphere.infoContents() << '\n';
 
 	aply::ray::Refraction const refractUp
 		(radEarth, radGnd, angleVerticalGround);
-	double const gotVal{ refractUp.angleAt(radSen) };
+	double const gotVal{ refractUp.thetaAngleAt(radSen) };
 	double const expVal{ -angleGround };
 
 	// Test displacement
@@ -146,7 +146,7 @@ std::cout << "earthAtmosphere: " << earthAtmosphere.infoContents() << '\n';
 
 	// Test zero refraction for zero inclination angle
 	aply::ray::Refraction const zeroRefract(radEarth, radSen, 0.0);
-	double const gotZero(zeroRefract.angleAt(radGnd));
+	double const gotZero(zeroRefract.thetaAngleAt(radGnd));
 	double const expZero(0.0);
 
 	if (! nearlyEquals(gotVal, expVal))

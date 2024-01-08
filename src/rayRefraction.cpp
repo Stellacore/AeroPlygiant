@@ -175,7 +175,7 @@ Refraction :: isValid() const
 }
 
 double
-Refraction :: angleAt
+Refraction :: thetaAngleAt
 	( double const & radius
 	) const
 {
@@ -196,7 +196,7 @@ Refraction :: displacementAt
 	( double const & radius
 	) const
 {
-	return radius * angleAt(radius);
+	return radius * thetaAngleAt(radius);
 }
 
 } // [ray]
