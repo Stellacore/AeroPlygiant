@@ -22,38 +22,43 @@
 // SOFTWARE.
 // 
 
+#ifndef aply_examp_DiffEqSystem_INCL_
+#define aply_examp_DiffEqSystem_INCL_
 
 /*! \file
  *
- * \brief Unit test for class math::DiffEqSolve
+ * \brief Example classes for differential equation systems.
  *
  */
 
 
-#include "mathDiffEqSolve.hpp"
 #include "mathDiffEqSystem.hpp"
-
-#include "../example/exampDiffEqSystem.hpp"
-#include "tst.hpp"
 
 #include <Engabra>
 
-#include <sstream>
 
-
-namespace
+namespace aply
 {
-#if 0
-	/*! \brief Example system of equations associated with a falling stone.
+namespace examp
+{
+
+/*! \brief Differential equation related examples
+ *
+ */
+namespace diffeq
+{
+
+	/*! \brief System of equations associated with uniform acceleration.
 	 *
-	 * This system of equations models a object falling in gravity field
-	 * near the surface of the Earth (where gravity field can be 
-	 * considered uniform and constant).
+	 * This system of equations models a uniform acceleration such as
+	 * what is experienced by an object falling in the gravity field
+	 * near the surface of the Earth (where gravity acceleration is
+	 * nominally uniform and constant).
 	 *
 	 * The relevant differential equation is:
 	 * \arg y'' = g   (for constant gravity acceleration value 'g')
 	 */
-	struct RockDrop : public aply::math::DiffEqSystem
+	struct UniformAccel : public aply::math::DiffEqSystem
 	{
 		//! Initial Time: Associated to initial conditions
 		double const theTime0{ engabra::g3::null<double>() };
@@ -65,11 +70,11 @@ namespace
 		double const theSpeed0{ engabra::g3::null<double>() };
 
 		//! Nominal value of local gravity (near 45-deg lattitude 1k' elevation)
-		static constexpr double theAccelG{ -9.805 };
+		static constexpr double theAccel{ -9.805 };
 
 		//! No-op construction
 		explicit
-		RockDrop
+		UniformAccel
 			( double const & t0  //!< Time [sec] at which drop starts
 			, double const & h0  //!< Height [m] at which drop starts
 			, double const & v0  //!< Speed [m/sec] with which drop starts
@@ -82,7 +87,7 @@ namespace
 
 		//! Default (no-op) dtor
 		virtual
-		~RockDrop
+		~UniformAccel
 			() = default;
 
 		/*! \brief Derivative equation system function values.
@@ -115,7 +120,7 @@ namespace
 			double const & y1Func = yFuncs[1];
 
 			double const y0Prime{ y1Func };
-			double const y1Prime{ theAccelG };
+			double const y1Prime{ theAccel };
 			return std::vector<double>
 				{ y0Prime
 				, y1Prime
@@ -145,113 +150,49 @@ namespace
 			return { t0, std::vector<double>{ y0_t0, y1_t0 } };
 		}
 
-	}; // RockDrop
-#endif
-
-
-	//! Check if numeric solution agrees with known analytical solution.
-	void
-	test0
-		( std::ostringstream & oss
-		)
-	{
-		// [DoxyExample00]
-
-		// Construct "rock drop" equations of motion system
-
-		// initial conditions
-		constexpr double dummyOffset{ 100. };
-		constexpr double t0{  0. + dummyOffset };
-		constexpr double h0{ 10. - dummyOffset };
-		constexpr double v0{  0. };
-
-		// end point of integration for this test
-		constexpr double t1{  2. + t0 };
-
-		// specify equation system
-		aply::examp::diffeq::UniformAccel const uniAccelEquations(t0, h0, v0);
-
-		// configure integrator
-		constexpr double stepSize{ .001 };
-		aply::math::DiffEqSolve solver(stepSize);
-
-		// request solution at time t1
-		std::pair<double, std::vector<double> > const soln
-			{ solver.solutionFor(t1, uniAccelEquations)
-			};
-
-		// interpret returned solution data
-		double const & got_t1 = soln.first;  // should match t1
-		std::vector<double> const & yVals = soln.second;
-		double const & gotPos = yVals[0];
-		double const & gotVel = yVals[1];
-
-		// known analytical solution
-		double const expAcc{ uniAccelEquations.expAccelerationAt(t1) };
-		double const expVel{ uniAccelEquations.expVelocityAt(t1) };
-		double const expPos{ uniAccelEquations.expPositionAt(t1) };
-
-
-		// utilize engabra capabilities for compare
-		using engabra::g3::nearlyEquals;
-		using engabra::g3::io::fixed;
-		using engabra::g3::io::enote;
-
-		if (! nearlyEquals(got_t1, t1))
+		//! Expected acceleration at time tau (from known analytical solution)
+		double
+		expAccelerationAt
+			( double const & tau
+			) const
 		{
-			oss << "Failure of RockDrop end time (t1) test\n";
-			oss << "exp_t1: " << fixed(    t1) << '\n';
-			oss << "got_t1: " << fixed(got_t1) << '\n';
+			return theAccel;
 		}
 
-		constexpr double tol{ 1.e-12 };
-		if (! nearlyEquals(gotPos, expPos, tol))
+		//! Expected velocity at time tau (from known analytical solution)
+		double
+		expVelocityAt
+			( double const & tau
+			) const
 		{
-			double const difPos{ gotPos - expPos };
-			oss << "Failure of RockDrop position test\n";
-			oss << "expPos: " << fixed(expPos) << '\n';
-			oss << "gotPos: " << fixed(gotPos) << '\n';
-			oss << "difPos: " << enote(difPos) << '\n';
-		}
-		if (! nearlyEquals(gotVel, expVel, tol))
-		{
-			double const difVel{ gotVel - expVel };
-			oss << "Failure of RockDrop position test\n";
-			oss << "expVel: " << fixed(expVel) << '\n';
-			oss << "gotVel: " << fixed(gotVel) << '\n';
-			oss << "difVel: " << enote(difVel) << '\n';
+			double const dTau{ tau - theTime0 };
+			return
+				( theAccel * dTau
+				+ theSpeed0
+				);
 		}
 
-		if (! oss.str().empty())
+		//! Expected position at time tau (from known analytical solution)
+		double
+		expPositionAt
+			( double const & tau
+			) const
 		{
-			oss << '\n';
-			oss << "     exp @t1: " << fixed(t1) << '\n';
-			oss << "     exp Pos: " << fixed(expPos) << '\n';
-			oss << "     exp Vel: " << fixed(expVel) << '\n';
-			oss << "     exp Acc: " << fixed(expAcc) << '\n';
-			oss << '\n';
-			oss << " soln got_t1: " << fixed(got_t1) << '\n';
-			oss << "soln yVals #: " << yVals.size() << '\n';
-			oss << "soln yVal[0]: " << fixed(yVals[0]) << '\n';
-			oss << "soln yVal[1]: " << fixed(yVals[1]) << '\n';
-			oss << '\n';
+			double const dTau{ tau - theTime0 };
+			return
+				( .5 * theAccel * dTau * dTau
+				+ theSpeed0 * dTau
+				+ theHeight0
+				);
 		}
-		// [DoxyExample00]
-	}
-
-} // [anon]
 
 
-/*! \brief Unit test for math::DiffEqSolve
- */
-int
-main
-	()
-{
-	std::ostringstream oss;
+	}; // UniformAccel
 
-	test0(oss); // Falling object equation of motion test
+} // [diffeq]
 
-	return tst::finish(oss);
-}
+} // [examp]
+} // [aply]
+
+#endif // aply_examp_DiffEqSystem_INCL_
 
