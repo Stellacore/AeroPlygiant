@@ -11,6 +11,7 @@ set(srcFiles
 	envAtmosphereParameters.cpp
 	envAtmosphere.cpp
 	mathDiffEqSolve.cpp
+	rayRefraction.cpp
 
 	)
 
