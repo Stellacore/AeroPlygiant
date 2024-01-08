@@ -34,11 +34,11 @@
 #include "tst.hpp"
 
 #include "envPlanet.hpp"
+#include "rayRefraction.hpp"
 
 #include <Engabra>
 
 /*
-#include "libgeo/Refraction.h"
 
 #include "libbase/Tests.h"
 #include "libgeo/Atmosphere.h"
@@ -104,15 +104,6 @@ test0
 	// Use for outputting errors
 	oss.precision(20);
 
-/*
-	// Null is valid case
-	geo::Refraction const null;
-	bool const nullIsValid(null.isValid());
-
-	// Make sure there's an infoString
-	(void)null.infoString("null");
-*/
-
 // ExampleStart
 	// quantities typical of remote sensing geometry
 	double const angleSensor(engabra::g3::pi / 4.0);
@@ -124,12 +115,13 @@ test0
 	double const radiusSensor(radiusEarth + highSensor);
 	double const radiusGround(radiusEarth + highGround);
 
-/*
-	geo::Refraction refractDown(radiusEarth, radiusSensor, angleSensor);
+	aply::ray::Refraction const refractDown
+		(radiusEarth, radiusSensor, angleSensor);
 	double const angleGround(refractDown.angleAt(radiusGround));
 // ExampleEnd
 
-	geo::Atmosphere earthAtmosphere(geo::AtmosphereParameters::COESA1976());
+	aply::env::Atmosphere earthAtmosphere
+		{ aply::env::Atmosphere::COESA1976() };
 
 	// Compute angle from vertical using a version of Snell's law
 	double const angleVerticalGround(std::asin
@@ -138,7 +130,8 @@ test0
 		* radiusSensor / radiusEarth
 		* std::sin(angleSensor)));
 
-	geo::Refraction refractUp(radiusEarth, radiusGround, angleVerticalGround);
+	aply::ray::Refraction const refractUp
+		(radiusEarth, radiusGround, angleVerticalGround);
 	double const gotVal(refractUp.angleAt(radiusSensor));
 	double const expVal(-angleGround);
 
@@ -149,37 +142,32 @@ test0
 		(radiusGround * angleGround);
 
 	// Test zero refraction for zero inclination angle
-	geo::Refraction zeroRefract(radiusEarth, radiusSensor, 0.0);
+	aply::ray::Refraction const zeroRefract(radiusEarth, radiusSensor, 0.0);
 	double const gotZero(zeroRefract.angleAt(radiusGround));
 	double const expZero(0.0);
 
-	// Conditional checking
-	if (nullIsValid)
-	{
-		oss << "failure: nullIsValid" << std::endl;
-	}
-
-	if (! math::nearlyEquals(gotVal, expVal))
+	using engabra::g3::nearlyEquals;
+	using engabra::g3::io::fixed;
+	if (! nearlyEquals(gotVal, expVal))
 	{
 		oss << "failure of symmetry test:" << std::endl;
-		oss << "got: " << gotVal << std::endl;
-		oss << "exp: " << expVal << std::endl;
+		oss << "got: " << fixed(gotVal, 1u, 9u) << std::endl;
+		oss << "exp: " << fixed(expVal, 1u, 9u) << std::endl;
 	}
 
-	if (! math::nearlyEquals(gotDisplacement, expDisplacement))
+	if (! nearlyEquals(gotDisplacement, expDisplacement))
 	{
 		oss << "failure of displacement test:" << std::endl;
-		oss << "got: " << gotDisplacement << std::endl;
-		oss << "exp: " << expDisplacement << std::endl;
+		oss << "got: " << fixed(gotDisplacement, 1u, 9u) << std::endl;
+		oss << "exp: " << fixed(expDisplacement, 1u, 9u) << std::endl;
 	}
 
-	if (! math::nearlyEquals(gotZero, expZero))
+	if (! nearlyEquals(gotZero, expZero))
 	{
 		oss << "failure of zero inclination angle test:" << std::endl;
-		oss << "got: " << gotZero << std::endl;
-		oss << "exp: " << expZero << std::endl;
+		oss << "got: " << fixed(gotZero, 1u, 9u) << std::endl;
+		oss << "exp: " << fixed(expZero, 1u, 9u) << std::endl;
 	}
-*/
 
 	oss << "\nFailure: restore test0\n";
 

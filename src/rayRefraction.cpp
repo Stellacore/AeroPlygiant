@@ -41,45 +41,50 @@ namespace
 {
 
 	//! \brief Refraction solver system of equations.
-	class RefractionSystem : public aply::math::DiffEqSystem
+	struct RefractionSystem : public aply::math::DiffEqSystem
 	{
-	public:
-
 		aply::ray::Refraction const & theRefraction;
 
+		//! Attach #theRefraction member to consumer class' Refraction instance.
 		RefractionSystem
 			( aply::ray::Refraction const & refraction
 			)
-			: theRefraction(refraction)
+			: theRefraction{ refraction }
 		{
 		}
 
+		/*! \brief TODO
+ 		*
+ 		*/
 		virtual
 		std::vector<double>
 		operator()
 			( std::pair<double, std::vector<double> > const & in
 			) const
 		{
-			std::vector<double> out;
+			std::vector<double> derivatives;
 
 			double const pointRadius(in.first);
 
 			double const & refractiveInvariant
-				(theRefraction.theRefractiveInvariant);
-			double const pointElevation
-				(pointRadius - theRefraction.theRadiusEarth);
+				= theRefraction.theRefractiveInvariant;
+			double const elev // elevation relative to Earth radius
+				{ pointRadius - theRefraction.theRadiusEarth };
 			double const refraction
-				(theRefraction.theAtmosphere.indexOfRefraction(pointElevation));
+				{ theRefraction.theAtmosphere.indexOfRefraction(elev) };
 			using engabra::g3::sq;
 			double const radicand
-				(sq(pointRadius*refraction) - sq(refractiveInvariant));
+				{ sq(pointRadius*refraction) - sq(refractiveInvariant) };
 
-			out.push_back
+			derivatives.push_back
 				(refractiveInvariant / pointRadius / std::sqrt(radicand));
 
-			return out;
+			return derivatives;
 		}
 
+		/*! \brief TODO
+ 		*
+ 		*/
 		virtual
 		std::pair<double, std::vector<double> >
 		initValues
@@ -115,7 +120,8 @@ Refraction :: Refraction
 	, theRefractiveInvariant
 		( startHeight * theAtmosphere.indexOfRefraction(startHeight-radiusEarth)
 		* std::sin(startAngle))
-	, theInitValues(std::make_pair(startHeight, std::vector<double>(1, 0.0)))
+	, theInitValues
+		{ std::make_pair(startHeight, std::vector<double>{ 0. }) }
 {
 }
 
