@@ -51,7 +51,6 @@ namespace env
 \skip ExampleStart
 \until ExampleEnd
 */
-
 struct AtmosphereParameters
 {
 
@@ -67,9 +66,14 @@ struct AtmosphereParameters
 
 	//! Descriptive information about this instance.
 	std::string
+	infoBrief
+		( std::string const & title=std::string()
+		) const;
+
+	//! Descriptive information about this instance.
+	std::string
 	infoString
 		( std::string const & title=std::string()
-		, std::string const & fmt="%20.15g"
 		) const;
 
 }; // AtmosphereParameters

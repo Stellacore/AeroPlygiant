@@ -39,6 +39,32 @@
 
 namespace
 {
+	struct RefractGyer : public aply::math::DiffEqSystem
+	{
+		/*! \brief TODO
+		 *
+		 */
+		virtual
+		std::vector<double>
+		operator()
+			( std::pair<double, std::vector<double> > const & in
+			) const
+		{
+			return {}; // TODO
+		}
+
+		/*! \brief TODO
+		 *
+		 */
+		virtual
+		std::pair<double, std::vector<double> >
+		initValues
+			() const
+		{
+			return {}; // TODO
+		}
+
+	}; // RefractGyer
 
 	//! \brief Refraction solver system of equations.
 	struct RefractionSystem : public aply::math::DiffEqSystem

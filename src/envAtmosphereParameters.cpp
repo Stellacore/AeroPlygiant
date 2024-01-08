@@ -53,9 +53,29 @@ AtmosphereParameters :: isValid() const
 }
 
 std::string
+AtmosphereParameters :: infoBrief
+	( std::string const & title
+	) const
+{
+	std::ostringstream oss;
+	if (! title.empty())
+	{
+		oss << std::setw(12u) << title << ' ';
+	}
+	using engabra::g3::io::fixed;
+	oss
+		<< " H[m],T[K],P[mBar],IoR[-]: "
+		<< " " << fixed(theHigh, 4u, 3u)
+		<< " " << fixed(theTemp, 4u, 2u)
+		<< " " << fixed(thePressure, 4u, 1u)
+		<< " " << fixed(theIoR, 1u, 9u)
+		;
+	return oss.str();
+}
+
+std::string
 AtmosphereParameters :: infoString
 	( std::string const & title
-	, std::string const & // fmt
 	) const
 {
 	std::ostringstream oss;

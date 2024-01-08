@@ -172,7 +172,6 @@ Atmosphere :: indexOfRefraction
 std::string
 Atmosphere :: infoString
 	( std::string const & title
-	, std::string const & // fmt
 	) const
 {
 	std::ostringstream oss;
@@ -184,6 +183,22 @@ Atmosphere :: infoString
 
 	oss << "Size: " << theParms.size();
 
+	return oss.str();
+}
+
+std::string
+Atmosphere :: infoContents
+	( std::string const & title
+	) const
+{
+	std::ostringstream oss;
+	oss << infoString(title);
+	for (std::map<double, AtmosphereParameters>::value_type
+		const & parm : theParms)
+	{
+		oss << '\n';
+		oss << parm.second.infoBrief();
+	}
 	return oss.str();
 }
 

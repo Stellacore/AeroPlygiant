@@ -95,7 +95,12 @@ public: // methods
 	std::string
 	infoString
 		( std::string const & title=std::string()
-		, std::string const & fmt = "%20.15g"
+		) const;
+
+	//! Descriptive information about this instance.
+	std::string
+	infoContents
+		( std::string const & title=std::string()
 		) const;
 
 };
