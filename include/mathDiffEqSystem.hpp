@@ -65,6 +65,18 @@ parameters, x.
 
 System may be solved with aply::math::DiffEqSolve.
 
+\b Example:
+
+Ref: Concrete class aply::examp::diffeq::UniformAccel
+in example/diffeqSystem.hpp which implements a uniform acceleration
+equation system (y''=const).
+
+The ODE system is implemented as:
+\snippet example/diffeqSystem.hpp DoxyExampleDiffEqSystemOp()
+
+The initial value function is implemented as:
+\snippet example/diffeqSystem.hpp DoxyExampleDiffEqSystemInitVal
+
 \b Detail:
 
 Let x be an independent parameter (e.g. often time or distance). Also

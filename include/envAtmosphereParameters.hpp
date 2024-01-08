@@ -47,7 +47,7 @@ namespace env
 /*! \brief Contain raw information about an atmosphere.
 
 \par Example
-\dontinclude testgeo/uAtmosphere.cpp
+\dontinclude testgeo/test_Atmosphere.cpp
 \skip ExampleStart
 \until ExampleEnd
 */

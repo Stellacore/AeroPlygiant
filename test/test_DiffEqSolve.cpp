@@ -123,7 +123,7 @@ namespace
 			oss << "difVel: " << enote(difVel) << '\n';
 		}
 
-//		if (! oss.str().empty())
+		if (! oss.str().empty())
 		{
 			oss << '\n';
 			oss << "     exp @t1: " << fixed(t1) << '\n';

@@ -57,6 +57,11 @@ namespace diffeq
 	 *
 	 * The relevant differential equation is:
 	 * \arg y'' = g   (for constant gravity acceleration value 'g')
+	 *
+	 * The associated simultaneous equation system structure is
+	 * described in functor operator()().
+	 *
+	 * Initial values are described in method initValues().
 	 */
 	struct UniformAccel : public aply::math::DiffEqSystem
 	{
@@ -107,6 +112,7 @@ namespace diffeq
 		 * \arg y0' = y1
 		 * \arg y1' = g + (0.*y1 + 0.*y0)  // example doesn't depend on y0, y1
 		 */
+		// [DoxyExampleDiffEqSystemOp()]
 		virtual
 		std::vector<double>
 		operator()
@@ -126,6 +132,7 @@ namespace diffeq
 				, y1Prime
 				};
 		}
+		// [DoxyExampleDiffEqSystemOp()]
 
 		/*! \brief Init values: evoluation parameter, position, and velocity.
 		 *
@@ -139,6 +146,7 @@ namespace diffeq
 		 *	};
 		 * \endcode
 		 */
+		// [DoxyExampleDiffEqSystemInitVal]
 		virtual
 		std::pair<double, std::vector<double> >
 		initValues
@@ -149,6 +157,7 @@ namespace diffeq
 			double const y1_t0{ theSpeed0 };
 			return { t0, std::vector<double>{ y0_t0, y1_t0 } };
 		}
+		// [DoxyExampleDiffEqSystemInitVal]
 
 		//! Expected acceleration at time tau (from known analytical solution)
 		double
