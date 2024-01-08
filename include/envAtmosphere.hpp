@@ -80,15 +80,11 @@ public: // methods
 		( double const & high
 		) const;
 
-// TODO
-	inline
+	//! Index of refraction evaluated at height
 	double
 	indexOfRefraction
-		( double const & pointElevation
-		) const
-	{
-		return -1.; // TODO
-	}
+		( double const & height
+		) const;
 
 	//! Check if instance is valid
 	bool

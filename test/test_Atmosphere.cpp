@@ -55,15 +55,6 @@ test0
 	// Make sure there's an infoString
 	(void)null.infoString("null");
 
-{ // TODO add indexOfRefraction function (and meaningful test).
-	double const elev{ 0. };
-	double const gotIndex{ null.indexOfRefraction(elev) };
-	if (! (0. < gotIndex))
-	{
-		oss << "Failure: indexOfRefraction() must be positive\n";
-	}
-}
-
 // ExampleStart
 	aply::env::Atmosphere const coesa1976
 		{ aply::env::Atmosphere::COESA1976() };
@@ -72,6 +63,27 @@ test0
 		{ coesa1976.parametersForHeight(8000.0) };
 
 // ExampleEnd
+
+	using engabra::g3::io::fixed;
+
+	constexpr double checkAtElev{ 0. };
+	constexpr double expIndex{ 1.000277 };
+	double const gotIndex{ coesa1976.indexOfRefraction(checkAtElev) };
+	if (! (0. < gotIndex))
+	{
+		oss << "Failure of positive indexOfRefraction() test\n";
+		oss << "gotIndex: " << fixed(gotIndex) << '\n';
+	}
+	else
+	{
+		constexpr double tol{ 0.000001 }; // in the noise for real atm
+		if (! engabra::g3::nearlyEquals(gotIndex, expIndex, tol) )
+		{
+			oss << "Failure of index interpolation test\n";
+			oss << "expIndex: " << fixed(expIndex, 1u, 9u) << '\n';
+			oss << "gotIndex: " << fixed(gotIndex, 1u, 9u) << '\n';
+		}
+	}
 
 	double const expTemperature(236.23);
 
