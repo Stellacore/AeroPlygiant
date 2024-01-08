@@ -31,7 +31,6 @@
 */
 
 
-#include "envAtmosphereParameters.hpp"
 #include "mathDiffEqSolve.hpp"
 #include "rayRefraction.hpp"
 

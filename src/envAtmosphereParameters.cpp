@@ -43,36 +43,6 @@ namespace aply
 namespace env
 {
 
-//
-// constructor
-//
-AtmosphereParameters :: AtmosphereParameters()
-	: theHigh(engabra::g3::null<double>())
-	, theTemp(engabra::g3::null<double>())
-	, thePressure(engabra::g3::null<double>())
-	, theRefIndex(engabra::g3::null<double>())
-{
-}
-
-//
-// constructor
-//
-AtmosphereParameters :: AtmosphereParameters
-	( double const & high
-	, double const & temp
-	, double const & pressure
-	, double const & refIndex
-	)
-	: theHigh(high)
-	, theTemp(temp)
-	, thePressure(pressure)
-	, theRefIndex(refIndex)
-{
-}
-
-//
-// isValid
-//
 bool
 AtmosphereParameters :: isValid() const
 {
@@ -82,9 +52,6 @@ AtmosphereParameters :: isValid() const
 		&& engabra::g3::isValid(theRefIndex);
 }
 
-//
-// infoString
-//
 std::string
 AtmosphereParameters :: infoString
 	( std::string const & title

@@ -69,7 +69,7 @@ test0
 		{ aply::env::Atmosphere::COESA1976() };
 
 	aply::env::AtmosphereParameters const parms
-		(coesa1976.parametersForHeight(8000.0));
+		{ coesa1976.parametersForHeight(8000.0) };
 
 // ExampleEnd
 

@@ -52,28 +52,13 @@ namespace env
 \until ExampleEnd
 */
 
-class AtmosphereParameters
+struct AtmosphereParameters
 {
-
-public: // data
 
 	double theHigh; //!< meters
 	double theTemp; //!< kelvins
 	double thePressure; //!< millibars
 	double theRefIndex; //!< index of refraction
-
-public: // methods
-
-	//! default null oncstructor
-	AtmosphereParameters();
-
-	//! value constructor
-	AtmosphereParameters
-		( double const & high
-		, double const & temp
-		, double const & pressure
-		, double const & refIndex
-		);
 
 	//! Check if instance is valid
 	bool
@@ -87,7 +72,7 @@ public: // methods
 		, std::string const & fmt="%20.15g"
 		) const;
 
-};
+}; // AtmosphereParameters
 
 } // [env]
 } // [aply]

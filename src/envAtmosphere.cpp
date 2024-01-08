@@ -42,34 +42,34 @@ namespace
 
 	using namespace aply::env;
 	AtmosphereParameters const coesa1976[] = {
-		  AtmosphereParameters(-1000.0, 294.66, 1139.30, 304.80e-6)
-		, AtmosphereParameters(    0.0, 288.16, 1013.25, 277.19e-6)
-		, AtmosphereParameters( 1000.0, 281.66,  898.76, 251.55e-6)
-		, AtmosphereParameters( 2000.0, 275.16,  795.01, 227.76e-6)
-		, AtmosphereParameters( 3000.0, 268.67,  701.21, 205.74e-6)
-		, AtmosphereParameters( 4000.0, 262.18,  616.60, 185.40e-6)
-		, AtmosphereParameters( 5000.0, 255.69,  540.48, 166.63e-6)
-		, AtmosphereParameters( 6000.0, 249.20,  472.17, 149.36e-6)
-		, AtmosphereParameters( 7000.0, 242.71,  411.05, 133.51e-6)
-		, AtmosphereParameters( 8000.0, 236.23,  356.51, 118.97e-6)
-		, AtmosphereParameters( 9000.0, 229.74,  308.00, 105.68e-6)
-		, AtmosphereParameters(10000.0, 223.26,  265.00,  93.57e-6)
-		, AtmosphereParameters(11000.0, 216.78,  227.00,  82.55e-6)
-		, AtmosphereParameters(12000.0, 216.66,  193.99,  70.58e-6)
-		, AtmosphereParameters(13000.0, 216.66,  165.79,  60.32e-6)
-		, AtmosphereParameters(14000.0, 216.66,  141.70,  51.56e-6)
-		, AtmosphereParameters(15000.0, 216.66,  121.12,  44.07e-6)
-		, AtmosphereParameters(16000.0, 216.66,  103.53,  37.67e-6)
-		, AtmosphereParameters(17000.0, 216.66,   88.50,  32.20e-6)
-		, AtmosphereParameters(18000.0, 216.66,   75.65,  27.53e-6)
-		, AtmosphereParameters(19000.0, 216.66,   64.67,  23.53e-6)
-		, AtmosphereParameters(20000.0, 216.66,   55.29,  20.12e-6)
-		, AtmosphereParameters(21000.0, 216.66,   47.27,  17.20e-6)
-		, AtmosphereParameters(22000.0, 216.66,   40.42,  14.71e-6)
-		, AtmosphereParameters(23000.0, 216.66,   34.56,  12.58e-6)
-		, AtmosphereParameters(24000.0, 216.66,   29.55,  10.75e-6)
-		, AtmosphereParameters(25000.0, 216.66,   25.27,   9.20e-6)
-		, AtmosphereParameters(26000.0, 219.34,   21.63,   7.77e-6)
+		  AtmosphereParameters{ -1000.0, 294.66, 1139.30, 304.80e-6 }
+		, AtmosphereParameters{     0.0, 288.16, 1013.25, 277.19e-6 }
+		, AtmosphereParameters{  1000.0, 281.66,  898.76, 251.55e-6 }
+		, AtmosphereParameters{  2000.0, 275.16,  795.01, 227.76e-6 }
+		, AtmosphereParameters{  3000.0, 268.67,  701.21, 205.74e-6 }
+		, AtmosphereParameters{  4000.0, 262.18,  616.60, 185.40e-6 }
+		, AtmosphereParameters{  5000.0, 255.69,  540.48, 166.63e-6 }
+		, AtmosphereParameters{  6000.0, 249.20,  472.17, 149.36e-6 }
+		, AtmosphereParameters{  7000.0, 242.71,  411.05, 133.51e-6 }
+		, AtmosphereParameters{  8000.0, 236.23,  356.51, 118.97e-6 }
+		, AtmosphereParameters{  9000.0, 229.74,  308.00, 105.68e-6 }
+		, AtmosphereParameters{ 10000.0, 223.26,  265.00,  93.57e-6 }
+		, AtmosphereParameters{ 11000.0, 216.78,  227.00,  82.55e-6 }
+		, AtmosphereParameters{ 12000.0, 216.66,  193.99,  70.58e-6 }
+		, AtmosphereParameters{ 13000.0, 216.66,  165.79,  60.32e-6 }
+		, AtmosphereParameters{ 14000.0, 216.66,  141.70,  51.56e-6 }
+		, AtmosphereParameters{ 15000.0, 216.66,  121.12,  44.07e-6 }
+		, AtmosphereParameters{ 16000.0, 216.66,  103.53,  37.67e-6 }
+		, AtmosphereParameters{ 17000.0, 216.66,   88.50,  32.20e-6 }
+		, AtmosphereParameters{ 18000.0, 216.66,   75.65,  27.53e-6 }
+		, AtmosphereParameters{ 19000.0, 216.66,   64.67,  23.53e-6 }
+		, AtmosphereParameters{ 20000.0, 216.66,   55.29,  20.12e-6 }
+		, AtmosphereParameters{ 21000.0, 216.66,   47.27,  17.20e-6 }
+		, AtmosphereParameters{ 22000.0, 216.66,   40.42,  14.71e-6 }
+		, AtmosphereParameters{ 23000.0, 216.66,   34.56,  12.58e-6 }
+		, AtmosphereParameters{ 24000.0, 216.66,   29.55,  10.75e-6 }
+		, AtmosphereParameters{ 25000.0, 216.66,   25.27,   9.20e-6 }
+		, AtmosphereParameters{ 26000.0, 219.34,   21.63,   7.77e-6 }
 	};
 
 	size_t const coesaSize(sizeof(coesa1976) / sizeof(coesa1976[0]));
