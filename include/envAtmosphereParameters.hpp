@@ -58,7 +58,7 @@ struct AtmosphereParameters
 	double theHigh; //!< meters
 	double theTemp; //!< kelvins
 	double thePressure; //!< millibars
-	double theRefIndex; //!< index of refraction
+	double theRefractivity; //!< index of refraction minus 1.000000
 
 	//! Check if instance is valid
 	bool

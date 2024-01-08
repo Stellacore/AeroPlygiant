@@ -169,12 +169,13 @@ Atmosphere :: parametersForHeight
 		res.thePressure = Interval
 			(prevIter->second.thePressure, nextIter->second.thePressure)
 			.valueAtFrac(frac);
-//		res.theRefIndex = math::valueAtFractionValid
+//		res.theRefractivity = math::valueAtFractionValid
 //			( frac
 //			, std::make_pair
-//				(prevIter->second.theRefIndex, nextIter->second.theRefIndex));
-		res.theRefIndex = Interval
-			(prevIter->second.theRefIndex, nextIter->second.theRefIndex)
+//				(prevIter->second.theRefractivity
+//				, nextIter->second.theRefractivity));
+		res.theRefractivity = Interval
+			(prevIter->second.theRefractivity, nextIter->second.theRefractivity)
 			.valueAtFrac(frac);
 	}
 

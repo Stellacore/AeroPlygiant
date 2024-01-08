@@ -49,7 +49,7 @@ AtmosphereParameters :: isValid() const
 	return engabra::g3::isValid(theHigh)
 		&& engabra::g3::isValid(theTemp)
 		&& engabra::g3::isValid(thePressure)
-		&& engabra::g3::isValid(theRefIndex);
+		&& engabra::g3::isValid(theRefractivity);
 }
 
 std::string
@@ -69,7 +69,7 @@ AtmosphereParameters :: infoString
 	oss << "Height:   " << fixed(theHigh) << std::endl;
 	oss << "Temp:     " << fixed(theTemp) << std::endl;
 	oss << "Pressure: " << fixed(thePressure) << std::endl;
-	oss << "RefIndex: " << fixed(theRefIndex);
+	oss << "RefIndex: " << fixed(theRefractivity);
 
 	return oss.str();
 }
