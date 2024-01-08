@@ -22,8 +22,8 @@
 // SOFTWARE.
 // 
 
-#ifndef aply_examp_DiffEqSystem_INCL_
-#define aply_examp_DiffEqSystem_INCL_
+#ifndef aply_examp_diffeqSystem_INCL_
+#define aply_examp_diffeqSystem_INCL_
 
 /*! \file
  *
@@ -203,5 +203,5 @@ namespace diffeq
 } // [examp]
 } // [aply]
 
-#endif // aply_examp_DiffEqSystem_INCL_
+#endif // aply_examp_diffeqSystem_INCL_
 
