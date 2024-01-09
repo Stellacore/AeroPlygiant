@@ -102,7 +102,7 @@ test0
 // ExampleStart
 
 	// Eample similar to low oblique remote sensing geometry
-	constexpr double lookAngleSen{ engabra::g3::piQtr }; // 45-deg off Nadir
+	constexpr double fwdLookAngle{ engabra::g3::piQtr }; // 45-deg off Nadir
 	constexpr double highSensor{  9000. }; // [m] - a bit under 30k'
 	constexpr double highGround{     0. }; // [m] - "sea level" for MoP compare
 	constexpr double fwdExpRefAngle{ .000073300 }; // from MoP table
@@ -112,16 +112,16 @@ test0
 	double const radSen{ radEarth + highSensor };
 	double const radGnd{ radEarth + highGround };
 
-	aply::ray::Refraction const refractDown(radEarth, radSen, lookAngleSen);
-	double const ecefThetaAtEnd{ refractDown.thetaAngleAt(radGnd) };
+	aply::ray::Refraction const fwdRefract(radEarth, radSen, fwdLookAngle);
+	double const fwdThetaAtEnd{ fwdRefract.thetaAngleAt(radGnd) };
 
 	// Cartesian locations in local polar frame
 	using namespace engabra::g3;
 	Vector const fwdLocBeg{ radSen * e3 };
 	Vector const fwdLocEnd
-		{ radGnd * std::sin(ecefThetaAtEnd)
+		{ radGnd * std::sin(fwdThetaAtEnd)
 		, 0.
-		, radGnd * std::cos(ecefThetaAtEnd)
+		, radGnd * std::cos(fwdThetaAtEnd)
 		};
 
 	// compute angular deviation at the sensor (in local nadir frame)
@@ -130,7 +130,7 @@ test0
 	double const fwdDist{ magnitude(fwdLocDel) };
 	BiVector const fwdRefAngle3D{ (logG2(downDir * fwdLocDel)).theBiv };
 	double const fwdRefAngle{ magnitude(fwdRefAngle3D) };
-	double const fwdGotRefAngle{ lookAngleSen - fwdRefAngle };
+	double const fwdGotRefAngle{ fwdLookAngle - fwdRefAngle };
 	constexpr double tolAngle{ .000005 }; // about 1 arc second
 	if (! nearlyEquals(fwdGotRefAngle, fwdExpRefAngle, tolAngle))
 	{
@@ -147,6 +147,7 @@ test0
 		oss << "fwdDifRefAngle: " << fixed(fwdDifRefAngle, 1u, 6u) << '\n';
 	}
 
+// ExampleEnd
 
 constexpr bool showDetail{ true };
 if (showDetail)
@@ -158,12 +159,12 @@ if (showDetail)
 	std::cout << "radEarth: " << fixed(radEarth) << '\n';
 	std::cout << "radSen: " << fixed(radSen) << '\n';
 	std::cout << "radGnd: " << fixed(radGnd) << '\n';
-	std::cout << "lookAngleSen: " << fixed(lookAngleSen, 1u, 9u) << '\n';
+	std::cout << "fwdLookAngle: " << fixed(fwdLookAngle, 1u, 9u) << '\n';
 
 	std::cout << '\n';
 	std::cout
-		<< "ecefThetaAtEnd: "
-		<< fixed(ecefThetaAtEnd, 1u, 9u)
+		<< "fwdThetaAtEnd: "
+		<< fixed(fwdThetaAtEnd, 1u, 9u)
 		<< '\n';
 
 	std::cout << '\n';
@@ -182,7 +183,7 @@ if (showDetail)
 
 	double const fwdDifRefAngle{ fwdGotRefAngle - fwdExpRefAngle };
 	std::cout << '\n';
-	std::cout << "  lookAngleSen: " << fixed(lookAngleSen, 1u, 9u) << '\n';
+	std::cout << "  fwdLookAngle: " << fixed(fwdLookAngle, 1u, 9u) << '\n';
 	std::cout << "   fwdRefAngle: " << fixed(fwdRefAngle, 1u, 9u) << '\n';
 	std::cout << "fwdExpRefAngle: " << fixed(fwdExpRefAngle, 1u, 9u) << '\n';
 	std::cout << "fwdGotRefAngle: " << fixed(fwdGotRefAngle, 1u, 9u) << '\n';
@@ -192,7 +193,24 @@ if (showDetail)
 	std::cout << '\n';
 }
 
-// ExampleEnd
+	//
+	// Setup ray tracing in reverse
+	//
+
+/*
+	constexpr double bckLookAngle
+		{ engabra::g3::piQtr }; // 45-deg off Nadir
+
+	aply::ray::Refraction const bckRefract(radSen, radEarth, bckLookAngle);
+	double const fwdThetaAtEnd{ bckRefract.thetaAngleAt(radGnd) };
+*/
+
+	//
+	//
+	//
+	//
+	//
+	//
 
 	aply::env::Atmosphere earthAtmosphere
 		{ aply::env::Atmosphere::COESA1976() };
@@ -202,19 +220,19 @@ if (showDetail)
 	// Compute angle from vertical using a version of Snell's law
 	double const atSenIoR{ earthAtmosphere.indexOfRefraction(highSensor) };
 	double const atGndIoR{ earthAtmosphere.indexOfRefraction(highGround) };
-	double const sinAngAtSen{ std::sin(lookAngleSen) };
+	double const sinAngAtSen{ std::sin(fwdLookAngle) };
 	double const angleVerticalGround
 		{ std::asin((atSenIoR/atGndIoR) * (radSen/radEarth) * sinAngAtSen) };
 
 	aply::ray::Refraction const refractUp
 		(radEarth, radGnd, angleVerticalGround);
 	double const gotVal{ refractUp.thetaAngleAt(radSen) };
-	double const expVal{ -ecefThetaAtEnd };
+	double const expVal{ -fwdThetaAtEnd };
 
 	// Test displacement
 
-	double const gotDisplacement{ refractDown.displacementAt(radGnd) };
-	double const expDisplacement{ radGnd * ecefThetaAtEnd };
+	double const gotDisplacement{ fwdRefract.displacementAt(radGnd) };
+	double const expDisplacement{ radGnd * fwdThetaAtEnd };
 
 	// Test zero refraction for zero inclination angle
 	aply::ray::Refraction const zeroRefract(radEarth, radSen, 0.0);
@@ -223,9 +241,13 @@ if (showDetail)
 
 	if (! nearlyEquals(gotVal, expVal))
 	{
+		double const difVal{ gotVal - expVal };
+		double const relVal{ difVal / expVal };
 		oss << "failure of symmetry test:" << std::endl;
 		oss << "got: " << fixed(gotVal, 1u, 9u) << std::endl;
 		oss << "exp: " << fixed(expVal, 1u, 9u) << std::endl;
+		oss << "dif: " << fixed(difVal, 1u, 18u) << std::endl;
+		oss << "rel: " << fixed(relVal, 1u, 18u) << std::endl;
 	}
 
 	if (! nearlyEquals(gotDisplacement, expDisplacement))
