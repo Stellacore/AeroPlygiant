@@ -74,13 +74,15 @@ that this is the polar angle (from center of Earth) at which the
 ray passes through a distance (from center of Earth) equal to the
 radiusEnd argument to the thetaAngleAt() function.
 
-The deflection angle observed \b from the \b sensor position needs
-to be computed using the initial conditions (location and direction)
-and the obtained end point. E.g.
+The deflection angle observed \b from the \b sensor position is
+available via the angularDeviationFromStart() methods. E.g.
 
-\snippet test/test_Refraction.cpp DoxyExample01
+\snippet test/test_Refraction.cpp DoxyExample00
+
+\b Theory
 
 The refraction model is that presented by Gyer 1996:
+
 \verbatim
 @article{gyer1996:AtmRefraction,
 	title = {Methods for Computing Photogrammetric Refraction Corrections for Vertical and Oblique Photographs},
@@ -93,6 +95,9 @@ The refraction model is that presented by Gyer 1996:
 	urldate = {2023-12-08},
 }
 \endverbatim
+
+In particular, this implemenation provides integration associated
+with Eqn [12].
 
 */
 
