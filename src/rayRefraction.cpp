@@ -205,16 +205,17 @@ Refraction :: Refraction
 	( double const & lookAngle
 	, double const & radiusSensor
 	, double const & radiusEarth
+	, env::Atmosphere const & atmosphere
 	)
 	: theStartLookAngle{ lookAngle }
 	, theStartRadius{ radiusSensor }
-	, theRadiusEarth(radiusEarth)
-	, theAtmosphere(env::Atmosphere::COESA1976())
+	, theRadiusEarth{ radiusEarth }
+	, theAtmosphere{ atmosphere }
 	, theRefractiveInvariant
-		( theStartRadius
+		{ theStartRadius
 		* theAtmosphere.indexOfRefraction(theStartRadius-theRadiusEarth)
 		* std::sin(lookAngle)
-		)
+		}
 	, theInitRadTheta
 		{ std::make_pair(theStartRadius, std::vector<double>{ theTheta0 }) }
 {

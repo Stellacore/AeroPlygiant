@@ -174,6 +174,7 @@ public: // methods
 		( double const & lookAngle
 		, double const & radiusSensor
 		, double const & radiusEarth
+		, env::Atmosphere const & atmosphere = env::Atmosphere::COESA1976()
 		);
 
 	// destructor -- compiler provided
