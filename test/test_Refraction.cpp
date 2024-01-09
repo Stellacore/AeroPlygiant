@@ -137,96 +137,20 @@ test0
 			<< "  From MoP {3rd Ed., pg487}\n";
 		oss << "fwdGotRefDevAngle: " << fixed(fwdGotRefDevAngle, 1u, 6u)
 			<< "  Using COESA1976 Atmosphere model\n";
-		oss << "fwdDifRefDevAngle: " << fixed(fwdDifRefDevAngle, 1u, 6u) << '\n';
+		oss << "fwdDifRefDevAngle: " << fixed(fwdDifRefDevAngle, 1u, 6u)<<'\n';
 	}
 
 // ExampleEnd
-
-constexpr bool showDetail{ true };
-if (showDetail)
-{
-	// Cartesian locations in local polar frame
-	using namespace engabra::g3;
-	Vector const fwdLocBeg{ radSen * e3 };
-	Vector const fwdLocEnd
-		{ radGnd * std::sin(fwdThetaAtEnd)
-		, 0.
-		, radGnd * std::cos(fwdThetaAtEnd)
-		};
-
-	// compute angular deviation at the sensor (in local nadir frame)
-	static Vector const downDir{ -e3 };
-	Vector const fwdLocDel{ fwdLocEnd - fwdLocBeg };
-	double const fwdDist{ magnitude(fwdLocDel) };
-	BiVector const fwdRefDevAngle3D{ (logG2(downDir * fwdLocDel)).theBiv };
-	double const fwdRefDevAngle{ magnitude(fwdRefDevAngle3D) };
-
-	std::cout << '\n';
-	std::cout << "=============\n";
-	std::cout << "highSensor: " << fixed(highSensor) << '\n';
-	std::cout << "highGround: " << fixed(highGround) << '\n';
-	std::cout << "radEarth: " << fixed(radEarth) << '\n';
-	std::cout << "radSen: " << fixed(radSen) << '\n';
-	std::cout << "radGnd: " << fixed(radGnd) << '\n';
-	std::cout << "fwdLookAngle: " << fixed(fwdLookAngle, 1u, 9u) << '\n';
-
-	std::cout << '\n';
-	std::cout
-		<< "fwdThetaAtEnd: "
-		<< fixed(fwdThetaAtEnd, 1u, 9u)
-		<< '\n';
-
-	std::cout << '\n';
-	std::cout << "fwdLocBeg: "
-		<< fixed(fwdLocBeg, 7u, 3u)
-		<< "  mag: " << fixed(magnitude(fwdLocBeg))
-		<< '\n';
-	std::cout << "fwdLocEnd: "
-		<< fixed(fwdLocEnd, 7u, 3u)
-		<< "  mag: " << fixed(magnitude(fwdLocEnd))
-		<< '\n';
-	std::cout << "fwdLocDel: "
-		<< fixed(fwdLocDel, 7u, 3u)
-		<< "  mag: " << fixed(magnitude(fwdLocDel))
-		<< '\n';
-
-	double const fwdDifRefDevAngle{ fwdGotRefDevAngle - fwdExpRefDevAngle };
-std::cout << '\n';
-std::cout << "     fwdLookAngle: " << fixed(fwdLookAngle, 1u, 9u) << '\n';
-std::cout << "   fwdRefDevAngle: " << fixed(fwdRefDevAngle, 1u, 9u) << '\n';
-std::cout << "fwdExpRefDevAngle: " << fixed(fwdExpRefDevAngle, 1u, 9u) << '\n';
-std::cout << "fwdGotRefDevAngle: " << fixed(fwdGotRefDevAngle, 1u, 9u) << '\n';
-std::cout << "fwdDifRefDevAngle: " << fixed(fwdDifRefDevAngle, 1u, 9u) << '\n';
-
-	std::cout << "=============\n";
-	std::cout << '\n';
-}
 
 	//
 	// Setup ray tracing in reverse
 	//
 
-/*
-	constexpr double bckLookAngle
-		{ engabra::g3::piQtr }; // 45-deg off Nadir
-
-	aply::ray::Refraction const bckRefract(radSen, radEarth, bckLookAngle);
-	double const fwdThetaAtEnd{ bckRefract.thetaAngleAt(radGnd) };
-*/
-
-	//
-	//
-	//
-	//
-	//
-	//
+	// Compute angle from vertical using a version of Snell's law
+		// TODO - form where does this formula come?  Gyer's paper? other?
 
 	aply::env::Atmosphere earthAtmosphere
 		{ aply::env::Atmosphere::COESA1976() };
-
-// std::cout << "earthAtmosphere: " << earthAtmosphere.infoContents() << '\n';
-
-	// Compute angle from vertical using a version of Snell's law
 	double const atSenIoR{ earthAtmosphere.indexOfRefraction(highSensor) };
 	double const atGndIoR{ earthAtmosphere.indexOfRefraction(highGround) };
 	double const sinAngAtSen{ std::sin(fwdLookAngle) };
@@ -239,12 +163,6 @@ std::cout << "fwdDifRefDevAngle: " << fixed(fwdDifRefDevAngle, 1u, 9u) << '\n';
 	double const expVal{ -fwdThetaAtEnd };
 
 	// Test displacement
-
-	// Test zero refraction for zero inclination angle
-	aply::ray::Refraction const zeroRefract(0., radSen, radEarth);
-	double const gotZero(zeroRefract.thetaAngleAt(radGnd));
-	double const expZero(0.0);
-
 	if (! nearlyEquals(gotVal, expVal))
 	{
 		double const difVal{ gotVal - expVal };
@@ -256,14 +174,20 @@ std::cout << "fwdDifRefDevAngle: " << fixed(fwdDifRefDevAngle, 1u, 9u) << '\n';
 		oss << "rel: " << fixed(relVal, 1u, 18u) << std::endl;
 	}
 
+	//
+	// Test zero refraction for zero inclination angle
+	//
+
+	aply::ray::Refraction const zeroRefract(0., radSen, radEarth);
+	double const gotZero(zeroRefract.thetaAngleAt(radGnd));
+	double const expZero(0.0);
+
 	if (! nearlyEquals(gotZero, expZero))
 	{
 		oss << "Failure of zero inclination angle test:" << std::endl;
 		oss << "got: " << fixed(gotZero, 1u, 9u) << std::endl;
 		oss << "exp: " << fixed(expZero, 1u, 9u) << std::endl;
 	}
-
-	oss << "\nFailure: restore test0\n";
 
 	return oss.str();
 }
