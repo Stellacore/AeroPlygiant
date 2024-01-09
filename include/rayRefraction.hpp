@@ -101,6 +101,20 @@ class Refraction
 
 private: // data
 
+	//! Cached construction value.
+	double const theStartLookAngle{ engabra::g3::null<double>() };
+
+	//! Cached construction value.
+	double const theStartRadius{ engabra::g3::null<double>() };
+
+	/*! \brief Initial value of Theta_c.
+	 *
+	 * Here this is always zero since ray tracing is performed in a
+	 * local coordinate system (e.g. the polar axis is constructed to 
+	 * pass through the sensor station by definition).
+	 */
+	static constexpr double theTheta0{ 0. };
+
 	/*! \brief Atmospheric model providing IoR as function of \b elevation.
 	 *
 	 * \note The atmospheric model is queried for an IoR value at a
@@ -123,11 +137,11 @@ private: // data
 	/*! \brief Initial conditions - polar coordinate of ray starting location.
 	 *
 	 * Initial value structure includes:
-	 *	- theInitValues.first : radius (should match method input argument)
-	 *	- theInitValues.second: has size of 1u and contains
+	 *	- theInitRadTheta.first : radius (should match method input argument)
+	 *	- theInitRadTheta.second: has size of 1u and contains
 	 *		- [0] : Theta_c angle (ray path polar angle from center of Earth)
 	 */
-	std::pair<double, std::vector<double> > theInitValues{};
+	std::pair<double, std::vector<double> > theInitRadTheta{};
 
 public: // methods
 
@@ -177,11 +191,51 @@ public: // methods
 	 * distance radiusEnd from Earth center.
 	 *
 	 * Ref Gyer 1996 Fig 2.
+	 *
+	 * \note This function performs numerical integration computations
+	 *       and therefore can take a non-trivial amount of time.
 	 */
 	double
 	thetaAngleAt
 		( double const & radiusEnd
 		) const;
+
+	/*! \brief Angular deviation of ray end as observed from start point.
+	 *
+	 * The ray leaves the start point (ref #theInitRadTheta) at a look
+	 * angle (relative to Nadir direction). Call this the "observed look
+	 * angle".
+	 *
+	 * The ray follows a curved path which terminates at the "EndPoint"
+	 * (specified by combination of radiusEnd and thetaAngleAt(radiusEnd)).
+	 *
+	 * From the Start point a geometrically straight line toward the
+	 * EndPoint defines the "ideal look angle".
+	 *
+	 * This function returns "ideal look angle" minus "observed look angle".
+	 */
+	double
+	angularDeviationFromStart
+		( double const radiusEnd
+			//!< Distance from \b center of Earth at which ray terminates.
+		, double const thetaEnd
+			//!< Angle subtended by ray path \b from \b Earth \b center.
+		) const;
+
+	/*! \brief Convienience: angularDeviationFromStart(thetaAngleAt(radiusEnd))
+	 *
+	 * \note: This performs numeric integration and therefore may take
+	 *        non trivial amount of time.
+	 */
+	inline
+	double
+	angularDeviationFromStart
+		( double const radiusEnd
+			//!< Distance from \b center of Earth at which ray terminates.
+		) const
+	{
+		return angularDeviationFromStart(radiusEnd, thetaAngleAt(radiusEnd));
+	}
 
 	//! Descriptive information about this instance.
 	std::string

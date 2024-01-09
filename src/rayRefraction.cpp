@@ -54,7 +54,7 @@ namespace
 		 *		- : constant of integration for Theta_c
 		 *
 		 */
-		std::pair<double, std::vector<double> > const theInitValues
+		std::pair<double, std::vector<double> > const theInitRadTheta
 			{ std::make_pair
 				( engabra::g3::null<double>()
 				, std::vector<double>{}
@@ -72,13 +72,13 @@ namespace
 		explicit
 		RefractGyer
 			( double const & refConst
-			, std::pair<double, std::vector<double> > const & initValues
+			, std::pair<double, std::vector<double> > const & initRadTheta
 			, aply::env::Atmosphere const & atmosphere
 			, double const & radEarth
 			)
 			: DiffEqSystem{}
 			, theRefConst{ refConst }
-			, theInitValues{ initValues }
+			, theInitRadTheta{ initRadTheta }
 			, theAtmosphere{ atmosphere }
 			, theRadEarth{ radEarth }
 		{ }
@@ -132,10 +132,58 @@ namespace
 		initValues
 			() const
 		{
-			return theInitValues;
+			return theInitRadTheta;
 		}
 
 	}; // RefractGyer
+
+	/*! \brief Info on net ray deviation as observed from sensor station.
+ 	 */
+	struct NetRayInfo
+	{
+		//! Distance from \b center of Earth at which ray starts.
+		double const theBegRadius{ engabra::g3::null<double>() };
+
+		//! Viewing angle from Nadir direction (0. is straight down).
+		double const theBegLookAngle{ engabra::g3::null<double>() };
+
+
+		//! \brief Deviation (refracted w.r.t. ideal straight line) at Sensor.
+		double
+		refractionDeviation
+			( double const endRadius
+				//!< Distance from \b center of Earth at which ray terminates.
+			, double const endTheta
+				//!< Angle subtended by ray path \b from \b Earth \b center.
+			) const
+		{
+			using namespace engabra::g3;
+
+			// [DoxyExample01]
+
+			// relative to local Nadir topocentric frame
+			static Vector const upDir{ e3 };
+			static Vector const downDir{ -upDir };
+
+			// Cartesian locations in local polar frame
+			Vector const locBeg{ theBegRadius * upDir };
+			Vector const locEnd
+				{ endRadius * std::sin(endTheta)
+				, 0.
+				, endRadius * std::cos(endTheta)
+				};
+			Vector const locDel{ locEnd - locBeg };
+
+			// compute angular deviation at the sensor (in local Nadir frame)
+			BiVector const deviationAngle3D{ (logG2(downDir * locDel)).theBiv };
+			double const deviationAngle{ magnitude(deviationAngle3D) };
+			double const deviationMag{ theBegLookAngle - deviationAngle };
+
+			// [DoxyExample01]
+			return deviationMag;
+		}
+
+	}; // NetRayInfo
 
 } // [anon]
 
@@ -149,7 +197,7 @@ Refraction :: Refraction()
 	: theRadiusEarth{ engabra::g3::null<double>() }
 	, theAtmosphere()
 	, theRefractiveInvariant(0.0)
-	, theInitValues()
+	, theInitRadTheta()
 {
 }
 
@@ -158,15 +206,17 @@ Refraction :: Refraction
 	, double const & radiusSensor
 	, double const & radiusEarth
 	)
-	: theRadiusEarth(radiusEarth)
+	: theStartLookAngle{ lookAngle }
+	, theStartRadius{ radiusSensor }
+	, theRadiusEarth(radiusEarth)
 	, theAtmosphere(env::Atmosphere::COESA1976())
 	, theRefractiveInvariant
-		( radiusSensor
-		* theAtmosphere.indexOfRefraction(radiusSensor-radiusEarth)
+		( theStartRadius
+		* theAtmosphere.indexOfRefraction(theStartRadius-theRadiusEarth)
 		* std::sin(lookAngle)
 		)
-	, theInitValues
-		{ std::make_pair(radiusSensor, std::vector<double>{ 0. }) }
+	, theInitRadTheta
+		{ std::make_pair(theStartRadius, std::vector<double>{ theTheta0 }) }
 {
 }
 
@@ -189,7 +239,7 @@ Refraction :: thetaAngleAt
 	math::DiffEqSolve solver(stepSize);
 	RefractGyer const refractionSystem
 		( theRefractiveInvariant
-		, theInitValues
+		, theInitRadTheta
 		, theAtmosphere
 		, theRadiusEarth
 		);
@@ -200,6 +250,21 @@ Refraction :: thetaAngleAt
 	std::pair<double, std::vector<double> > const endValues
 		{ solver.solutionFor(radius, refractionSystem) };
 	return endValues.second[0];
+}
+
+double
+Refraction :: angularDeviationFromStart
+	( double const radiusEnd
+	, double const thetaEnd
+	) const
+{
+	double deviation{ engabra::g3::null<double>() };
+	if (isValid())
+	{
+		NetRayInfo const netRayInfo{ theStartRadius, theStartLookAngle };
+		deviation = netRayInfo.refractionDeviation(radiusEnd, thetaEnd);
+	}
+	return deviation;
 }
 
 } // [ray]

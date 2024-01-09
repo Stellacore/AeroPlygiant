@@ -86,54 +86,6 @@ H[km]    refraction[uRad]
 
 namespace todo
 {
-	/*! \brief TODO
- 	 */
-	struct NetRayInfo
-	{
-		//! Distance from \b center of Earth at which ray starts.
-		double const theBegRadius{ engabra::g3::null<double>() };
-
-		//! Viewing angle from Nadir direction (0. is straight down).
-		double const theBegLookAngle{ engabra::g3::null<double>() };
-
-
-		//! \brief Deviation (refracted w.r.t. ideal straight line) at Sensor.
-		double
-		refractionDeviation
-			( double const endRadius
-				//!< Distance from \b center of Earth at which ray terminates.
-			, double const endTheta
-				//!< Angle subtended by ray path \b from \b Earth \b center.
-			) const
-		{
-			using namespace engabra::g3;
-
-			// [DoxyExample01]
-
-			// relative to local Nadir topocentric frame
-			static Vector const upDir{ e3 };
-			static Vector const downDir{ -upDir };
-
-			// Cartesian locations in local polar frame
-			Vector const locBeg{ theBegRadius * upDir };
-			Vector const locEnd
-				{ endRadius * std::sin(endTheta)
-				, 0.
-				, endRadius * std::cos(endTheta)
-				};
-			Vector const locDel{ locEnd - locBeg };
-
-			// compute angular deviation at the sensor (in local Nadir frame)
-			BiVector const deviationAngle3D{ (logG2(downDir * locDel)).theBiv };
-			double const deviationAngle{ magnitude(deviationAngle3D) };
-			double const deviationMag{ theBegLookAngle - deviationAngle };
-
-			// [DoxyExample01]
-			return deviationMag;
-		}
-
-	}; // NetRayInfo
-
 } // [anon]
 
 
@@ -168,11 +120,8 @@ test0
 	aply::ray::Refraction const fwdRefract(fwdLookAngle, radSen, radEarth);
 	double const fwdThetaAtEnd{ fwdRefract.thetaAngleAt(radGnd) };
 
-using namespace engabra::g3;
-
-	todo::NetRayInfo const netRayInfo{ radSen, fwdLookAngle };
 	double const fwdGotRefDevAngle
-		{ netRayInfo.refractionDeviation(radGnd, fwdThetaAtEnd) };
+		{ fwdRefract.angularDeviationFromStart(radGnd, fwdThetaAtEnd) };
 
 	constexpr double tolAngle{ .000005 }; // about 1 arc second
 
