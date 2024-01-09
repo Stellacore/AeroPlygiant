@@ -49,28 +49,85 @@ namespace ray
 
 /*! \brief Determine angle and displacement due to refraction.
 
-			TODO
-
-\par Example
-\dontinclude testgeo/uRefraction.cpp
-\skip ExampleStart
-\until ExampleEnd
-
 This class computes the displacement that results when a ray of light
-(as between the ground and a sensor) travels through the atmosphere.
+travels through the atmosphere.  (as between a sensor and a location on
+the ground).
+
 It uses the COESA1976 atmosphere parameters to obtain the needed
 index of refraction data.
 
-It is possible to determine the angular displacement from the line between
-the sensor and the center of the earth and also to determine the displacement
-along the ground.
+The ray path is expressed in terms of polar coordinates relative to
+origin at the \b center \b of \b Earth. I.e. a point on the ray path has
+location (r,theta) where "r" is a value on the order of 6.37e6 [m] and
+theta=0 is start point of ray.
+
+The ray initial conditions (start location and direction) are provided
+to the constructor. The construction is light weight (e.g. nothing is
+compuated initially).
+
+At any point(s) in the future, the constructed instance may be queried
+to obtain an end point on the ray - by using thetaAngleAt() method.
+
+The thetaAngleAt() method, performs the full numeric integration
+computations (e.g. is the potentially "expensive" operation). Note
+that this is the polar angle (from center of Earth) at which the
+ray passes through a distance (from center of Earth) equal to the
+radiusEnd argument to the thetaAngleAt() function.
+
+The deflection angle observed \b from the \b sensor position needs
+to be computed using the initial conditions (location and direction)
+and the obtained end point. E.g.
+
+\snippet test/test_Refraction.cpp DoxyExample01
+
+The refraction model is that presented by Gyer 1996:
+\verbatim
+@article{gyer1996:AtmRefraction,
+	title = {Methods for Computing Photogrammetric Refraction Corrections for Vertical and Oblique Photographs},
+	author = {Maurice S. Gyer},
+	journal = {Photogrammetric Engineering \& Remote Sensing},
+	year = {1996},
+	month = {March},
+	pages = {301-310},
+	url = {https://www.asprs.org/wp-content/uploads/pers/1996journal/mar/1996_mar_301-310.pdf},
+	urldate = {2023-12-08},
+}
+\endverbatim
+
 */
 
 class Refraction
 {
 
-	//! refraction system
-//	friend class RefractionSystem;
+private: // data
+
+	/*! \brief Atmospheric model providing IoR as function of \b elevation.
+	 *
+	 * \note The atmospheric model is queried for an IoR value at a
+	 * \b elevation value (e.g. at a current height above the radiusEarth
+	 * value provided to Refraction() ctor. The reason for doing this
+	 * is that it keeps the atmospheric model relatively DE-coupled
+	 * from any specific figure of Earth models.
+	 */
+	env::Atmosphere theAtmosphere{};
+
+	//! \brief Defines the "zero-elevation" location relative to ECEF origin.
+	double theRadiusEarth{ engabra::g3::null<double>() };
+
+	/*! \brief The Snell's constant (IoR * sin(angle)) value.
+	 *
+	 * This is the "k" value in Gyer's paper, Eqn[1].
+	 */
+	double theRefractiveInvariant{ engabra::g3::null<double>() };
+
+	/*! \brief Initial conditions - polar coordinate of ray starting location.
+	 *
+	 * Initial value structure includes:
+	 *	- theInitValues.first : radius (should match method input argument)
+	 *	- theInitValues.second: has size of 1u and contains
+	 *		- [0] : Theta_c angle (ray path polar angle from center of Earth)
+	 */
+	std::pair<double, std::vector<double> > theInitValues{};
 
 public: // methods
 
@@ -118,7 +175,9 @@ public: // methods
 	 * direction to sensor location (i.e. the positive e3 axis) and
 	 * the direction (from Earth center) to (end) point of ray a
 	 * distance radiusEnd from Earth center.
-	*/
+	 *
+	 * Ref Gyer 1996 Fig 2.
+	 */
 	double
 	thetaAngleAt
 		( double const & radiusEnd
@@ -131,13 +190,6 @@ public: // methods
 		, std::string const & fmt="%20.15g"
 		) const;
 
-
-// TODO private: // data
-
-	env::Atmosphere theAtmosphere{};
-	double theRadiusEarth{ engabra::g3::null<double>() };
-	double theRefractiveInvariant{ engabra::g3::null<double>() };
-	mutable std::pair<double, std::vector<double> > theInitValues{};
 };
 
 } // ray

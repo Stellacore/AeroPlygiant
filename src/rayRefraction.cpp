@@ -181,7 +181,9 @@ Refraction :: thetaAngleAt
 	( double const & radius
 	) const
 {
-// TODO - what's "best" step size - accuracy/speed
+	// For aerial sensing work, an integration step size of 50 [m] seems
+	// to be a good value. E.g. 10x larger or 10x smaller still produces
+	// the same ray deviation angle from 9k[m] at pi/4 look dir.
 	constexpr double stepSize{ 50. }; // a resonable step size
 
 	math::DiffEqSolve solver(stepSize);
@@ -191,6 +193,10 @@ Refraction :: thetaAngleAt
 		, theAtmosphere
 		, theRadiusEarth
 		);
+	// Return initial value like structure includes:
+	//	- endValues.first : radius (should match method input argument)
+	//	- endValues.second: size of 1u
+	//		- [0] : Theta_c angle (ray path polar angle from center of Earth)
 	std::pair<double, std::vector<double> > const endValues
 		{ solver.solutionFor(radius, refractionSystem) };
 	return endValues.second[0];

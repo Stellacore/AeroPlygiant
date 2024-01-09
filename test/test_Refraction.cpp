@@ -112,6 +112,7 @@ test0
 	double const radSen{ radEarth + highSensor };
 	double const radGnd{ radEarth + highGround };
 
+	// [DoxyExample01]
 	aply::ray::Refraction const fwdRefract(fwdLookAngle, radSen, radEarth);
 	double const fwdThetaAtEnd{ fwdRefract.thetaAngleAt(radGnd) };
 
@@ -132,6 +133,8 @@ test0
 	double const fwdRefAngle{ magnitude(fwdRefAngle3D) };
 	double const fwdGotRefAngle{ fwdLookAngle - fwdRefAngle };
 	constexpr double tolAngle{ .000005 }; // about 1 arc second
+	// [DoxyExample01]
+
 	if (! nearlyEquals(fwdGotRefAngle, fwdExpRefAngle, tolAngle))
 	{
 		double const fwdDifRefAngle{ fwdGotRefAngle - fwdExpRefAngle };
