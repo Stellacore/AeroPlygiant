@@ -84,6 +84,9 @@ H[km]    refraction[uRad]
 
 */
 
+/*! \brief Check integration of Gyer Eqn[12]
+ *
+ */
 std::string
 test0
 	( std::ostringstream & oss
@@ -98,51 +101,120 @@ test0
 
 // ExampleStart
 
-	// quantities typical of remote sensing geometry
-	constexpr double angleSensor{ engabra::g3::piQtr };
-	constexpr double highSensor{  2000. };
-	constexpr double highGround{   500. };
+	// Eample similar to low oblique remote sensing geometry
+	constexpr double lookAngleSen{ engabra::g3::piQtr }; // 45-deg off Nadir
+	constexpr double highSensor{  9000. }; // [m] - a bit under 30k'
+	constexpr double highGround{     0. }; // [m] - "sea level" for MoP compare
+	constexpr double fwdExpRefAngle{ .000073300 }; // from MoP table
 
 	// convert to geocentric values for refraction computation
 	double const radEarth{ aply::env::sEarth.theRadGround };
 	double const radSen{ radEarth + highSensor };
 	double const radGnd{ radEarth + highGround };
 
-	aply::ray::Refraction const refractDown(radEarth, radSen, angleSensor);
-	double const angleGround{ refractDown.thetaAngleAt(radGnd) };
+	aply::ray::Refraction const refractDown(radEarth, radSen, lookAngleSen);
+	double const ecefThetaAtEnd{ refractDown.thetaAngleAt(radGnd) };
 
-std::cout << "highSensor: " << fixed(highSensor) << '\n';
-std::cout << "highGround: " << fixed(highGround) << '\n';
-std::cout << "radEarth: " << fixed(radEarth) << '\n';
-std::cout << "radSen: " << fixed(radSen) << '\n';
-std::cout << "radGnd: " << fixed(radGnd) << '\n';
+	// Cartesian locations in local polar frame
+	using namespace engabra::g3;
+	Vector const fwdLocBeg{ radSen * e3 };
+	Vector const fwdLocEnd
+		{ radGnd * std::sin(ecefThetaAtEnd)
+		, 0.
+		, radGnd * std::cos(ecefThetaAtEnd)
+		};
 
-std::cout << "angleSensor: " << fixed(angleSensor) << '\n';
-std::cout << "angleGround: " << fixed(angleGround) << '\n';
+	// compute angular deviation at the sensor (in local nadir frame)
+	static Vector const downDir{ -e3 };
+	Vector const fwdLocDel{ fwdLocEnd - fwdLocBeg };
+	double const fwdDist{ magnitude(fwdLocDel) };
+	BiVector const fwdRefAngle3D{ (logG2(downDir * fwdLocDel)).theBiv };
+	double const fwdRefAngle{ magnitude(fwdRefAngle3D) };
+	double const fwdGotRefAngle{ lookAngleSen - fwdRefAngle };
+	constexpr double tolAngle{ .000005 }; // about 1 arc second
+	if (! nearlyEquals(fwdGotRefAngle, fwdExpRefAngle, tolAngle))
+	{
+		double const fwdDifRefAngle{ fwdGotRefAngle - fwdExpRefAngle };
+		oss << "Failure of forward refraction angle test\n";
+		oss << "    highSensor: " << fixed(highSensor, 5u, 3u)
+			<< "  [m]\n";
+		oss << "    highGround: " << fixed(highGround, 5u, 3u)
+			<< "  [m]\n";
+		oss << "fwdExpRefAngle: " << fixed(fwdExpRefAngle, 1u, 6u)
+			<< "  From MoP {3rd Ed., pg487}\n";
+		oss << "fwdGotRefAngle: " << fixed(fwdGotRefAngle, 1u, 6u)
+			<< "  Using COESA1976 Atmosphere model\n";
+		oss << "fwdDifRefAngle: " << fixed(fwdDifRefAngle, 1u, 6u) << '\n';
+	}
+
+
+constexpr bool showDetail{ true };
+if (showDetail)
+{
+	std::cout << '\n';
+	std::cout << "=============\n";
+	std::cout << "highSensor: " << fixed(highSensor) << '\n';
+	std::cout << "highGround: " << fixed(highGround) << '\n';
+	std::cout << "radEarth: " << fixed(radEarth) << '\n';
+	std::cout << "radSen: " << fixed(radSen) << '\n';
+	std::cout << "radGnd: " << fixed(radGnd) << '\n';
+	std::cout << "lookAngleSen: " << fixed(lookAngleSen, 1u, 9u) << '\n';
+
+	std::cout << '\n';
+	std::cout
+		<< "ecefThetaAtEnd: "
+		<< fixed(ecefThetaAtEnd, 1u, 9u)
+		<< '\n';
+
+	std::cout << '\n';
+	std::cout << "fwdLocBeg: "
+		<< fixed(fwdLocBeg, 7u, 3u)
+		<< "  mag: " << fixed(magnitude(fwdLocBeg))
+		<< '\n';
+	std::cout << "fwdLocEnd: "
+		<< fixed(fwdLocEnd, 7u, 3u)
+		<< "  mag: " << fixed(magnitude(fwdLocEnd))
+		<< '\n';
+	std::cout << "fwdLocDel: "
+		<< fixed(fwdLocDel, 7u, 3u)
+		<< "  mag: " << fixed(magnitude(fwdLocDel))
+		<< '\n';
+
+	double const fwdDifRefAngle{ fwdGotRefAngle - fwdExpRefAngle };
+	std::cout << '\n';
+	std::cout << "  lookAngleSen: " << fixed(lookAngleSen, 1u, 9u) << '\n';
+	std::cout << "   fwdRefAngle: " << fixed(fwdRefAngle, 1u, 9u) << '\n';
+	std::cout << "fwdExpRefAngle: " << fixed(fwdExpRefAngle, 1u, 9u) << '\n';
+	std::cout << "fwdGotRefAngle: " << fixed(fwdGotRefAngle, 1u, 9u) << '\n';
+	std::cout << "fwdDifRefAngle: " << fixed(fwdDifRefAngle, 1u, 9u) << '\n';
+
+	std::cout << "=============\n";
+	std::cout << '\n';
+}
 
 // ExampleEnd
 
 	aply::env::Atmosphere earthAtmosphere
 		{ aply::env::Atmosphere::COESA1976() };
 
-std::cout << "earthAtmosphere: " << earthAtmosphere.infoContents() << '\n';
+// std::cout << "earthAtmosphere: " << earthAtmosphere.infoContents() << '\n';
 
 	// Compute angle from vertical using a version of Snell's law
 	double const atSenIoR{ earthAtmosphere.indexOfRefraction(highSensor) };
 	double const atGndIoR{ earthAtmosphere.indexOfRefraction(highGround) };
-	double const sinAngAtSen{ std::sin(angleSensor) };
+	double const sinAngAtSen{ std::sin(lookAngleSen) };
 	double const angleVerticalGround
 		{ std::asin((atSenIoR/atGndIoR) * (radSen/radEarth) * sinAngAtSen) };
 
 	aply::ray::Refraction const refractUp
 		(radEarth, radGnd, angleVerticalGround);
 	double const gotVal{ refractUp.thetaAngleAt(radSen) };
-	double const expVal{ -angleGround };
+	double const expVal{ -ecefThetaAtEnd };
 
 	// Test displacement
 
 	double const gotDisplacement{ refractDown.displacementAt(radGnd) };
-	double const expDisplacement{ radGnd * angleGround };
+	double const expDisplacement{ radGnd * ecefThetaAtEnd };
 
 	// Test zero refraction for zero inclination angle
 	aply::ray::Refraction const zeroRefract(radEarth, radSen, 0.0);

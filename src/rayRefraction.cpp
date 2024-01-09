@@ -179,7 +179,10 @@ Refraction :: thetaAngleAt
 	( double const & radius
 	) const
 {
-	math::DiffEqSolve solver(50.0); // reasonable step
+// TODO - what's "best" step size - accuracy/speed
+	constexpr double stepSize{ 50. }; // a resonable step size
+
+	math::DiffEqSolve solver(stepSize);
 	RefractGyer const refractionSystem
 		( theRefractiveInvariant
 		, theInitValues
