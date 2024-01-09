@@ -84,6 +84,59 @@ H[km]    refraction[uRad]
 
 */
 
+namespace todo
+{
+	/*! \brief TODO
+ 	 */
+	struct NetRayInfo
+	{
+		//! Distance from \b center of Earth at which ray starts.
+		double const theBegRadius{ engabra::g3::null<double>() };
+
+		//! Viewing angle from Nadir direction (0. is straight down).
+		double const theBegLookAngle{ engabra::g3::null<double>() };
+
+
+		//! \brief Deviation (refracted w.r.t. ideal straight line) at Sensor.
+		double
+		refractionDeviation
+			( double const endRadius
+				//!< Distance from \b center of Earth at which ray terminates.
+			, double const endTheta
+				//!< Angle subtended by ray path \b from \b Earth \b center.
+			) const
+		{
+			using namespace engabra::g3;
+
+			// [DoxyExample01]
+
+			// relative to local Nadir topocentric frame
+			static Vector const upDir{ e3 };
+			static Vector const downDir{ -upDir };
+
+			// Cartesian locations in local polar frame
+			Vector const locBeg{ theBegRadius * upDir };
+			Vector const locEnd
+				{ endRadius * std::sin(endTheta)
+				, 0.
+				, endRadius * std::cos(endTheta)
+				};
+			Vector const locDel{ locEnd - locBeg };
+
+			// compute angular deviation at the sensor (in local Nadir frame)
+			BiVector const deviationAngle3D{ (logG2(downDir * locDel)).theBiv };
+			double const deviationAngle{ magnitude(deviationAngle3D) };
+			double const deviationMag{ theBegLookAngle - deviationAngle };
+
+			// [DoxyExample01]
+			return deviationMag;
+		}
+
+	}; // NetRayInfo
+
+} // [anon]
+
+
 /*! \brief Check integration of Gyer Eqn[12]
  *
  */
@@ -105,17 +158,44 @@ test0
 	constexpr double fwdLookAngle{ engabra::g3::piQtr }; // 45-deg off Nadir
 	constexpr double highSensor{  9000. }; // [m] - a bit under 30k'
 	constexpr double highGround{     0. }; // [m] - "sea level" for MoP compare
-	constexpr double fwdExpRefAngle{ .000073300 }; // from MoP table
+	constexpr double fwdExpRefDevAngle{ .000073300 }; // from MoP table
 
 	// convert to geocentric values for refraction computation
 	double const radEarth{ aply::env::sEarth.theRadGround };
 	double const radSen{ radEarth + highSensor };
 	double const radGnd{ radEarth + highGround };
 
-	// [DoxyExample01]
 	aply::ray::Refraction const fwdRefract(fwdLookAngle, radSen, radEarth);
 	double const fwdThetaAtEnd{ fwdRefract.thetaAngleAt(radGnd) };
 
+using namespace engabra::g3;
+
+	todo::NetRayInfo const netRayInfo{ radSen, fwdLookAngle };
+	double const fwdGotRefDevAngle
+		{ netRayInfo.refractionDeviation(radGnd, fwdThetaAtEnd) };
+
+	constexpr double tolAngle{ .000005 }; // about 1 arc second
+
+	if (! nearlyEquals(fwdGotRefDevAngle, fwdExpRefDevAngle, tolAngle))
+	{
+		double const fwdDifRefDevAngle{ fwdGotRefDevAngle - fwdExpRefDevAngle };
+		oss << "Failure of forward refraction angle test\n";
+		oss << "    highSensor: " << fixed(highSensor, 5u, 3u)
+			<< "  [m]\n";
+		oss << "    highGround: " << fixed(highGround, 5u, 3u)
+			<< "  [m]\n";
+		oss << "fwdExpRefDevAngle: " << fixed(fwdExpRefDevAngle, 1u, 6u)
+			<< "  From MoP {3rd Ed., pg487}\n";
+		oss << "fwdGotRefDevAngle: " << fixed(fwdGotRefDevAngle, 1u, 6u)
+			<< "  Using COESA1976 Atmosphere model\n";
+		oss << "fwdDifRefDevAngle: " << fixed(fwdDifRefDevAngle, 1u, 6u) << '\n';
+	}
+
+// ExampleEnd
+
+constexpr bool showDetail{ true };
+if (showDetail)
+{
 	// Cartesian locations in local polar frame
 	using namespace engabra::g3;
 	Vector const fwdLocBeg{ radSen * e3 };
@@ -129,32 +209,9 @@ test0
 	static Vector const downDir{ -e3 };
 	Vector const fwdLocDel{ fwdLocEnd - fwdLocBeg };
 	double const fwdDist{ magnitude(fwdLocDel) };
-	BiVector const fwdRefAngle3D{ (logG2(downDir * fwdLocDel)).theBiv };
-	double const fwdRefAngle{ magnitude(fwdRefAngle3D) };
-	double const fwdGotRefAngle{ fwdLookAngle - fwdRefAngle };
-	constexpr double tolAngle{ .000005 }; // about 1 arc second
-	// [DoxyExample01]
+	BiVector const fwdRefDevAngle3D{ (logG2(downDir * fwdLocDel)).theBiv };
+	double const fwdRefDevAngle{ magnitude(fwdRefDevAngle3D) };
 
-	if (! nearlyEquals(fwdGotRefAngle, fwdExpRefAngle, tolAngle))
-	{
-		double const fwdDifRefAngle{ fwdGotRefAngle - fwdExpRefAngle };
-		oss << "Failure of forward refraction angle test\n";
-		oss << "    highSensor: " << fixed(highSensor, 5u, 3u)
-			<< "  [m]\n";
-		oss << "    highGround: " << fixed(highGround, 5u, 3u)
-			<< "  [m]\n";
-		oss << "fwdExpRefAngle: " << fixed(fwdExpRefAngle, 1u, 6u)
-			<< "  From MoP {3rd Ed., pg487}\n";
-		oss << "fwdGotRefAngle: " << fixed(fwdGotRefAngle, 1u, 6u)
-			<< "  Using COESA1976 Atmosphere model\n";
-		oss << "fwdDifRefAngle: " << fixed(fwdDifRefAngle, 1u, 6u) << '\n';
-	}
-
-// ExampleEnd
-
-constexpr bool showDetail{ true };
-if (showDetail)
-{
 	std::cout << '\n';
 	std::cout << "=============\n";
 	std::cout << "highSensor: " << fixed(highSensor) << '\n';
@@ -184,13 +241,13 @@ if (showDetail)
 		<< "  mag: " << fixed(magnitude(fwdLocDel))
 		<< '\n';
 
-	double const fwdDifRefAngle{ fwdGotRefAngle - fwdExpRefAngle };
-	std::cout << '\n';
-	std::cout << "  fwdLookAngle: " << fixed(fwdLookAngle, 1u, 9u) << '\n';
-	std::cout << "   fwdRefAngle: " << fixed(fwdRefAngle, 1u, 9u) << '\n';
-	std::cout << "fwdExpRefAngle: " << fixed(fwdExpRefAngle, 1u, 9u) << '\n';
-	std::cout << "fwdGotRefAngle: " << fixed(fwdGotRefAngle, 1u, 9u) << '\n';
-	std::cout << "fwdDifRefAngle: " << fixed(fwdDifRefAngle, 1u, 9u) << '\n';
+	double const fwdDifRefDevAngle{ fwdGotRefDevAngle - fwdExpRefDevAngle };
+std::cout << '\n';
+std::cout << "     fwdLookAngle: " << fixed(fwdLookAngle, 1u, 9u) << '\n';
+std::cout << "   fwdRefDevAngle: " << fixed(fwdRefDevAngle, 1u, 9u) << '\n';
+std::cout << "fwdExpRefDevAngle: " << fixed(fwdExpRefDevAngle, 1u, 9u) << '\n';
+std::cout << "fwdGotRefDevAngle: " << fixed(fwdGotRefDevAngle, 1u, 9u) << '\n';
+std::cout << "fwdDifRefDevAngle: " << fixed(fwdDifRefDevAngle, 1u, 9u) << '\n';
 
 	std::cout << "=============\n";
 	std::cout << '\n';
@@ -243,7 +300,7 @@ if (showDetail)
 	{
 		double const difVal{ gotVal - expVal };
 		double const relVal{ difVal / expVal };
-		oss << "failure of symmetry test:" << std::endl;
+		oss << "Failure of symmetry test:" << std::endl;
 		oss << "got: " << fixed(gotVal, 1u, 9u) << std::endl;
 		oss << "exp: " << fixed(expVal, 1u, 9u) << std::endl;
 		oss << "dif: " << fixed(difVal, 1u, 18u) << std::endl;
@@ -252,7 +309,7 @@ if (showDetail)
 
 	if (! nearlyEquals(gotZero, expZero))
 	{
-		oss << "failure of zero inclination angle test:" << std::endl;
+		oss << "Failure of zero inclination angle test:" << std::endl;
 		oss << "got: " << fixed(gotZero, 1u, 9u) << std::endl;
 		oss << "exp: " << fixed(expZero, 1u, 9u) << std::endl;
 	}
