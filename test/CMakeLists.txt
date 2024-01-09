@@ -29,6 +29,11 @@ set(mainProgs
 	test_Cylinder
 	test_Interval
 
+	# Atmospheric refraction code from Stellacore
+	test_DiffEqSolve
+	test_Atmosphere
+	test_Refraction
+
 	)
 
 foreach(mainProg ${mainProgs})
@@ -40,11 +45,13 @@ foreach(mainProg ${mainProgs})
 			${CMAKE_CURRENT_SOURCE_DIR}/../include # public interface
 		PRIVATE
 			${CMAKE_CURRENT_SOURCE_DIR}  # local test code includes
+			${CMAKE_CURRENT_SOURCE_DIR}/..  # project level code (e.g. example)
 		)
 	target_link_libraries(
 		${mainProg}
 		PRIVATE
 			engabra::engabra
+			${aProjLib}  # TODO AeroPlygiantLib::AeroPlygiantLib
 		)
 	add_test(NAME ${mainProg} COMMAND ${mainProg})
 

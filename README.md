@@ -61,7 +61,7 @@ Top level project/software description is in README.md (this file).
 Technical/math modeling notes are contained in the document
 "Refraction.lyx" compatible with the
 [Lyx document processor](https://www.lyx.org/).
-This project document, along with the associated \ref Papers.bib 
+This project document, along with the associated Papers.bib 
 bibliography file provide references to various works on refraction.
 
 [Software reference documentation](#Software-Reference-Documentation)

@@ -33,8 +33,9 @@
 #include "tst.hpp"
 
 #include "env.hpp"
-#include "envModels.hpp"
 #include "ray.hpp"
+
+#include "example/indexModel.hpp"
 
 #include <Engabra>
 
@@ -87,7 +88,7 @@ namespace
 			{ std::make_shared<env::ActiveBox>
 				(zero<Vector>(), Vector{10., 10., 10.})
 			};
-		env::Slab const media
+		aply::env::index::Slab const media
 			( e1   // 'x' direction
 			, 4.   // xBeg
 			, 6.   // xEnd
