@@ -49,7 +49,7 @@
 namespace
 {
 
-/* Refraction reference data used in second test function
+/* \brief Refraction reference data used for external validation.
 
 Source: Manual of Photogrammetry, Forth Edition,
         Editor in Chief Chester C Slama
@@ -83,17 +83,106 @@ H[km]    refraction[uRad]
  10.0         83.1
 
 */
-
-namespace todo
+namespace mop
 {
-} // [anon]
+	using AltDeviation = std::pair<double, double>;
+
+	//!< Ref "namespace mop" for description and source.
+	std::vector<AltDeviation> const altDevs
+	{
+		  {   .5e3 ,   4.9e-6 }
+		, {  1.0e3 ,   9.8e-6 }
+		, {  1.5e3 ,  14.9e-6 }
+		, {  2.0e3 ,  19.9e-6 }
+		, {  2.5e3 ,  25.0e-6 }
+		, {  3.0e3 ,  30.0e-6 }
+		, {  3.5e3 ,  35.0e-6 }
+		, {  4.0e3 ,  39.8e-6 }
+		, {  4.5e3 ,  44.6e-6 }
+		, {  5.0e3 ,  49.2e-6 }
+		, {  5.5e3 ,  53.6e-6 }
+		, {  6.0e3 ,  57.8e-6 }
+		, {  6.5e3 ,  61.9e-6 }
+		, {  7.0e3 ,  65.6e-6 }
+		, {  7.5e3 ,  69.2e-6 }
+		, {  8.0e3 ,  72.5e-6 }
+		, {  8.5e3 ,  75.5e-6 }
+		, {  9.0e3 ,  78.3e-6 }
+		, {  9.5e3 ,  80.8e-6 }
+		, { 10.0e3 ,  83.1e-6 }
+	};
+
+} // [mop]
 
 
-/*! \brief Check integration of Gyer Eqn[12]
+/*! \brief Check trivial cases
  *
  */
 std::string
 test0
+	( std::ostringstream & oss
+	)
+{
+	//
+	// Test zero refraction for zero inclination angle
+	//
+
+	double const radEarth{ aply::env::sEarth.theRadGround };
+	double const radGnd{ radEarth + 1000. };
+	double const radSen{   radGnd + 1000. };
+
+	aply::ray::Refraction const zeroRefract(0., radSen, radEarth);
+	double const gotZero(zeroRefract.thetaAngleAt(radGnd));
+	double const expZero(0.0);
+
+	if (! engabra::g3::nearlyEquals(gotZero, expZero))
+	{
+		using engabra::g3::io::fixed;
+		oss << "Failure of zero inclination angle test:" << std::endl;
+		oss << "got: " << fixed(gotZero, 1u, 9u) << std::endl;
+		oss << "exp: " << fixed(expZero, 1u, 9u) << std::endl;
+	}
+
+	return oss.str();
+}
+
+/*! \brief Test consistency of refraction deviation angles.
+ */
+void
+checkRefDevAngles
+	( std::ostream & oss
+	, double const & gotRefDevAngle
+	, double const & expRefDevAngle
+	, double const & highSensor
+	, double const & highGround
+	, double const & tolAngleAbsolute
+	)
+{
+	// Note 'absolute' version of comparisionf
+	// (since relative errors on this data are enormous (couple percent)).
+	using engabra::g3::nearlyEqualsAbs;
+	if (! nearlyEqualsAbs(gotRefDevAngle, expRefDevAngle, tolAngleAbsolute))
+	{
+		using engabra::g3::io::fixed;
+		double const difRefDevAngle{ gotRefDevAngle - expRefDevAngle };
+		oss << "Failure of forward refraction angle test\n";
+		oss << "    highSensor: " << fixed(highSensor, 5u, 3u)
+			<< "  [m]\n";
+		oss << "    highGround: " << fixed(highGround, 5u, 3u)
+			<< "  [m]\n";
+		oss << "expRefDevAngle: " << fixed(expRefDevAngle, 1u, 6u)
+			<< "  From MoP {3rd Ed., pg487}\n";
+		oss << "gotRefDevAngle: " << fixed(gotRefDevAngle, 1u, 6u)
+			<< "  Using COESA1976 Atmosphere model\n";
+		oss << "difRefDevAngle: " << fixed(difRefDevAngle, 1u, 6u) << '\n';
+	}
+}
+
+
+/*! \brief Check integration of Gyer Eqn[12] for example high altitude use case.
+ */
+std::string
+test1
 	( std::ostringstream & oss
 	)
 {
@@ -104,90 +193,132 @@ test0
 	using engabra::g3::nearlyEquals;
 	using engabra::g3::io::fixed;
 
-// ExampleStart
+	// [DoxyExample00]
 
-	// Eample similar to low oblique remote sensing geometry
+	//
+	// Example similar to mid oblique remote sensing geometry
+	// Matches mop::AltDeviation validation data table described 
+	// in namespace mop above which includes data from Manual
+	// of Photogrammetry (3rd Ed, p 487).
+	//
 	constexpr double fwdLookAngle{ engabra::g3::piQtr }; // 45-deg off Nadir
-	constexpr double highSensor{  9000. }; // [m] - a bit under 30k'
 	constexpr double highGround{     0. }; // [m] - "sea level" for MoP compare
-	constexpr double fwdExpRefDevAngle{ .000073300 }; // from MoP table
+
+	constexpr double highSensor{  9000. }; // [m] - a bit under 30k' (FL300)
+	constexpr double expRefDevAngle{ .000078300 }; // from MoP table
 
 	// convert to geocentric values for refraction computation
 	double const radEarth{ aply::env::sEarth.theRadGround };
 	double const radSen{ radEarth + highSensor };
 	double const radGnd{ radEarth + highGround };
 
-	aply::ray::Refraction const fwdRefract(fwdLookAngle, radSen, radEarth);
-	double const fwdThetaAtEnd{ fwdRefract.thetaAngleAt(radGnd) };
+	aply::ray::Refraction const refract(fwdLookAngle, radSen, radEarth);
+	double const thetaAtEnd{ refract.thetaAngleAt(radGnd) };
 
-	double const fwdGotRefDevAngle
-		{ fwdRefract.angularDeviationFromStart(radGnd, fwdThetaAtEnd) };
+	double const gotRefDevAngle
+		{ refract.angularDeviationFromStart(radGnd, thetaAtEnd) };
 
+	// [DoxyExample00]
+
+	// check consistency
 	constexpr double tolAngle{ .000005 }; // about 1 arc second
+	checkRefDevAngles
+		( oss
+		, gotRefDevAngle
+		, expRefDevAngle
+		, highSensor
+		, highGround
+		, tolAngle
+		);
 
-	if (! nearlyEquals(fwdGotRefDevAngle, fwdExpRefDevAngle, tolAngle))
+	return oss.str();
+}
+
+/*! \brief Check computations against MoP table of data.
+ */
+std::string
+test2
+	( std::ostringstream & oss
+	)
+{
+	std::ostringstream rptResid;
+
+	// if true, display residual to stdout
+	constexpr bool showResiduals{ true };
+
+	constexpr double fwdLookAngle{ engabra::g3::piQtr }; // 45-deg off Nadir
+	constexpr double highGround{     0. }; // [m] - "sea level" for MoP compare
+
+	// track differences for each table entry
+	std::vector<double> resids{};
+	resids.reserve(mop::altDevs.size());
+
+	//! Loop over entire table
+	for (mop::AltDeviation const & altDev : mop::altDevs)
 	{
-		double const fwdDifRefDevAngle{ fwdGotRefDevAngle - fwdExpRefDevAngle };
-		oss << "Failure of forward refraction angle test\n";
-		oss << "    highSensor: " << fixed(highSensor, 5u, 3u)
-			<< "  [m]\n";
-		oss << "    highGround: " << fixed(highGround, 5u, 3u)
-			<< "  [m]\n";
-		oss << "fwdExpRefDevAngle: " << fixed(fwdExpRefDevAngle, 1u, 6u)
-			<< "  From MoP {3rd Ed., pg487}\n";
-		oss << "fwdGotRefDevAngle: " << fixed(fwdGotRefDevAngle, 1u, 6u)
-			<< "  Using COESA1976 Atmosphere model\n";
-		oss << "fwdDifRefDevAngle: " << fixed(fwdDifRefDevAngle, 1u, 6u)<<'\n';
+		double const & highSensor = altDev.first;
+		double const & expRefDevAngle = altDev.second;
+
+		// convert to geocentric values for refraction computation
+		double const radEarth{ aply::env::sEarth.theRadGround };
+		double const radSen{ radEarth + highSensor };
+		double const radGnd{ radEarth + highGround };
+
+		aply::ray::Refraction const refract(fwdLookAngle, radSen, radEarth);
+		double const thetaAtEnd{ refract.thetaAngleAt(radGnd) };
+
+		double const gotRefDevAngle
+			{ refract.angularDeviationFromStart(radGnd, thetaAtEnd) };
+
+		// record difference
+		double const resid{ gotRefDevAngle - expRefDevAngle };
+		resids.emplace_back(resid);
+
+		// check consistency
+		std::ostringstream msg;
+		constexpr double tolAngle{ .000005 }; // about 1 arc second
+		checkRefDevAngles
+			( msg
+			, gotRefDevAngle
+			, expRefDevAngle
+			, highSensor
+			, highGround
+			, tolAngle
+			);
+		if (! msg.str().empty())
+		{
+			// append any error case message to test error stream
+			oss << msg.str() << '\n';
+		}
+
+		// generate residual report for potential later use
+		using engabra::g3::io::fixed;
+		rptResid
+			<< "  Alt[m]: " << fixed(altDev.first, 5u, 0u)
+			<< "  Deviation:MoP[uRad]: " << fixed(1.e6*altDev.second, 3u, 1u)
+			<< "  Residual(got-exp)[uRad]: " << fixed(1.e6*resid, 3u, 1u)
+			<< '\n';
+	}
+
+	// summary information
+	std::ostringstream rpt;
+	rpt << "\n#===Residuals: MoP Validation Results";
+	rpt << "\n#===  [MoP: Manual of Photogrammetry (3rd ed., pg 487)]";
+	rpt << "\n#===  [45-deg look angle (from Nadir)]";
+	rpt << "\n#===  [ground elevation 0.]";
+	rpt << '\n' << rptResid.str();
+	rpt << "#===\n";
+	if (showResiduals)
+	{
+		std::cout << rpt.str() << std::endl;
+	}
+
+	if (! oss.str().empty())
+	{
+		oss << rptResid.str() << std::endl;
 	}
 
 // ExampleEnd
-
-	//
-	// Setup ray tracing in reverse
-	//
-
-	// Compute angle from vertical using a version of Snell's law
-		// TODO - form where does this formula come?  Gyer's paper? other?
-
-	aply::env::Atmosphere earthAtmosphere
-		{ aply::env::Atmosphere::COESA1976() };
-	double const atSenIoR{ earthAtmosphere.indexOfRefraction(highSensor) };
-	double const atGndIoR{ earthAtmosphere.indexOfRefraction(highGround) };
-	double const sinAngAtSen{ std::sin(fwdLookAngle) };
-	double const angleVerticalGround
-		{ std::asin((atSenIoR/atGndIoR) * (radSen/radEarth) * sinAngAtSen) };
-
-	aply::ray::Refraction const refractUp
-		(angleVerticalGround, radGnd, radEarth);
-	double const gotVal{ refractUp.thetaAngleAt(radSen) };
-	double const expVal{ -fwdThetaAtEnd };
-
-	// Test displacement
-	if (! nearlyEquals(gotVal, expVal))
-	{
-		double const difVal{ gotVal - expVal };
-		double const relVal{ difVal / expVal };
-		oss << "Failure of symmetry test:" << std::endl;
-		oss << "got: " << fixed(gotVal, 1u, 9u) << std::endl;
-		oss << "exp: " << fixed(expVal, 1u, 9u) << std::endl;
-		oss << "dif: " << fixed(difVal, 1u, 18u) << std::endl;
-		oss << "rel: " << fixed(relVal, 1u, 18u) << std::endl;
-	}
-
-	//
-	// Test zero refraction for zero inclination angle
-	//
-
-	aply::ray::Refraction const zeroRefract(0., radSen, radEarth);
-	double const gotZero(zeroRefract.thetaAngleAt(radGnd));
-	double const expZero(0.0);
-
-	if (! nearlyEquals(gotZero, expZero))
-	{
-		oss << "Failure of zero inclination angle test:" << std::endl;
-		oss << "got: " << fixed(gotZero, 1u, 9u) << std::endl;
-		oss << "exp: " << fixed(expZero, 1u, 9u) << std::endl;
-	}
 
 	return oss.str();
 }
@@ -203,7 +334,8 @@ main
 	std::ostringstream oss;
 
 	test0(oss);
-//	test1(oss); // TODO add from /tmp/dk.tmp/test1.cpp
+	test1(oss);
+	test2(oss);
 
 	return tst::finish(oss);
 }
