@@ -154,17 +154,17 @@ Refraction :: Refraction()
 }
 
 Refraction :: Refraction
-	( double const & radiusEarth
-	, double const & startHeight
-	, double const & startAngle
+	( double const & lookAngle
+	, double const & radSensor
+	, double const & radiusEarth
 	)
 	: theRadiusEarth(radiusEarth)
 	, theAtmosphere(env::Atmosphere::COESA1976())
 	, theRefractiveInvariant
-		( startHeight * theAtmosphere.indexOfRefraction(startHeight-radiusEarth)
-		* std::sin(startAngle))
+		( radSensor * theAtmosphere.indexOfRefraction(radSensor-radiusEarth)
+		* std::sin(lookAngle))
 	, theInitValues
-		{ std::make_pair(startHeight, std::vector<double>{ 0. }) }
+		{ std::make_pair(radSensor, std::vector<double>{ 0. }) }
 {
 }
 

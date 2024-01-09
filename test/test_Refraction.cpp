@@ -112,7 +112,7 @@ test0
 	double const radSen{ radEarth + highSensor };
 	double const radGnd{ radEarth + highGround };
 
-	aply::ray::Refraction const fwdRefract(radEarth, radSen, fwdLookAngle);
+	aply::ray::Refraction const fwdRefract(fwdLookAngle, radSen, radEarth);
 	double const fwdThetaAtEnd{ fwdRefract.thetaAngleAt(radGnd) };
 
 	// Cartesian locations in local polar frame
@@ -225,7 +225,7 @@ if (showDetail)
 		{ std::asin((atSenIoR/atGndIoR) * (radSen/radEarth) * sinAngAtSen) };
 
 	aply::ray::Refraction const refractUp
-		(radEarth, radGnd, angleVerticalGround);
+		(angleVerticalGround, radGnd, radEarth);
 	double const gotVal{ refractUp.thetaAngleAt(radSen) };
 	double const expVal{ -fwdThetaAtEnd };
 
@@ -235,7 +235,7 @@ if (showDetail)
 	double const expDisplacement{ radGnd * fwdThetaAtEnd };
 
 	// Test zero refraction for zero inclination angle
-	aply::ray::Refraction const zeroRefract(radEarth, radSen, 0.0);
+	aply::ray::Refraction const zeroRefract(0., radSen, radEarth);
 	double const gotZero(zeroRefract.thetaAngleAt(radGnd));
 	double const expZero(0.0);
 

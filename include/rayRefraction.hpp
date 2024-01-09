@@ -78,15 +78,31 @@ public: // methods
 	Refraction
 		();
 
-	/*! Create an instance out of the various parameters needed. startHeight is
+	/*! \brief Construct refraction engine to propagate ray.
+	 *
+	 * Propagation is performed in a local coordinate frame for which:
+	 *
+	 *	- e3 ('z') axis is direction from Earth center directed
+	 *	  vertically upward through sensor station location.
+	 *	- Planar coordinate system containing e3 axis and ray path.
+	 *	- Earth Radius is distance from center of Earth to ground
+	 *	  nadir point.
+	 *		- NOTE: computation is not very sensitive to this values
+	 *		  so that any reasonable approximation is good enough.
+	 *
+	 * Computation
+	 *	- arg Ray path begins by leaving from radSensor (on e3 axis)
+	 *	  above ground nadir location.
+	 *
+	an instance out of the various parameters needed. radSensor is
 	    the radius of the starting position, and startAngle is the angle between
 	    the ray and the vertical.
 	*/
 	explicit
 	Refraction
-		( double const & radiusEarth
-		, double const & startHeight
-		, double const & startAngle
+		( double const & lookAngle
+		, double const & radSensor
+		, double const & radiusEarth
 		);
 
 	// destructor -- compiler provided
