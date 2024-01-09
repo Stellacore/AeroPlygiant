@@ -155,16 +155,18 @@ Refraction :: Refraction()
 
 Refraction :: Refraction
 	( double const & lookAngle
-	, double const & radSensor
+	, double const & radiusSensor
 	, double const & radiusEarth
 	)
 	: theRadiusEarth(radiusEarth)
 	, theAtmosphere(env::Atmosphere::COESA1976())
 	, theRefractiveInvariant
-		( radSensor * theAtmosphere.indexOfRefraction(radSensor-radiusEarth)
-		* std::sin(lookAngle))
+		( radiusSensor
+		* theAtmosphere.indexOfRefraction(radiusSensor-radiusEarth)
+		* std::sin(lookAngle)
+		)
 	, theInitValues
-		{ std::make_pair(radSensor, std::vector<double>{ 0. }) }
+		{ std::make_pair(radiusSensor, std::vector<double>{ 0. }) }
 {
 }
 
@@ -192,14 +194,6 @@ Refraction :: thetaAngleAt
 	std::pair<double, std::vector<double> > const endValues
 		{ solver.solutionFor(radius, refractionSystem) };
 	return endValues.second[0];
-}
-
-double
-Refraction :: displacementAt
-	( double const & radius
-	) const
-{
-	return radius * thetaAngleAt(radius);
 }
 
 } // [ray]

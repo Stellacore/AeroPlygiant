@@ -231,9 +231,6 @@ if (showDetail)
 
 	// Test displacement
 
-	double const gotDisplacement{ fwdRefract.displacementAt(radGnd) };
-	double const expDisplacement{ radGnd * fwdThetaAtEnd };
-
 	// Test zero refraction for zero inclination angle
 	aply::ray::Refraction const zeroRefract(0., radSen, radEarth);
 	double const gotZero(zeroRefract.thetaAngleAt(radGnd));
@@ -248,13 +245,6 @@ if (showDetail)
 		oss << "exp: " << fixed(expVal, 1u, 9u) << std::endl;
 		oss << "dif: " << fixed(difVal, 1u, 18u) << std::endl;
 		oss << "rel: " << fixed(relVal, 1u, 18u) << std::endl;
-	}
-
-	if (! nearlyEquals(gotDisplacement, expDisplacement))
-	{
-		oss << "failure of displacement test:" << std::endl;
-		oss << "got: " << fixed(gotDisplacement, 1u, 9u) << std::endl;
-		oss << "exp: " << fixed(expDisplacement, 1u, 9u) << std::endl;
 	}
 
 	if (! nearlyEquals(gotZero, expZero))

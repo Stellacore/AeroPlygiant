@@ -90,18 +90,18 @@ public: // methods
 	 *		- NOTE: computation is not very sensitive to this values
 	 *		  so that any reasonable approximation is good enough.
 	 *
-	 * Computation
-	 *	- arg Ray path begins by leaving from radSensor (on e3 axis)
-	 *	  above ground nadir location.
-	 *
-	an instance out of the various parameters needed. radSensor is
-	    the radius of the starting position, and startAngle is the angle between
-	    the ray and the vertical.
+	 * Computation includes:
+	 *	- Ray path begins by leaving sensor from radiusSensor distance
+	 *	  from Earth center (on e3 axis). Ref ctor.
+	 *	- Ray path leaves sensor in lookAngle (from Nadir) direction
+	 *	  (e.g. 0 angle is ray heading straight down). Ref ctor.
+	 *	- Ray propagates until distance radiusEnd from Earth center.
+	 *	  Ref thetaAngleAt() and displacementAt().
 	*/
 	explicit
 	Refraction
 		( double const & lookAngle
-		, double const & radSensor
+		, double const & radiusSensor
 		, double const & radiusEarth
 		);
 
@@ -114,20 +114,14 @@ public: // methods
 
 	/*! \brief Determine angle 'Theta_c' deviation.
 	 *
-	 * Theata is the angle subtended from center of earth between
-	 * direction to sensor location and direction to point along ray.
+	 * Theata is the angle subtended from center of Earth between
+	 * direction to sensor location (i.e. the positive e3 axis) and
+	 * the direction (from Earth center) to (end) point of ray a
+	 * distance radiusEnd from Earth center.
 	*/
 	double
 	thetaAngleAt
-		( double const & radius
-		) const;
-
-	/*  Determine the displacement from the vertical at a certain
-		radius.
-	*/
-	double
-	displacementAt
-		( double const & radius
+		( double const & radiusEnd
 		) const;
 
 	//! Descriptive information about this instance.
