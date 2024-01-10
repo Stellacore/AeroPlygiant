@@ -22,8 +22,8 @@
 // SOFTWARE.
 // 
 
-#ifndef aply_env_Air_INCL_
-#define aply_env_Air_INCL_
+#ifndef aply_env_AirInfo_INCL_
+#define aply_env_AirInfo_INCL_
 
 /*! \file
  *
@@ -44,27 +44,6 @@ namespace aply
 {
 namespace env
 {
-	//! Index of Refraction utilities
-	namespace ior
-	{
-		/*! \brief Optical Index of Refraction value via Bomford 1971.
-		 *
-		 * Value is computed using Bomford's expression as it is quoted by
-		 * Gyer (ref 'gyer1996:AtmRefraction' entry in theory/Papers.bib).
-		 */
-		inline
-		double
-		bomford
-			( double const & pressurePa
-			, double const & temperatureK
-			)
-		{
-			double const mBarPres{ pressurePa / 100. };
-			double const refractivity{ .000078831 * (mBarPres / temperatureK) };
-			return (1. + refractivity);
-		}
-	} // [ior]
-
 	//! Private implementation detail utilities.
 	namespace priv
 	{
@@ -104,6 +83,27 @@ namespace env
 		}
 
 	} // [priv]
+
+	//! Index of Refraction utilities
+	namespace ior
+	{
+		/*! \brief Optical Index of Refraction value via Bomford 1971.
+		 *
+		 * Value is computed using Bomford's expression as it is quoted by
+		 * Gyer (ref 'gyer1996:AtmRefraction' entry in theory/Papers.bib).
+		 */
+		inline
+		double
+		bomford
+			( double const & pressurePa
+			, double const & temperatureK
+			)
+		{
+			double const mBarPres{ pressurePa / 100. };
+			double const refractivity{ .000078831 * (mBarPres / temperatureK) };
+			return (1. + refractivity);
+		}
+	} // [ior]
 
 	//! \brief Simple container for air property values.
 	struct AirInfo
@@ -236,7 +236,7 @@ namespace env
 	 * Data (most likely) taken from Gyer's 1996 PE&RS paper on refraction.
 	 * Gyer (ref 'gyer1996:AtmRefraction' entry in theory/Papers.bib).
 	 */
-	std::map<double, AirInfo> const sAirMapCoesa1976
+	std::map<double, AirInfo> const sAirInfoCoesa1976
 		{ //           [m]     [K]   [Pa]
 		  { -1000., AirInfo{ -1000.0, 294.66, 113930. } }
 		, {     0., AirInfo{     0.0, 288.16, 101325. } }
@@ -268,14 +268,6 @@ namespace env
 		, { 26000., AirInfo{ 26000.0, 219.34,   2163. } }
 		};
 
-	//! \brief Collection of AirInfo representing an atomspheric profile
-	struct AirProfile
-	{
-		using Height = double;
-		std::map<Height, AirInfo> theAirValues;
-
-	}; // Air
-
 } // [env]
 } // [aply]
 
@@ -295,5 +287,5 @@ namespace
 } // [anon]
 
 
-#endif // aply_env_Air_INCL_
+#endif // aply_env_AirInfo_INCL_
 

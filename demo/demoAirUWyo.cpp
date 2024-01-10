@@ -29,7 +29,7 @@
  */
 
 
-#include "envAir.hpp"
+#include "envAirInfo.hpp"
 #include "envAtmosphere.hpp"
 
 #include <filesystem>
@@ -143,7 +143,7 @@ main
 
 	// Load COESA1976 model (from hard coded data)
 	std::map<Height, aply::env::AirInfo> const airMapCoesa1976
-		{ aply::env::sAirMapCoesa1976 };
+		{ aply::env::sAirInfoCoesa1976 };
 
 // TODO do something with this
 	// Create COESA standard model

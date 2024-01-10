@@ -25,12 +25,12 @@
 
 /*! \file
  *
- * \brief Unit test for class env::Air
+ * \brief Unit test for class env::AirInfo
  *
  */
 
 
-#include "envAir.hpp"
+#include "envAirInfo.hpp"
 
 #include "tst.hpp"
 
