@@ -231,6 +231,42 @@ namespace env
 
 	}; // AirInfo
 
+	/*! \brief COESA1976 standard atmosphere model.
+	 *
+	 * Data (most likely) taken from Gyer's 1996 PE&RS paper on refraction.
+	 * Gyer (ref 'gyer1996:AtmRefraction' entry in theory/Papers.bib).
+	 */
+	std::map<double, AirInfo> const sAirMapCoesa1976
+		{ //           [m]     [K]   [Pa]
+		  { -1000., AirInfo{ -1000.0, 294.66, 113930. } }
+		, {     0., AirInfo{     0.0, 288.16, 101325. } }
+		, {  1000., AirInfo{  1000.0, 281.66,  89876. } }
+		, {  2000., AirInfo{  2000.0, 275.16,  79501. } }
+		, {  3000., AirInfo{  3000.0, 268.67,  70121. } }
+		, {  4000., AirInfo{  4000.0, 262.18,  61660. } }
+		, {  5000., AirInfo{  5000.0, 255.69,  54048. } }
+		, {  6000., AirInfo{  6000.0, 249.20,  47217. } }
+		, {  7000., AirInfo{  7000.0, 242.71,  41105. } }
+		, {  8000., AirInfo{  8000.0, 236.23,  35651. } }
+		, {  9000., AirInfo{  9000.0, 229.74,  30800. } }
+		, { 10000., AirInfo{ 10000.0, 223.26,  26500. } }
+		, { 11000., AirInfo{ 11000.0, 216.78,  22700. } }
+		, { 12000., AirInfo{ 12000.0, 216.66,  19399. } }
+		, { 13000., AirInfo{ 13000.0, 216.66,  16579. } }
+		, { 14000., AirInfo{ 14000.0, 216.66,  14170. } }
+		, { 15000., AirInfo{ 15000.0, 216.66,  12112. } }
+		, { 16000., AirInfo{ 16000.0, 216.66,  10353. } }
+		, { 17000., AirInfo{ 17000.0, 216.66,   8850. } }
+		, { 18000., AirInfo{ 18000.0, 216.66,   7565. } }
+		, { 19000., AirInfo{ 19000.0, 216.66,   6467. } }
+		, { 20000., AirInfo{ 20000.0, 216.66,   5529. } }
+		, { 21000., AirInfo{ 21000.0, 216.66,   4727. } }
+		, { 22000., AirInfo{ 22000.0, 216.66,   4042. } }
+		, { 23000., AirInfo{ 23000.0, 216.66,   3456. } }
+		, { 24000., AirInfo{ 24000.0, 216.66,   2955. } }
+		, { 25000., AirInfo{ 25000.0, 216.66,   2527. } }
+		, { 26000., AirInfo{ 26000.0, 219.34,   2163. } }
+		};
 
 	//! \brief Collection of AirInfo representing an atomspheric profile
 	struct AirProfile

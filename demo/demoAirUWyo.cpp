@@ -85,7 +85,7 @@ namespace
 	using Height = double;
 	//! \brief Collection of AirInfo values organized by height above ground.
 	std::map<Height, aply::env::AirInfo>
-	airInfoMapFrom
+	airMapUWyoSoundingFrom
 		( std::filesystem::path const & inPath
 		)
 	{
@@ -127,16 +127,21 @@ main
 	}
 
 	// Load UWyo atmospheric model
-	std::map<Height, aply::env::AirInfo> const airMap
-		{ airInfoMapFrom(use.theLoadPath) };
+	std::map<Height, aply::env::AirInfo> const airMapSounding
+		{ airMapUWyoSoundingFrom(use.theLoadPath) };
 
+	// Load COESA1976 model (from hard coded data)
+	std::map<Height, aply::env::AirInfo> const airMapCoesa1976
+		{ aply::env::sAirMapCoesa1976 };
+
+// TODO do something with this
 	// Create COESA standard model
 	aply::env::Atmosphere const coesa1976
 		{ aply::env::Atmosphere::COESA1976() };
 
 	std::cout << "# loaded from: " << use.theLoadPath << '\n';
 	for (std::map<Height, aply::env::AirInfo>::value_type
-		const & pairHighInfo : airMap)
+		const & pairHighInfo : airMapSounding)
 	{
 		aply::env::AirInfo const & info = pairHighInfo.second;
 		double const uwyoIoR{ info.indexOfRefraction() };
