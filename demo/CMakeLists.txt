@@ -14,6 +14,7 @@ set(mainProgs
 
 	demoAeroPlygiant
 
+	demoAirUWyo
 	demoExpAtmosphere
 	demoHotRoad
 	demoThickPlate
@@ -36,6 +37,7 @@ foreach(mainProg ${mainProgs})
 		${mainProg}
 		PRIVATE
 			engabra::engabra
+			${aProjLib}  # TODO AeroPlygiantLib::AeroPlygiantLib
 		)
 
 endforeach(mainProg)

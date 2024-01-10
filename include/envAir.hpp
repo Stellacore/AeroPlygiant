@@ -44,6 +44,27 @@ namespace aply
 {
 namespace env
 {
+	//! Index of Refraction utilities
+	namespace ior
+	{
+		/*! \brief Optical Index of Refraction value via Bomford 1971.
+		 *
+		 * Value is computed using Bomford's expression as it is quoted by
+		 * Gyer (ref 'gyer1996:AtmRefraction' entry in theory/Papers.bib).
+		 */
+		inline
+		double
+		bomford
+			( double const & pressurePa
+			, double const & temperatureK
+			)
+		{
+			double const mBarPres{ pressurePa / 100. };
+			double const refractivity{ .000078831 * (mBarPres / temperatureK) };
+			return (1. + refractivity);
+		}
+	} // [ior]
+
 	//! Private implementation detail utilities.
 	namespace priv
 	{
@@ -136,6 +157,19 @@ namespace env
 			return info;
 		}
 
+		//! True if all data members are valid
+		bool
+		isValid
+			() const
+		{
+			return
+				(  engabra::g3::isValid(theHigh)
+				&& engabra::g3::isValid(theTemp)
+				&& engabra::g3::isValid(thePres)
+				&& engabra::g3::isValid(theRelH)
+				);
+		}
+
 		//! \brief Temperature value in Celsius.
 		inline
 		double
@@ -154,6 +188,24 @@ namespace env
 			return (thePres / 100.);
 		}
 
+		//! Height (elevation) in meters.
+		inline
+		double const &
+		height
+			() const
+		{
+			return theHigh;
+		}
+
+		//! \brief Optical Index of Refraction value via Bomford 1971.
+		inline
+		double
+		indexOfRefraction
+			() const
+		{
+			return ior::bomford(thePres, theTemp);
+		}
+
 		//! \brief Short description of values.
 		inline
 		std::string
@@ -163,10 +215,16 @@ namespace env
 			std::ostringstream oss;
 			using engabra::g3::io::fixed;
 			oss
-				<< " High[m]: " << fixed(theHigh, 5u, 1u)
-				<< " Temp[K]: " << fixed(theTemp, 4u, 1u)
-				<< " Pres[Pa]: " << fixed(thePres, 6u, 0u)
-				<< " RelH[-]: " << fixed(theRelH, 1u, 3u)
+				<< fixed(theHigh, 5u, 1u)
+				<< " h[m] "
+				<< fixed(theTemp, 4u, 1u)
+				<< " T[K] "
+				<< fixed(thePres, 6u, 0u)
+				<< " p[Pa] "
+				<< fixed(theRelH, 1u, 3u)
+				<< " relH[-] "
+				<< fixed(indexOfRefraction(), 1u, 9u)
+				<< " IoR[-] "
 				;
 			return oss.str();
 		}
