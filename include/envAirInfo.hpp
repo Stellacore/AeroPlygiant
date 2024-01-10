@@ -34,7 +34,10 @@
 
 #include <Engabra>
 
+#include <filesystem>
+#include <fstream>
 #include <map>
+#include <regex>
 #include <sstream>
 #include <string>
 #include <vector>
@@ -267,6 +270,49 @@ namespace env
 		, { 25000., AirInfo{ 25000.0, 216.66,   2527. } }
 		, { 26000., AirInfo{ 26000.0, 219.34,   2163. } }
 		};
+
+	//! Alias for std::map key associated with "height above ground"
+	using Height = double;
+
+	//! \brief Load University WY atmospheric sounding data
+	std::map<Height, aply::env::AirInfo>
+	airInfoFromUWyoSounding
+		( std::ifstream & istrm
+		)
+	{
+		std::map<Height, aply::env::AirInfo> mapHighInfo;
+		std::string line;
+		while ((! istrm.bad()) && (! istrm.eof()))
+		{
+			getline(istrm, line);
+			// prequalify data lines by skipping those with text description
+			static std::regex rxNonDigit("[A-Z]");
+			if (std::regex_search(line, rxNonDigit))
+			{
+				continue;
+			}
+			// attempt constructing an AirData instance with potential record
+			using aply::env::AirInfo;
+			AirInfo const info{ AirInfo::fromUWyoRecord(line) };
+			if (info.isValid())
+			{
+				mapHighInfo[info.height()] = info;
+			}
+		}
+		return mapHighInfo;
+	}
+
+	//! \brief Load University WY atmospheric sounding data
+	std::map<Height, aply::env::AirInfo>
+	airInfoFromUWyoSounding
+		( std::filesystem::path const & inPath
+		)
+	{
+		std::ifstream ifs(inPath.native());
+		return airInfoFromUWyoSounding(ifs);
+	}
+
+
 
 } // [env]
 } // [aply]

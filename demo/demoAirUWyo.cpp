@@ -33,9 +33,7 @@
 #include "envAtmosphere.hpp"
 
 #include <filesystem>
-#include <fstream>
 #include <iostream>
-#include <regex>
 
 
 namespace
@@ -82,46 +80,6 @@ namespace
 	}; // Usage
 
 
-	using Height = double;
-
-	//! \brief Load University WY atmospheric sounding data
-	std::map<Height, aply::env::AirInfo>
-	airMapUWyoSoundingFrom
-		( std::ifstream & istrm
-		)
-	{
-		std::map<Height, aply::env::AirInfo> mapHighInfo;
-		std::string line;
-		while ((! istrm.bad()) && (! istrm.eof()))
-		{
-			getline(istrm, line);
-			// prequalify data lines by skipping those with text description
-			static std::regex rxNonDigit("[A-Z]");
-			if (std::regex_search(line, rxNonDigit))
-			{
-				continue;
-			}
-			// attempt constructing an AirData instance with potential record
-			using aply::env::AirInfo;
-			AirInfo const info{ AirInfo::fromUWyoRecord(line) };
-			if (info.isValid())
-			{
-				mapHighInfo[info.height()] = info;
-			}
-		}
-		return mapHighInfo;
-	}
-
-	//! \brief Load University WY atmospheric sounding data
-	std::map<Height, aply::env::AirInfo>
-	airMapUWyoSoundingFrom
-		( std::filesystem::path const & inPath
-		)
-	{
-		std::ifstream ifs(inPath.native());
-		return airMapUWyoSoundingFrom(ifs);
-	}
-
 
 } // [anon]
 
@@ -138,11 +96,11 @@ main
 	}
 
 	// Load UWyo atmospheric model
-	std::map<Height, aply::env::AirInfo> const airMapSounding
-		{ airMapUWyoSoundingFrom(use.theLoadPath) };
+	std::map<aply::env::Height, aply::env::AirInfo> const airMapSounding
+		{ aply::env::airInfoFromUWyoSounding(use.theLoadPath) };
 
 	// Load COESA1976 model (from hard coded data)
-	std::map<Height, aply::env::AirInfo> const airMapCoesa1976
+	std::map<aply::env::Height, aply::env::AirInfo> const airMapCoesa1976
 		{ aply::env::sAirInfoCoesa1976 };
 
 // TODO do something with this
@@ -151,7 +109,7 @@ main
 		{ aply::env::Atmosphere::COESA1976() };
 
 	std::cout << "# loaded from: " << use.theLoadPath << '\n';
-	for (std::map<Height, aply::env::AirInfo>::value_type
+	for (std::map<aply::env::Height, aply::env::AirInfo>::value_type
 		const & pairHighInfo : airMapSounding)
 	{
 		aply::env::AirInfo const & info = pairHighInfo.second;
