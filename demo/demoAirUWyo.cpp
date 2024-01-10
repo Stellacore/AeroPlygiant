@@ -83,18 +83,18 @@ namespace
 
 
 	using Height = double;
-	//! \brief Collection of AirInfo values organized by height above ground.
+
+	//! \brief Load University WY atmospheric sounding data
 	std::map<Height, aply::env::AirInfo>
 	airMapUWyoSoundingFrom
-		( std::filesystem::path const & inPath
+		( std::ifstream & istrm
 		)
 	{
 		std::map<Height, aply::env::AirInfo> mapHighInfo;
-		std::ifstream ifs(inPath.native());
 		std::string line;
-		while ((! ifs.bad()) && (! ifs.eof()))
+		while ((! istrm.bad()) && (! istrm.eof()))
 		{
-			getline(ifs, line);
+			getline(istrm, line);
 			// prequalify data lines by skipping those with text description
 			static std::regex rxNonDigit("[A-Z]");
 			if (std::regex_search(line, rxNonDigit))
@@ -111,6 +111,17 @@ namespace
 		}
 		return mapHighInfo;
 	}
+
+	//! \brief Load University WY atmospheric sounding data
+	std::map<Height, aply::env::AirInfo>
+	airMapUWyoSoundingFrom
+		( std::filesystem::path const & inPath
+		)
+	{
+		std::ifstream ifs(inPath.native());
+		return airMapUWyoSoundingFrom(ifs);
+	}
+
 
 } // [anon]
 
