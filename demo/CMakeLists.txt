@@ -14,7 +14,7 @@ set(mainProgs
 
 	demoAeroPlygiant
 
-	demoAirUWyo
+	demoAirSoundingData
 	demoExpAtmosphere
 	demoHotRoad
 	demoThickPlate
