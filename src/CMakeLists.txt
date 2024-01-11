@@ -8,8 +8,8 @@
 
 set(srcFiles
 
-	envAtmosphereParameters.cpp
-	envAtmosphere.cpp
+	envAirInfo.cpp
+	envAirProfile.cpp
 	mathDiffEqSolve.cpp
 	rayRefraction.cpp
 

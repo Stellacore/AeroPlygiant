@@ -26,16 +26,15 @@
 // SOFTWARE.
 // 
 
-#ifndef aply_env_Atmosphere_INCL_
-#define aply_env_Atmosphere_INCL_
+#ifndef aply_env_AirProfile_INCL_
+#define aply_env_AirProfile_INCL_
 
 /*! \file
-\brief Declarations for aply::env::Atmosphere
+\brief Declarations for aply::env::AirProfile
 */
 
-#include "envAtmosphereParameters.hpp"
 
-#include <string>
+#include "envAirInfo.hpp"
 
 
 namespace aply
@@ -43,70 +42,34 @@ namespace aply
 namespace env
 {
 
-/*! \brief Provide estimates of atmospheric data from given atmospheric data.
-
-This algorithm uses a set of data points and linearly interpolates them.
-
-\par Example
-\dontinclude test/test_Atmosphere.cpp
-\skip ExampleStart
-\until ExampleEnd
+/*! \brief Wrapper to interpolate AirInfo data from (ordered) collections.
 */
 
-class Atmosphere
+struct AirProfile
 {
+	//! Collection of AirInfo properties ordered by height above ground.
+	std::map<Height, AirInfo> theAirInfoMap{};
 
-public: // data
-
-	std::map<double, AtmosphereParameters> theParms;
-
-public: // static
-
-	//! Use COESA1976 model
-	static
-	Atmosphere
-	COESA1976
-		();
-
-public: // methods
-
-	//! default null constructor
-	Atmosphere
-		();
-
-	//! Interpolate all values for given high above sea level
-	AtmosphereParameters
-	parametersForHeight
-		( double const & high
+	//! AirInfo values interpolated at given high above ground (elevation).
+	AirInfo
+	airInfoAtHeight
+		( double const & height
 		) const;
 
-	//! Index of refraction evaluated at height
+	//! Index of refraction corresponding to this height.
 	double
 	indexOfRefraction
 		( double const & height
 		) const;
 
-	//! Check if instance is valid
+	//! True if theAirInfoMap has at least two entries (needed to interpolate).
 	bool
 	isValid
 		() const;
-
-	//! Descriptive information about this instance.
-	std::string
-	infoString
-		( std::string const & title=std::string()
-		) const;
-
-	//! Descriptive information about this instance.
-	std::string
-	infoContents
-		( std::string const & title=std::string()
-		) const;
-
 };
 
 } // [env]
 } // [aply]
 
-#endif //  aply_env_Atmosphere_INCL_
+#endif //  aply_env_AirProfile_INCL_
 

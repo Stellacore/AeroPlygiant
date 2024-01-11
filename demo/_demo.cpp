@@ -1,7 +1,3 @@
-//
-// Original Code:
-//  Copyright (c) 2007 Stellacore Corporation.
-//  Donated to AeroPlygiant Open Source project 2024.
 // 
 // MIT License
 // 
@@ -26,60 +22,20 @@
 // SOFTWARE.
 // 
 
-#ifndef aply_env_AtmosphereParameters_INCL_
-#define aply_env_AtmosphereParameters_INCL_
-
-
 /*! \file
-\brief Declarations for geo::AtmosphereParameters
-*/
+ *
+ * \brief Demonstrate TODO
+ *
+ */
 
+#include <Engabra> // TODO
 
-#include <map>
-#include <string>
+#include <iostream>
 
-
-namespace aply
+int
+main
+	()
 {
-namespace env
-{
-
-/*! \brief Contain raw information about an atmosphere.
-
-\par Example
-\dontinclude testgeo/test_Atmosphere.cpp
-\skip ExampleStart
-\until ExampleEnd
-*/
-struct AtmosphereParameters
-{
-
-	double theHigh; //!< meters
-	double theTemp; //!< kelvins
-	double thePressure; //!< millibars
-	double theIoR; //!< the index of refraction
-
-	//! Check if instance is valid
-	bool
-	isValid
-		() const;
-
-	//! Descriptive information about this instance.
-	std::string
-	infoBrief
-		( std::string const & title=std::string()
-		) const;
-
-	//! Descriptive information about this instance.
-	std::string
-	infoString
-		( std::string const & title=std::string()
-		) const;
-
-}; // AtmosphereParameters
-
-} // [env]
-} // [aply]
-
-#endif // aply_env_AtmosphereParameters_INCL_
+	std::cout << "Hey Demo\n";
+}
 
