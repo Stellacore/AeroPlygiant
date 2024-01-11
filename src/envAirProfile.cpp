@@ -32,10 +32,10 @@
 
 
 #include "envAirProfile.hpp"
-#include "geomInterval.hpp"
 
 #include <Engabra>
 
+#include <iterator>
 #include <sstream>
 
 
@@ -52,87 +52,41 @@ AirProfile :: airInfoAtHeight
 	AirInfo info{};
 	if (isValid())
 	{
+		// get first occurring entry not less than 'height'
 		std::map<Height, AirInfo>::const_iterator const nextIter
 			{ theAirInfoMap.upper_bound(height) };
 
-		if ( (std::cbegin(theAirInfoMap) != nextIter)
-		  && (std::cend(theAirInfoMap) != nextIter)
+		// find the previous entry
+		// Note: If nextIter is the first in collection, then the
+		// desired "previous" one would be off the end which would
+		// represent (extrapolation).
+		if ( (std::cbegin(theAirInfoMap) != nextIter) // next is NOT first
+		  && (std::cend(theAirInfoMap) != nextIter) // next is in collection
 		   )
 		{
-			std::map<Height, AirInfo>::const_iterator prevIter{ nextIter };
-			--prevIter;
+			// get the entry before this for use in extrapolation
+			std::map<Height, AirInfo>::const_iterator
+				const prevIter { std::prev(nextIter, 1) };
 
-// TODO Move interpolation to a function in AirInfo
-
-			AirInfo const & nextAir = nextIter->second;
+			// data values to be interpolated
 			AirInfo const & prevAir = prevIter->second;
+			AirInfo const & nextAir = nextIter->second;
 
-			double const & prevH(prevIter->first);
-			double const & nextH(nextIter->first);
+			// end points defining the interpolation
+			double const & prevHeight = prevIter->first;
+			double const & nextHeight = nextIter->first;
 
-			using geom::Interval;
-			Interval const inverval(prevH, nextH);
-
-			// determine fraction of way into interval
-			double const frac{ Interval(prevH, nextH).fracAtValue(height) };
-
-			if ((! (frac < 0.)) && (frac < 1.))
-			{
-				info.theHigh = height;
-				info.theTemp = Interval
-					(prevAir.theTemp, nextAir.theTemp).valueAtFrac(frac);
-				info.thePres = Interval
-					(prevAir.thePres, nextAir.thePres).valueAtFrac(frac);
-				info.theRelH = Interval
-					(prevAir.theRelH, nextAir.theRelH).valueAtFrac(frac);
-			}
-
+			// interpolate AirInfo values
+			info = AirInfo::airInfoInterpolated
+				( prevAir, nextAir
+				, height
+				, std::make_pair(prevHeight, nextHeight)
+				);
 		}
 	}
 
 	return info;
 }
-/*
-// Atmosphere :: parametersForHeight
-{
-	AtmosphereParameters parms;
-
-	//! find upper bracketing value
-	std::map<double, AtmosphereParameters>::const_iterator
-		const nextIter(theParms.upper_bound(height));
-
-	if (nextIter != theParms.end() && nextIter != theParms.begin())
-	{
-		std::map<double, AtmosphereParameters>::const_iterator
-			prevIter(nextIter);
-		--prevIter;
-
-		double const & prevHeight(prevIter->first);
-		double const & nextHeight(nextIter->first);
-
-		geom::Interval const inverval(prevHeight, nextHeight);
-
-		using geom::Interval;
-		double const frac
-			{ Interval(prevHeight, nextHeight).fracAtValue(height) };
-
-		parms.theHigh = height;
-		parms.theTemp = Interval
-			(prevIter->second.theTemp, nextIter->second.theTemp)
-			.valueAtFrac(frac);
-		parms.thePressure = Interval
-			(prevIter->second.thePressure, nextIter->second.thePressure)
-			.valueAtFrac(frac);
-		parms.theIoR = Interval
-			(prevIter->second.theIoR, nextIter->second.theIoR)
-			.valueAtFrac(frac);
-	}
-
-	return parms;
-}
-*/
-
-
 
 double
 AirProfile :: indexOfRefraction

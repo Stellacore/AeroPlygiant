@@ -31,6 +31,7 @@
 
 
 #include "envAirInfo.hpp"
+#include "geomInterval.hpp"
 
 #include <Engabra>
 
@@ -119,6 +120,39 @@ AirInfo :: fromUWyoRecord
 	}
 	return info;
 }
+
+// static
+AirInfo
+AirInfo :: airInfoInterpolated
+	( AirInfo const & beg
+	, AirInfo const & end
+	, double const & valueAt
+	, std::pair<double, double> const & valueBegEnd
+	)
+{
+	AirInfo info{}; // default is null instance
+
+	// end points of interval
+	double const & begAt = valueBegEnd.first;
+	double const & endAt = valueBegEnd.second;
+	using geom::Interval;
+
+	// determine fraction of way into interval
+	double const frac{ Interval(begAt, endAt).fracAtValue(valueAt) };
+
+	// check for interpolation condition (for extrapolation return null)
+	if ((! (frac < 0.)) && (frac < 1.))
+	{
+		// interpolate values at this fraction of the way
+		info.theHigh = Interval(beg.theHigh, end.theHigh).valueAtFrac(frac);
+		info.theTemp = Interval(beg.theTemp, end.theTemp).valueAtFrac(frac);
+		info.thePres = Interval(beg.thePres, end.thePres).valueAtFrac(frac);
+		info.theRelH = Interval(beg.theRelH, end.theRelH).valueAtFrac(frac);
+	}
+
+	return info;
+}
+
 
 bool
 AirInfo :: isValid

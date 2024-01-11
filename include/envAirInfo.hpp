@@ -38,6 +38,7 @@
 #include <iostream>
 #include <map>
 #include <string>
+#include <utility>
 
 
 namespace aply
@@ -89,6 +90,17 @@ namespace env
 			( std::string const & record
 				//!< One record line of sounding data
 			);
+
+		//! \brief Interpolate parameters between two samples
+		static
+		AirInfo
+		airInfoInterpolated
+			( AirInfo const & beg
+			, AirInfo const & end
+			, double const & valueAt
+			, std::pair<double, double> const & valueBegEnd
+			);
+
 
 		//! True if all data members are valid
 		bool
