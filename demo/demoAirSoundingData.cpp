@@ -31,7 +31,6 @@
 
 #include "envAirInfo.hpp"
 #include "envAirProfile.hpp"
-#include "envAtmosphere.hpp"
 
 #include <filesystem>
 #include <iostream>
