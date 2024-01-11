@@ -51,6 +51,7 @@ namespace env
 	namespace priv
 	{
 		//! Parse string into a collection of double fields.
+		inline
 		std::vector<double>
 		valuesFrom
 			( std::string const & str
@@ -161,6 +162,7 @@ namespace env
 		}
 
 		//! True if all data members are valid
+		inline
 		bool
 		isValid
 			() const
@@ -275,6 +277,7 @@ namespace env
 	using Height = double;
 
 	//! \brief Load University WY atmospheric sounding data
+	inline
 	std::map<Height, aply::env::AirInfo>
 	airInfoFromUWyoSounding
 		( std::ifstream & istrm
@@ -303,6 +306,7 @@ namespace env
 	}
 
 	//! \brief Load University WY atmospheric sounding data
+	inline
 	std::map<Height, aply::env::AirInfo>
 	airInfoFromUWyoSounding
 		( std::filesystem::path const & inPath
@@ -320,6 +324,8 @@ namespace env
 
 namespace
 {
+	//! Put aply::env::AirInfo data to standard stream.
+	inline
 	std::ostream &
 	operator<<
 		( std::ostream & ostrm

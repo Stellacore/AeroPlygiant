@@ -30,6 +30,7 @@
 
 
 #include "envAirInfo.hpp"
+#include "envAirProfile.hpp"
 #include "envAtmosphere.hpp"
 
 #include <filesystem>
@@ -95,6 +96,10 @@ main
 		return 1;
 	}
 
+	//
+	// Load raw AirInfo data (e.g. pressure, temperature)
+	//
+
 	// Load UWyo atmospheric model
 	std::map<aply::env::Height, aply::env::AirInfo> const airMapSounding
 		{ aply::env::airInfoFromUWyoSounding(use.theLoadPath) };
@@ -102,6 +107,32 @@ main
 	// Load COESA1976 model (from hard coded data)
 	std::map<aply::env::Height, aply::env::AirInfo> const airMapCoesa1976
 		{ aply::env::sAirInfoCoesa1976 };
+
+	//
+	// Wrap data in Atmosphere properties interpolation class
+	//
+
+	aply::env::AirProfile const profileSounding{ airMapSounding };
+	aply::env::AirProfile const profileCoesa1976{ airMapCoesa1976 };
+
+	constexpr double maxHeight{ 15000. };
+	constexpr double delHeight{  1000. };
+	for (double height{0.} ; height < maxHeight ; height += delHeight)
+	{
+		double const iorSound{ profileSounding.indexOfRefraction(height) };
+		double const iorCoesa{ profileCoesa1976.indexOfRefraction(height) };
+		double const iorDiff{ iorSound - iorCoesa };
+		using engabra::g3::io::fixed;
+		std::cout
+			<< "  height: " << fixed(height, 6u, 0u)
+			<< "  iorSound: " << fixed(iorSound, 1u, 6u)
+			<< "  iorCoesa: " << fixed(iorCoesa, 1u, 6u)
+			<< "   iorDiff: " << fixed(iorDiff, 1u, 6u)
+			<< '\n';
+	}
+
+return 1;
+
 
 // TODO do something with this
 	// Create COESA standard model
