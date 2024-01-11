@@ -16,7 +16,11 @@ Interesting programs include:
 Other programs include:
 
 * demo/demoExpAtmosphere.cpp
+
 * demo/demoHotRoad.cpp
-* demo/demoIntegrate.cpp
+
+* demo/demoIntegrate.cpp - demonstrate use of numeric integration code
+  in math::DiffEq{System,Solve}.
+
 * demo/demoThickPlate.cpp
 
