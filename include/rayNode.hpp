@@ -45,14 +45,20 @@ namespace ray
 {
 	using namespace engabra::g3;
 
-	//! Data relevant to an individual node
+	//! Data relevant to an individual node along general ray path.
 	struct Node
 	{
+		//! Unitary direction of curve tangent incident into this node.
 		Vector const thePrevTan;
+		//! IoR value before this node (about half way from previous one)
 		double const thePrevNu;
+		//! Location of this node
 		Vector const theCurrLoc;
+		//! IoR value after this node (about half way toward next one)
 		double const theNextNu;
+		//! Unitary direction of curve tangent exiting from this node.
 		Vector const theNextTan;
+		//! Characterization of what optical effect occurs at this node.
 		DirChange const theDirChange;
 
 		//! Descriptive information about this instance

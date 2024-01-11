@@ -44,70 +44,26 @@ add_subdirectory(doc) # project reference documentation
 # === Library
 # ===
 
-message(aProjLib: ${aProjLib})
-# add_library(aProjLib
-# 	)
+message("adding src library aProjLib: ${aProjLib}")
+
+# set(EXPORT_ALIAS_NAME ${aProjLib}::${aProjLib})
+# set(EXPORT_TARGETS_NAME ${aProjLib}Targets)
+# set(EXPORT_FILENAME ${EXPORT_TARGETS_NAME}.cmake)
+# message("### EXPORT_ALIAS_NAME: " ${EXPORT_ALIAS_NAME})
+# message("### EXPORT_TARGETS_NAME: " ${EXPORT_TARGETS_NAME})
+# message("### EXPORT_FILENAME: " ${EXPORT_FILENAME})
+
+add_subdirectory(src)
 
 # ===
-# === Main Programs
+# === Demonstrations
 # ===
 
-set(mainProgs
-
-	hello
-
-	demoExpAtmosphere
-	demoHotRoad
-	demoThickPlate
-
-	)
-
-foreach(mainProg ${mainProgs})
-
-	add_executable (${mainProg} ${mainProg}.cpp)
-	target_link_libraries(
-		${mainProg}
-		PRIVATE
-			engabra::engabra
-		)
-
-endforeach(mainProg)
+add_subdirectory(demo)
 
 # ===
-# === Unit tests
+# === Test programs
 # ===
 
-set(testProgs
-
-	test_test
-
-	# Algorithm checks
-	test_Sylvester
-
-	# env
-	test_IndexVolume
-
-	# ray
-	test_nextTangentDir
-	test_Path
-	test_Propagator
-	test_roundTrip
-
-	# geom
-	test_Cylinder
-	test_Interval
-
-	)
-
-foreach(testProg ${testProgs})
-
-	add_executable(${testProg} ${testProg}.cpp)
-	target_link_libraries(
-		${testProg}
-		PRIVATE
-			engabra::engabra
-		)
-	add_test(NAME ${testProg} COMMAND ${testProg})
-
-endforeach(testProg)
+add_subdirectory(test)
 

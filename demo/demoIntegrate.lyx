@@ -1,0 +1,1040 @@
+#LyX 2.3 created this file. For more info see http://www.lyx.org/
+\lyxformat 544
+\begin_document
+\begin_header
+\save_transient_properties true
+\origin unavailable
+\textclass IEEEtran
+\use_default_options true
+\maintain_unincluded_children false
+\language english
+\language_package default
+\inputencoding auto
+\fontencoding global
+\font_roman "default" "default"
+\font_sans "default" "default"
+\font_typewriter "default" "default"
+\font_math "auto" "auto"
+\font_default_family default
+\use_non_tex_fonts false
+\font_sc false
+\font_osf false
+\font_sf_scale 100 100
+\font_tt_scale 100 100
+\use_microtype false
+\use_dash_ligatures true
+\graphics default
+\default_output_format default
+\output_sync 0
+\bibtex_command default
+\index_command default
+\paperfontsize default
+\spacing single
+\use_hyperref false
+\papersize default
+\use_geometry false
+\use_package amsmath 1
+\use_package amssymb 1
+\use_package cancel 1
+\use_package esint 1
+\use_package mathdots 1
+\use_package mathtools 1
+\use_package mhchem 1
+\use_package stackrel 1
+\use_package stmaryrd 1
+\use_package undertilde 1
+\cite_engine biblatex
+\cite_engine_type authoryear
+\biblio_style plain
+\biblatex_bibstyle authoryear
+\biblatex_citestyle authoryear
+\use_bibtopic false
+\use_indices false
+\paperorientation portrait
+\suppress_date false
+\justification true
+\use_refstyle 1
+\use_minted 0
+\index Index
+\shortcut idx
+\color #008000
+\end_index
+\secnumdepth 3
+\tocdepth 3
+\paragraph_separation indent
+\paragraph_indentation default
+\is_math_indent 0
+\math_numbering_side default
+\quotes_style english
+\dynamic_quotes 0
+\papercolumns 1
+\papersides 1
+\paperpagestyle default
+\tracking_changes false
+\output_changes false
+\html_math_output 0
+\html_css_as_file 0
+\html_be_strict false
+\end_header
+
+\begin_body
+
+\begin_layout Title
+Example Solution to an Euler-Lagrange Differential Equation System
+\end_layout
+
+\begin_layout Author
+AeroPlygiant S/W
+\begin_inset Newline newline
+\end_inset
+
+Stellacore Corporation
+\begin_inset Newline newline
+\end_inset
+
+Dave Knopp
+\end_layout
+
+\begin_layout Abstract
+To provide a mathematical backdrop for formulating and solving differential
+ equation systems that are associated with optical refraction, this short
+ technical note presents a classic solution to the 
+\begin_inset Quotes eld
+\end_inset
+
+equations of motion
+\begin_inset Quotes erd
+\end_inset
+
+ for a simply mechanics problem.
+ In general, the relationships that arises in both cases are expressed as
+ a system of second order, (typically ordinary, often non linear) differential
+ equations.
+ These equations represent an expression of the Euler Lagrange equations
+ associated with the solution to calculus of variation problem.
+ For the simple example here, the differential system is formulated as a
+ single vector equation (corresponding to a system of three individual scalar
+ differential equations).
+ The starting differential equation is ordinary and linear.
+ Notwithstanding the near trivial nature of this example, the solution provides
+ an example of the double integration procedure involved including the process
+ of determining constants of integration that are consistent with enforced
+ initial conditions.
+ As an added intellectual bonus, this seemingly trivial example is associated
+ with a rather non intuitive and likely surprising motion result.
+\end_layout
+
+\begin_layout Section
+Example Case
+\end_layout
+
+\begin_layout Standard
+Consider a rocket in free space that is tumbling end for end at a constant
+ rate of rotation and it fires it's engine for a length of time.
+ Determine what path the rocket follows (while the engine is firing).
+ For present purposes, assume the engine expels negligible mass such that
+ the magnitude of the acceleration remains constant.
+\end_layout
+
+\begin_layout Standard
+The mathematical relationships are expressed in the notation of Geometric
+ Algebra with conventions closely following those introduced by
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset CommandInset citation
+LatexCommand citet
+key "HestenesNFCM"
+literal "false"
+
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Subsection
+Equation of Motion
+\end_layout
+
+\begin_layout Standard
+For this problem, the equations of motion (cf.
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset CommandInset citation
+LatexCommand citet
+key "enwiki:EqnsOfMotion,enwiki:EulerLagrangeEqn"
+literal "false"
+
+\end_inset
+
+)
+\end_layout
+
+\begin_layout Standard
+For the rocket problem, the rocket engine provides an acceleration (assumed
+ through the center of mass) that rotates with time.
+ The direction of this acceleration vector may be represented by a rotation
+ of the 
+\begin_inset Formula $e_{1}$
+\end_inset
+
+ coordinate frame axis as a function of time, 
+\begin_inset Formula $\tau$
+\end_inset
+
+, via the rotation relationship,
+\begin_inset Formula 
+\begin{equation}
+a=\ddot{x}=\frac{\phi}{\mu}e_{1}e^{\omega\Omega\tau}\label{eq:a_specified}
+\end{equation}
+
+\end_inset
+
+Here, 
+\begin_inset Formula $\phi$
+\end_inset
+
+ is the magnitude of the engine force, 
+\begin_inset Formula $\mu$
+\end_inset
+
+ is the (assumed constant) mass of the overall rocket, and 
+\begin_inset Formula $\omega$
+\end_inset
+
+ is the constant (in magnitude and direction) rate of rotation expressed
+ in magnitude/direction form, 
+\begin_inset Formula $\omega\Omega$
+\end_inset
+
+.
+ The plane of rotation is specified by unitary bivector, 
+\begin_inset Formula $\Omega=e_{12}$
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+This equation
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:a_specified"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+ is the Euler Lagrange equation that arises as a necessary condition for
+ a stationary point in the 
+\begin_inset Quotes eld
+\end_inset
+
+action
+\begin_inset Quotes erd
+\end_inset
+
+ integral (exchange between potential and kinetic energy) associated with
+ the rocket system.
+ For the situation here, the variation problem is formulated in terms of
+ minimizing the 
+\begin_inset Quotes eld
+\end_inset
+
+action
+\begin_inset Quotes erd
+\end_inset
+
+ of the mechanical rocket system.
+ For optical refraction, the calculus of variation is applied to Fermat's
+ theorem of minimizing the optical path length (time of transit) associated
+ with a photon in a refracting media.
+ Although different principals give rise to each case, both situations lead
+ to the specification of a conceptually similar system of second order different
+ial equations.
+ Solution of such an example system is where we begin here.
+\end_layout
+
+\begin_layout Subsection
+Integrated State Equations
+\end_layout
+
+\begin_layout Standard
+Integrate equation
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:a_specified"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+ once to get velocity relationship.
+\begin_inset Formula 
+\begin{equation}
+v=\dot{x}=\frac{\phi}{\mu}e_{1}e^{\omega\Omega\tau}\left(-\frac{1}{\omega}\Omega\right)+k_{1}\label{eq:v_integrated}
+\end{equation}
+
+\end_inset
+
+Here, 
+\begin_inset Formula $k_{1}$
+\end_inset
+
+, is a vector constant of integration.
+ The value of 
+\begin_inset Formula $k_{1}$
+\end_inset
+
+ can be determine if the velocity is known for some specific value of the
+ evolution parameter, 
+\begin_inset Formula $\tau$
+\end_inset
+
+, as demonstrated in Section
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "subsec:Initial-Conditions"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+ below.
+\end_layout
+
+\begin_layout Standard
+Next perform a second integration operation on the resulting velocity expression
+ to get the position expression
+\begin_inset Formula 
+\begin{equation}
+p=x=\frac{\phi}{\mu}e_{1}e^{\omega\Omega\tau}\left(-\frac{1}{\omega}\Omega\right)^{2}+k_{1}\tau+k_{2}\label{eq:p_integrated}
+\end{equation}
+
+\end_inset
+
+Similar to the first integration step, vector 
+\begin_inset Formula $k_{2}$
+\end_inset
+
+ is a second constant of integration to be determined by knowledge of initial
+ conditions.
+\end_layout
+
+\begin_layout Subsection
+\begin_inset CommandInset label
+LatexCommand label
+name "subsec:Initial-Conditions"
+
+\end_inset
+
+Initial Conditions
+\end_layout
+
+\begin_layout Standard
+Assume initial conditions, 
+\begin_inset Formula $\dot{x}\left(\tau=0\right)=0$
+\end_inset
+
+ and 
+\begin_inset Formula $x\left(\tau=0\right)=0$
+\end_inset
+
+, and use these to determine the constants of integration, 
+\begin_inset Formula $k_{1}$
+\end_inset
+
+ and 
+\begin_inset Formula $k_{2}$
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+The velocity initial condition requires that
+\begin_inset Formula 
+\[
+\frac{\phi}{\mu}e_{1}\cancelto{1}{e^{\omega\Omega\tau}}\left(-\frac{1}{\omega}\Omega\right)+k_{1}=0
+\]
+
+\end_inset
+
+
+\begin_inset Formula 
+\[
+k_{1}=\frac{\phi}{\mu}e_{1}\left(\frac{1}{\omega}\Omega\right)=\frac{\phi}{\mu\omega}e_{1}\Omega
+\]
+
+\end_inset
+
+Noting that 
+\begin_inset Formula $\Omega=e_{1}e_{2}$
+\end_inset
+
+, then 
+\begin_inset Formula $e_{1}\Omega=e_{1}e_{1}e_{2}=e_{2}$
+\end_inset
+
+, and the velocity constant can be expressed as
+\begin_inset Formula 
+\[
+k_{1}=\frac{\phi}{\mu\omega}e_{2}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The position initial condition requires that
+\begin_inset Formula 
+\[
+0==\frac{\phi}{\mu}e_{1}\cancelto{1}{e^{\omega\Omega\tau}}\left(-\frac{1}{\omega}\Omega\right)^{2}+k_{1}\cancelto{0}{\tau}+k_{2}
+\]
+
+\end_inset
+
+
+\begin_inset Formula 
+\[
+k_{2}=-\frac{\phi}{\mu}e_{1}\left(-\frac{1}{\omega}\Omega\right)^{2}=-\left(\Omega\right)^{2}\frac{\phi}{\mu}e_{1}\frac{1}{\omega}\frac{1}{\omega}
+\]
+
+\end_inset
+
+Noting that 
+\begin_inset Formula $\Omega^{2}=-1$
+\end_inset
+
+,
+\begin_inset Formula 
+\[
+k_{2}=\frac{\phi}{\mu\omega}\frac{1}{\omega}e_{1}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection
+Solution Summary
+\end_layout
+
+\begin_layout Standard
+Note that 
+\begin_inset Formula $-e_{1}\Omega=-e_{2}$
+\end_inset
+
+, and 
+\begin_inset Formula $\Omega^{2}=-1$
+\end_inset
+
+, and that the spinor 
+\begin_inset Formula $\exp\left(\omega\Omega\tau\right)$
+\end_inset
+
+ anti commutes with both 
+\begin_inset Formula $e_{1}$
+\end_inset
+
+ and 
+\begin_inset Formula $e_{2}$
+\end_inset
+
+ (since 
+\begin_inset Formula $\Omega=e_{1}e_{2}$
+\end_inset
+
+).
+ Therefore, the state equations may be expressed as
+\begin_inset Formula 
+\begin{align*}
+a=\ddot{x} & =\frac{\phi}{\mu}e_{1}e^{\omega\Omega\tau}\\
+v=\dot{x} & =\frac{\phi}{\mu}e_{1}e^{\omega\Omega\tau}\left(-\frac{1}{\omega}\Omega\right)+k_{1}\\
+p=x & =\frac{\phi}{\mu}e_{1}e^{\omega\Omega\tau}\left(-\frac{1}{\omega}\Omega\right)^{2}+k_{1}\tau+k_{2}
+\end{align*}
+
+\end_inset
+
+Employing relationships including 
+\begin_inset Formula $\Omega^{2}=-1$
+\end_inset
+
+, along with 
+\begin_inset Formula $e_{1}\Omega=-\Omega e_{1}$
+\end_inset
+
+, and 
+\begin_inset Formula $e_{2}\Omega=-\Omega e_{2}$
+\end_inset
+
+, which imply 
+\begin_inset Formula $e_{j}\exp\left(\omega\Omega\tau\right)=\exp\left(-\omega\Omega\tau\right)e_{j}$
+\end_inset
+
+ for 
+\begin_inset Formula $j=1,2$
+\end_inset
+
+, leads to the particular solution equations that are consistent with the
+ specified initial conditions
+\begin_inset Note Comment
+status collapsed
+
+\begin_layout Plain Layout
+\begin_inset Formula 
+\begin{align*}
+a=\ddot{x} & =\frac{\phi}{\mu}e_{1}e^{\omega\Omega\tau}\\
+v=\dot{x} & =-\frac{1}{\omega}\frac{\phi}{\mu}e_{1}\left(\Omega\right)e^{\omega\Omega\tau}+\frac{\phi}{\mu\omega}e_{2}\\
+p=x & =\frac{1}{\omega}\frac{1}{\omega}\frac{\phi}{\mu}e_{1}\left(-1\right)e^{\omega\Omega\tau}+\frac{\phi}{\mu\omega}e_{2}\tau+\frac{\phi}{\mu\omega}\frac{1}{\omega}e_{1}
+\end{align*}
+
+\end_inset
+
+
+\begin_inset Formula 
+\begin{align*}
+a=\ddot{x} & =\frac{\phi}{\mu}e_{1}e^{\omega\Omega\tau}\\
+v=\dot{x} & =-\frac{\phi}{\mu\omega}e_{2}e^{\omega\Omega\tau}+\frac{\phi}{\mu\omega}e_{2}\\
+p=x & =-\frac{\phi}{\mu\omega^{2}}e_{1}e^{\omega\Omega\tau}+\frac{\phi}{\mu\omega^{2}}\omega e_{2}\tau+\frac{\phi}{\mu\omega^{2}}e_{1}
+\end{align*}
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\begin_inset Formula 
+\begin{align*}
+a=\ddot{x} & =\frac{\phi}{\mu}e_{1}e^{\omega\Omega\tau}\\
+v=\dot{x} & =\frac{\phi}{\mu\omega}e_{2}\left(1-e^{\omega\Omega\tau}\right)\\
+p=x & =\frac{\phi}{\mu\omega^{2}}\left(e_{1}\left(1-e^{\omega\Omega\tau}\right)+\omega e_{2}\tau\right)
+\end{align*}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsubsection
+Check
+\end_layout
+
+\begin_layout Standard
+To verify, differentiate the position equation via
+\begin_inset Formula 
+\begin{align*}
+\dot{x} & =\frac{\phi}{\mu\omega^{2}}\left(e_{1}\left(-e^{\omega\Omega\tau}\omega\Omega\right)+\omega e_{2}\right)\\
+ & =\frac{\phi}{\mu\omega^{2}}\left(-e_{1}e^{\omega\Omega\tau}\omega\Omega+\omega e_{2}\right)\\
+ & =\frac{\phi}{\mu\omega}\left(-e_{1}\Omega e^{\omega\Omega\tau}+e_{2}\right)\\
+ & =\frac{\phi}{\mu\omega}\left(-e_{2}e^{\omega\Omega\tau}+e_{2}\right)\\
+ & =\frac{\phi}{\mu\omega}e_{2}\left(-e^{\omega\Omega\tau}+1\right)
+\end{align*}
+
+\end_inset
+
+This agrees with the velocity equation.
+\end_layout
+
+\begin_layout Standard
+Differentiation again
+\begin_inset Formula 
+\begin{align*}
+\ddot{x} & =\frac{\phi}{\mu\omega}e_{2}\left(-e^{\omega\Omega\tau}\omega\Omega\right)\\
+ & =\frac{\phi}{\mu\omega}e_{2}\omega\left(-\Omega\right)e^{\omega\Omega\tau}\\
+ & =\frac{\phi}{\mu}\left(-e_{2}\Omega\right)e^{\omega\Omega\tau}\\
+ & =\frac{\phi}{\mu}e_{1}e^{\omega\Omega\tau}
+\end{align*}
+
+\end_inset
+
+This agrees with the acceleration condition.
+\end_layout
+
+\begin_layout Subsection
+Interesting Aspects of this Particular Example
+\end_layout
+
+\begin_layout Subsubsection
+Orthogonal Components
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\begin_inset Graphics
+	filename demoIntegrate_path.png
+	height 50theight%
+
+\end_inset
+
+
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:Example-of-path"
+
+\end_inset
+
+Example of path followed by rocket that fires its engine continuously for
+ three full rotation cycles.
+ Note that the rocket is originally pointing to the right (at bottom left
+ of graphic) and begins heading forward to the right.
+ Although acceleration initially displaces it to the right as expected,
+ the long term drift (due to the 
+\begin_inset Formula $\omega e_{2}\tau$
+\end_inset
+
+ parameter in the position solution) is 
+\emph on
+orthogonal to 
+\emph default
+this initial direction (i.e.
+ upward in the graphic).
+ The displayed section of path corresponds with position solution (Equation
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:x_SinCos"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+) evaluated over the range of evolution parameter values 
+\begin_inset Formula $0\le\tau\le50$
+\end_inset
+
+, for parameter values 
+\begin_inset Formula $\mu=1$
+\end_inset
+
+, 
+\begin_inset Formula $\phi=1$
+\end_inset
+
+, and 
+\begin_inset Formula $\omega=\frac{2\pi}{10}$
+\end_inset
+
+.
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The position equation can be expressed as
+\begin_inset Formula 
+\[
+p=x=\frac{\phi}{\mu\omega^{2}}\left(e_{1}+\omega e_{2}\tau\right)-\frac{\phi}{\mu\omega^{2}}e_{1}e^{\omega\Omega\tau}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The individual vector components of position can be distinguished by utilizing
+ Euler's identity to decompose the spinor into scalar and bivector grades,
+\begin_inset Formula 
+\begin{align*}
+p=x & =\frac{\phi}{\mu\omega^{2}}\left(e_{1}+\omega e_{2}\tau\right)\\
+ & -\frac{\phi}{\mu\omega^{2}}e_{1}\left(\cos\left(\omega\tau\right)+\Omega\sin\left(\omega\tau\right)\right)
+\end{align*}
+
+\end_inset
+
+Noting that 
+\begin_inset Formula $e_{1}\Omega=e_{2}$
+\end_inset
+
+,
+\begin_inset Formula 
+\begin{align*}
+p=x & =\frac{\phi}{\mu\omega^{2}}\left(e_{1}+\omega e_{2}\tau\right)\\
+ & -\frac{\phi}{\mu\omega^{2}}\left(\cos\left(\omega\tau\right)e_{1}+\sin\left(\omega\tau\right)e_{2}\right)
+\end{align*}
+
+\end_inset
+
+
+\begin_inset Formula 
+\begin{align*}
+p=x & =\frac{\phi}{\mu\omega^{2}}\left(e_{1}+\omega e_{2}\tau\right)\\
+ & +\frac{\phi}{\mu\omega^{2}}\left(-\cos\left(\omega\tau\right)e_{1}-\sin\left(\omega\tau\right)e_{2}\right)
+\end{align*}
+
+\end_inset
+
+
+\begin_inset Formula 
+\begin{align*}
+p=x & =\frac{\phi}{\mu\omega^{2}}\left(\left(1-\cos\left(\omega\tau\right)\right)e_{1}\right)\\
+ & +\frac{\phi}{\mu\omega^{2}}\left(\left(\omega\tau-\sin\left(\omega\tau\right)\right)e_{2}\right)
+\end{align*}
+
+\end_inset
+
+so that,
+\begin_inset Formula 
+\begin{equation}
+x=\frac{\phi}{\mu\omega^{2}}\left(\left(1-\cos\left(\omega\tau\right)\right)e_{1}+\left(\omega\tau-\sin\left(\omega\tau\right)\right)e_{2}\right)\label{eq:x_SinCos}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+From this it is clear that the 
+\begin_inset Formula $e_{1}$
+\end_inset
+
+ component of position oscillates (between 
+\begin_inset Formula $0$
+\end_inset
+
+ and 
+\begin_inset Formula $+2e_{1}$
+\end_inset
+
+), while the position in the 
+\begin_inset Formula $e_{2}$
+\end_inset
+
+ direction continues to increase indefinitely with time (while the acceleration
+ is being applied) while having an oscillation superposed upon the general
+ increasing trend.
+\end_layout
+
+\begin_layout Standard
+A graphic representation of this solution is presented in Figure
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig:Example-of-path"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Subsubsection
+Dependence on 
+\begin_inset Formula $\omega$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+It is interesting to consider the behavior of the position solution of equation
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:x_SinCos"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+ for special values of the rotation rate including, reversal of direction
+ (
+\begin_inset Formula $-\omega$
+\end_inset
+
+), for very fast rotation (large values of 
+\begin_inset Formula $\omega$
+\end_inset
+
+) and for very slow rotation (small values of 
+\begin_inset Formula $\omega$
+\end_inset
+
+).
+\end_layout
+
+\begin_layout Paragraph
+Reversal of Direction
+\end_layout
+
+\begin_layout Standard
+The solution for 
+\begin_inset Quotes eld
+\end_inset
+
+forward
+\begin_inset Quotes erd
+\end_inset
+
+ rotation is provided directly by equation
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:x_SinCos"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+.
+ I.e.
+\begin_inset Formula 
+\[
+x\left(\tau,\omega\right)=\frac{\phi}{\mu\omega^{2}}\left(\left(1-\cos\left(\omega\tau\right)\right)e_{1}+\left(\omega\tau-\sin\left(\omega\tau\right)\right)e_{2}\right)
+\]
+
+\end_inset
+
+Reversing the direction of rotation corresponds with negating the scalar
+ rotation rate, i.e.
+ 
+\begin_inset Formula $\omega\rightarrow-\omega$
+\end_inset
+
+.
+ The reversed rotation position may be expressed as
+\begin_inset Formula 
+\[
+x\left(\tau,-\omega\right)=\frac{\phi}{\mu\omega^{2}}\left(\left(1-\cos\left(\omega\tau\right)\right)e_{1}-\left(\omega\tau-\sin\left(\omega\tau\right)\right)e_{2}\right)
+\]
+
+\end_inset
+
+The forward component is unchanged, but the orthogonal component (including
+ the drift term) changes sign.
+\end_layout
+
+\begin_layout Paragraph
+Fast Rotation
+\end_layout
+
+\begin_layout Standard
+As 
+\begin_inset Formula $\omega$
+\end_inset
+
+ gets larger, the magnitudes of the oscillatory changes in position decrease.
+ The oscillation magnitudes decrease in proportion to 
+\begin_inset Formula $\omega^{-2}$
+\end_inset
+
+, while the linear drift decreased in proportion to 
+\begin_inset Formula $\omega^{-1}$
+\end_inset
+
+, such that
+\begin_inset Formula 
+\[
+\lim_{\omega\rightarrow\text{big}}\left\{ x\right\} \rightarrow\frac{\phi}{\mu\omega}\tau e_{2}
+\]
+
+\end_inset
+
+and in the extreme,
+\begin_inset Formula 
+\[
+\lim_{\omega\rightarrow\infty}\left\{ x\right\} \rightarrow0
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Paragraph
+Slow Rotation
+\end_layout
+
+\begin_layout Standard
+In the other extreme, there is almost no rotation associated with the condition,
+ 
+\begin_inset Formula $\omega\rightarrow0$
+\end_inset
+
+.
+ To evaluate this case, express the sine and cosine terms of equation
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:x_SinCos"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+ in series form, leading to
+\begin_inset Formula 
+\begin{align*}
+p=x & =\frac{\phi}{\mu\omega^{2}}\left(\left(1-\left[1-\frac{1}{2}\omega^{2}\tau^{2}+\mathcal{O}\left(\omega^{4}\right)\right]\right)e_{1}\right)\\
+ & +\frac{\phi}{\mu\omega^{2}}\left(\left(\omega\tau-\left[\omega t-\frac{1}{6}\omega^{3}\tau^{3}+\mathcal{O}\left(\omega^{5}\right)\right]\right)e_{2}\right)
+\end{align*}
+
+\end_inset
+
+which simplifies to
+\begin_inset Formula 
+\begin{align*}
+p=x & =\frac{\phi}{\mu\omega^{2}}\left(\left(\frac{1}{2}\omega^{2}\tau^{2}-\mathcal{O}\left(\omega^{4}\right)\right)e_{1}\right)\\
+ & +\frac{\phi}{\mu\omega^{2}}\left(\left(\frac{1}{6}\omega^{3}\tau^{3}-\mathcal{O}\left(\omega^{5}\right)\right)e_{2}\right)
+\end{align*}
+
+\end_inset
+
+
+\begin_inset Formula 
+\begin{align*}
+p=x & =\frac{\phi}{\mu}\left(\left(\frac{1}{2}\tau^{2}-\mathcal{O}\left(\omega^{2}\right)\right)e_{1}\right)\\
+ & +\frac{\phi}{\mu}\left(\left(\frac{1}{6}\omega\tau^{3}-\mathcal{O}\left(\omega^{3}\right)\right)e_{2}\right)
+\end{align*}
+
+\end_inset
+
+so that, in the limit,
+\begin_inset Formula 
+\[
+\lim_{\omega\rightarrow0}\left\{ x\right\} =\frac{\phi}{\mu}\frac{1}{2}\tau^{2}e_{1}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+This agrees with expectation of a constant force situation.
+ I.e.
+ while a constant (non rotating) vector force is applied continuously, the
+ position changes in quadratic fashion with the distance from the origin
+ increasing in proportion to the force magnitude, 
+\begin_inset Formula $\phi$
+\end_inset
+
+, in inverse proportion to the mass, 
+\begin_inset Formula $\mu$
+\end_inset
+
+, and in proportion to one half the square of the elapsed time, with the
+ direction of position change aligned with the direction of the (non rotating)
+ force.
+\end_layout
+
+\begin_layout Section
+General Observations
+\end_layout
+
+\begin_layout Standard
+The solution for this example includes steps analogous to those in solving
+ refraction problems.
+ I.e.
+\end_layout
+
+\begin_layout Itemize
+Formulate the problem as a system of differential equations
+\end_layout
+
+\begin_layout Itemize
+Integrate the equation system and determine the first constant of integration
+\end_layout
+
+\begin_layout Itemize
+Integrate the result once again and determine the second constant of integration
+\end_layout
+
+\begin_layout Standard
+The primary difference in the refraction case, is that the calculus of variation
+ leads to an Euler-Lagrange equation system that is much more complicated.
+ For the general refraction case, the equation system that, compared with
+ equation
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:a_specified"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+, is enormously more complicated and, other than for a few specialized cases,
+ the integration must be performed via numerical techniques.
+\end_layout
+
+\begin_layout Standard
+\begin_inset CommandInset bibtex
+LatexCommand bibtex
+btprint "btPrintCited"
+bibfiles "Papers"
+
+\end_inset
+
+
+\end_layout
+
+\end_body
+\end_document
