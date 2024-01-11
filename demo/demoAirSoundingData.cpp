@@ -39,7 +39,7 @@
 
 namespace
 {
-	//! demoAir application usage
+	//! \brief Program demoAirSoundingData.cpp main application usage.
 	struct Usage
 	{
 		std::filesystem::path theLoadPath;
@@ -84,6 +84,22 @@ namespace
 
 } // [anon]
 
+
+/* \brief Compare computed IoR values between UWyo sounding data and COESA1976.
+ *
+ * Usage:
+ * \arg Program takes one argumen which is the path to a file containing
+ * atmospheric sounding data (in "select-all/cut-n-paste" format from the
+ * University of Wyoming site:
+ * http://weather.uwyo.edu/upperair/sounding.html
+ *
+ * Code loads these "Sounding" data. It also loads "COESA1976" model data
+ * (from aply::env::sAirInfoCoesa1976 in include/envAirInfo.hpp). It then
+ * loops over range of heights above ground. At each height it:
+ * \arg Intrpolates AirIndex parameters (e.g. Temp/Pres) at height
+ * \arg Computes IoR using AirIndex values for each
+ * \arg Reports the two IoR values as well as difference between them.
+ */
 int
 main
 	( int argc
@@ -109,12 +125,16 @@ main
 		{ aply::env::sAirInfoCoesa1976 };
 
 	//
-	// Wrap data in Atmosphere properties interpolation class
+	// Wrap data in AirProfile interpolator
 	//
 
+	// construct a profile corresponding to sounding data (from arg[1])
 	aply::env::AirProfile const profileSounding{ airMapSounding };
+
+	// construct a Standard atmosphere profile for comparison
 	aply::env::AirProfile const profileCoesa1976{ airMapCoesa1976 };
 
+	// generate a table of IoR value comparisons
 	constexpr double maxHeight{ 15000. };
 	constexpr double delHeight{  1000. };
 	for (double height{0.} ; height < maxHeight ; height += delHeight)
@@ -131,31 +151,6 @@ main
 			<< '\n';
 	}
 
-return 1;
-
-
-// TODO do something with this
-	// Create COESA standard model
-	aply::env::Atmosphere const coesa1976
-		{ aply::env::Atmosphere::COESA1976() };
-
-	std::cout << "# loaded from: " << use.theLoadPath << '\n';
-	for (std::map<aply::env::Height, aply::env::AirInfo>::value_type
-		const & pairHighInfo : airMapSounding)
-	{
-		aply::env::AirInfo const & info = pairHighInfo.second;
-		double const uwyoIoR{ info.indexOfRefraction() };
-		double const height{ info.height() };
-		double const coesaIoR{ coesa1976.indexOfRefraction(height) };
-		double const diff{ uwyoIoR - coesaIoR };
-		using engabra::g3::io::fixed;
-//		std::cout << info << '\n';
-		std::cout
-			<< "  height: " << fixed(height, 6u, 0u)
-			<< "  uWyoIor: " << fixed(uwyoIoR, 1u, 6u)
-			<< "  coesa: " << fixed(coesaIoR, 1u, 6u)
-			<< "  diff: " << fixed(diff, 1u, 6u)
-			<< '\n';
-	}
+	return 0;
 }
 
