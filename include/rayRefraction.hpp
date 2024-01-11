@@ -34,7 +34,7 @@
 */
 
 
-#include "envAtmosphere.hpp"
+#include "envAirProfile.hpp"
 
 #include <Engabra>
 
@@ -128,7 +128,7 @@ private: // data
 	 * is that it keeps the atmospheric model relatively DE-coupled
 	 * from any specific figure of Earth models.
 	 */
-	env::Atmosphere theAtmosphere{};
+	env::AirProfile theAirProfile{};
 
 	//! \brief Defines the "zero-elevation" location relative to ECEF origin.
 	double theRadiusEarth{ engabra::g3::null<double>() };
@@ -179,7 +179,8 @@ public: // methods
 		( double const & lookAngle
 		, double const & radiusSensor
 		, double const & radiusEarth
-		, env::Atmosphere const & atmosphere = env::Atmosphere::COESA1976()
+		, env::AirProfile const & airProfile
+			= aply::env::AirProfile{ aply::env::sAirInfoCoesa1976 }
 		);
 
 	// destructor -- compiler provided

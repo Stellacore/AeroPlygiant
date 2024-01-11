@@ -61,8 +61,8 @@ namespace
 				)
 			};
 
-		//! \brief Atmosphere model in location of interest.
-		aply::env::Atmosphere const theAtmosphere{ };
+		//! \brief AirProfile model in location of interest.
+		aply::env::AirProfile const theAirProfile{ };
 
 		//! \brief Radius of Earth in vicinity of location of interest.
 		double const theRadEarth{ engabra::g3::null<double>() };
@@ -73,13 +73,13 @@ namespace
 		RefractGyer
 			( double const & refConst
 			, std::pair<double, std::vector<double> > const & initRadTheta
-			, aply::env::Atmosphere const & atmosphere
+			, aply::env::AirProfile const & airProfile
 			, double const & radEarth
 			)
 			: DiffEqSystem{}
 			, theRefConst{ refConst }
 			, theInitRadTheta{ initRadTheta }
-			, theAtmosphere{ atmosphere }
+			, theAirProfile{ airProfile }
 			, theRadEarth{ radEarth }
 		{ }
 
@@ -112,7 +112,7 @@ namespace
 
 			// height relative to Earth radius
 			double const elev{ currRad - theRadEarth };
-			double const currIoR{ theAtmosphere.indexOfRefraction(elev) };
+			double const currIoR{ theAirProfile.indexOfRefraction(elev) };
 			using engabra::g3::sq;
 			double const radicand{ sq(currRad*currIoR) - sq(theRefConst) };
 			double const denom{ currRad * std::sqrt(radicand) };
@@ -195,7 +195,7 @@ namespace ray
 
 Refraction :: Refraction()
 	: theRadiusEarth{ engabra::g3::null<double>() }
-	, theAtmosphere()
+	, theAirProfile()
 	, theRefractiveInvariant(0.0)
 	, theInitRadTheta()
 {
@@ -205,15 +205,15 @@ Refraction :: Refraction
 	( double const & lookAngle
 	, double const & radiusSensor
 	, double const & radiusEarth
-	, env::Atmosphere const & atmosphere
+	, env::AirProfile const & airProfile
 	)
 	: theStartLookAngle{ lookAngle }
 	, theStartRadius{ radiusSensor }
 	, theRadiusEarth{ radiusEarth }
-	, theAtmosphere{ atmosphere }
+	, theAirProfile{ airProfile }
 	, theRefractiveInvariant
 		{ theStartRadius
-		* theAtmosphere.indexOfRefraction(theStartRadius-theRadiusEarth)
+		* theAirProfile.indexOfRefraction(theStartRadius-theRadiusEarth)
 		* std::sin(lookAngle)
 		}
 	, theInitRadTheta
@@ -241,7 +241,7 @@ Refraction :: thetaAngleAt
 	RefractGyer const refractionSystem
 		( theRefractiveInvariant
 		, theInitRadTheta
-		, theAtmosphere
+		, theAirProfile
 		, theRadiusEarth
 		);
 	// Return initial value like structure includes:
