@@ -54,6 +54,7 @@ AirProfile :: airInfoAtHeight
 	{
 		std::map<Height, AirInfo>::const_iterator const nextIter
 			{ theAirInfoMap.upper_bound(height) };
+
 		if ( (std::cbegin(theAirInfoMap) != nextIter)
 		  && (std::cend(theAirInfoMap) != nextIter)
 		   )
@@ -75,7 +76,7 @@ AirProfile :: airInfoAtHeight
 			// determine fraction of way into interval
 			double const frac{ Interval(prevH, nextH).fracAtValue(height) };
 
-			if ((! (frac < 0.)) && (! (1. < frac)))
+			if ((! (frac < 0.)) && (frac < 1.))
 			{
 				info.theHigh = height;
 				info.theTemp = Interval
