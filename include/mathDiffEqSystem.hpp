@@ -36,6 +36,7 @@
 
 
 #include <string>
+#include <utility>
 #include <vector>
 
 
@@ -58,18 +59,20 @@ namespace math
 
 \b Summary:
 
-In general, the functor must transform (y1, y2, y3, ...) into (y1', y2',
-y3', ...) and the init function must be initialized with values (y1,
-y2, y3, ...) at a specified initial value for the (assumed) independent
-parameters, x.
+In general, the functor, operator(), must transform a system of function
+values (y1, y2, y3, ...) into a system of derivative values (y1', y2',
+y3', ...).  The initValues() function must be provide values for the
+functions (y1, y2, y3, ...) that are associated with a specific initial
+value for the (assumed) independent parameters, x.
 
-System may be solved with aply::math::DiffEqSolve.
+Once a desired ODE System is expressed within a derived class, then the
+system may be solved using aply::math::DiffEqSolve.
 
 \b Example:
 
 Ref: Concrete class aply::examp::diffeq::UniformAccel
 in example/diffeqSystem.hpp which implements a uniform acceleration
-equation system (y''=const).
+as a scalar valued equation system (y''=const).
 
 The ODE system is implemented as:
 \snippet example/diffeqSystem.hpp DoxyExampleDiffEqSystemOp()
