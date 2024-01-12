@@ -98,8 +98,8 @@ literal "false"
 .
  Because, the online available version of the paper presentation is difficult
  to read (photo-copy-of-a-copy quality graphics), it's useful to have a
- neatly legible copy of the formula available for reference while reading
- the paper.
+ neatly legible version of the key formula available for reference while
+ reading the paper.
  This document serves that purpose as well as providing several explicit
  intermediate formula to aid in following Gyer's derivation.
 \end_layout
@@ -109,7 +109,7 @@ Formulae
 \end_layout
 
 \begin_layout Standard
-Path shape geometry (2)
+Path shape geometry - Gyer Eqn[2]
 \begin_inset Formula 
 \[
 \partial\vartheta=\frac{1}{r}\tan\zeta\partial r
@@ -121,7 +121,7 @@ Path shape geometry (2)
 \end_layout
 
 \begin_layout Standard
-Refraction condition equation (differentiation of Snel's law) (5)
+Refraction condition equation (differentiation of Snel's law) - Gyer Eqn[5]
 \begin_inset Formula 
 \[
 \partial r=-\frac{r\partial n}{n}-r\cot\zeta\partial\zeta
@@ -133,7 +133,7 @@ Refraction condition equation (differentiation of Snel's law) (5)
 \end_layout
 
 \begin_layout Standard
-Substitute second into first (to get to 6)
+Substitute second into first to get to Gyer Eqn[6]
 \begin_inset Formula 
 \[
 \partial\vartheta=\frac{1}{r}\tan\zeta\left(-\frac{r\partial n}{n}-r\cot\zeta\partial\zeta\right)
@@ -169,7 +169,7 @@ Substitute second into first (to get to 6)
 \end_layout
 
 \begin_layout Standard
-Integrate from ground to camera (6,7)
+Integrate from ground to camera - Gyer Eqns [6,7]
 \begin_inset Formula 
 \[
 \intop_{\vartheta_{g}}^{\vartheta_{c}}\partial\vartheta+\intop_{\zeta_{g}}^{\zeta_{c}}\partial\zeta=-\intop_{n_{g}}^{n_{c}}\left(\frac{1}{n}\tan\zeta\right)\partial n
@@ -205,7 +205,7 @@ Integrate from ground to camera (6,7)
 \end_layout
 
 \begin_layout Standard
-Relationship (8)
+Relationship - Gyer Eqn [8]
 \begin_inset Formula 
 \[
 \zeta_{g}+R_{g}=\vartheta_{c}+\zeta_{c}-R_{c}
@@ -226,7 +226,7 @@ R_{g}+R_{c}=\vartheta_{c}+\zeta_{c}-\zeta_{g}
 
 \begin_layout Standard
 Substitute into above (to get the total deflection between two end tangent
- vectors) (9)
+ vectors) - Gyer Eqn [9]
 \begin_inset Formula 
 \[
 R_{g}+R_{c}=-\intop_{n_{g}}^{n_{c}}\left(\frac{1}{n}\tan\zeta\right)\partial n
@@ -235,6 +235,36 @@ R_{g}+R_{c}=-\intop_{n_{g}}^{n_{c}}\left(\frac{1}{n}\tan\zeta\right)\partial n
 \end_inset
 
 
+\end_layout
+
+\begin_layout Standard
+After change of variables based on Gyer Figure [2,3], the integral may be
+ expressed as - Gyer Eqn [12]
+\begin_inset Formula 
+\[
+\vartheta_{c}=\intop_{h_{g}}^{h_{c}}\frac{k}{r^{2}\sqrt{n^{2}r^{2}-k^{2}}}dr
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+This gives the angular component of polar coordinates for the (terminal)
+ point on the ray at location 
+\begin_inset Formula $r=h_{c}$
+\end_inset
+
+ relative to ray start point 
+\begin_inset Formula $\vartheta=0$
+\end_inset
+
+ and 
+\begin_inset Formula $r=h_{g}$
+\end_inset
+
+.
 \end_layout
 
 \begin_layout Standard
