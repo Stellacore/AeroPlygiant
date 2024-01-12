@@ -161,6 +161,16 @@ coupled component equations as illustrated above. Together, these
 processes can be applied repeatedly to reduce an arbitrary high-order
 vector differential equation to a set of coupled simultaneous first-order
 scalar equations.
+
+\par Example of Vector-valued 2nd order ODE system:
+
+Functor implementation:
+\snippet demo/demoIntegrate.cpp DoxyExample00
+
+Initial values implementation:
+\snippet demo/demoIntegrate.cpp DoxyExample01
+
+
 */
 /* - no test
 

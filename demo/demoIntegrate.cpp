@@ -211,7 +211,10 @@ namespace rk
 
 		virtual ~AccelSystem() = default;
 
-		/*! \brief TODO
+		// [DoxyExample00]
+		/*! \brief Derivatives for rotating rocket problem.
+		*
+		* Ref demoIntegrate.lyx for math description.
 		*
 		* Functions are:
 		* \arg y0c1 position, e1 component
@@ -234,37 +237,45 @@ namespace rk
 			( std::pair<double, std::vector<double> > const & tyValues
 			) const
 		{
+			// evoluation parameter (here time)
 			double const & tau = tyValues.first;
+
+			// access function values
 			std::vector<double> const & yFuncs = tyValues.second;
 			double const * ptFuncComp = yFuncs.data();
+
+			// components of vector position function
 			double const & y0c1 = *ptFuncComp++;
 			double const & y0c2 = *ptFuncComp++;
 			double const & y0c3 = *ptFuncComp++;
+
+			// components of vector velocity function
 			double const & y1c1 = *ptFuncComp++;
 			double const & y1c2 = *ptFuncComp++;
 			double const & y1c3 = *ptFuncComp++;
 
-			Vector const acc{ acceleration(tau) };
+			// vector acceleration function (known for this problem)
+			Vector const accel{ acceleration(tau) };
 
+			// derivative of position is velocity - one equation per component
 			double const y0c1Prime = y1c1;
 			double const y0c2Prime = y1c2;
 			double const y0c3Prime = y1c3;
-			double const y1c1Prime = acc[0];
-			double const y1c2Prime = acc[1];
-			double const y1c3Prime = acc[2];
+			// derivative of velocity is acceleration - equation per component
+			double const y1c1Prime = accel[0];
+			double const y1c2Prime = accel[1];
+			double const y1c3Prime = accel[2];
 
 			return
-				{ // y0Prime
-				  y0c1Prime
-				, y0c2Prime
-				, y0c3Prime
-				  // y1Prime
-				, y1c1Prime
-				, y1c2Prime
-				, y1c3Prime
+				{ // y0Prime vector component derivatives
+				  y0c1Prime, y0c2Prime, y0c3Prime
+				  // y1Prime vector component derivatives
+				, y1c1Prime, y1c2Prime, y1c3Prime
 				};
 		}
+		// [DoxyExample00]
 
+		// [DoxyExample01]
 		/*! \brief Initial conditios for spinning rocket problem
  		 *
  		 * Init Conditions
@@ -278,17 +289,18 @@ namespace rk
 			return
 				{ theInitTau
 				, std::vector<double>
-					{  // Pos(t0)
+					{  // Pos(t0) - init value for each component
 					  theInitPos[0]
 					, theInitPos[1]
 					, theInitPos[2]
-					   // Vel(t0)
+					   // Vel(t0) - init value for each component
 					, theInitVel[0]
 					, theInitVel[1]
 					, theInitVel[2]
 					}
 				};
 		}
+		// [DoxyExample01]
 
 	}; // AccelSystem
 
