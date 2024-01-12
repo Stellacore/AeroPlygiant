@@ -38,6 +38,9 @@
  *
 */
 
+#include "mathDiffEqSolve.hpp"
+#include "mathDiffEqSystem.hpp"
+
 #include <Engabra>
 
 #include <iostream>
@@ -49,8 +52,8 @@ namespace
 	using namespace engabra::g3;
 
 	// Configuration
-	constexpr double sPeriod{ 10. };
-	constexpr double sTauMax{ 3.*sPeriod };
+	constexpr double sPeriod{ 8. };
+	constexpr double sTauMax{ 4.*sPeriod };
 	constexpr double sTauDel{ sPeriod/1024. };
 
 	//! Rotating acceleration vector
@@ -74,9 +77,9 @@ namespace
 	struct State
 	{
 		double theTau{ null<double>() };
-		Vector theAcc{ null<Vector>() };
-		Vector theVel{ null<Vector>() };
 		Vector thePos{ null<Vector>() };
+		Vector theVel{ null<Vector>() };
+		Vector theAcc{ null<Vector>() };
 
 	}; // State
 
@@ -95,6 +98,22 @@ namespace
 			<< "  pos: " << io::fixed(state.thePos, 2u, 9u)
 			;
 		return strm;
+	}
+
+	//! Difference (component by component) between two states
+	inline
+	State
+	operator-
+		( State const & stateA
+		, State const & stateB
+		)
+	{
+		return State
+			{ stateA.theTau - stateB.theTau
+			, stateA.thePos - stateB.thePos
+			, stateA.theVel - stateB.theVel
+			, stateA.theAcc - stateB.theAcc
+			};
 	}
 
 	//! True if value is closest to (positive side of) an integer
@@ -132,7 +151,7 @@ namespace euler
 		Vector const nextPos{ curr.thePos + nextVel * dtau };
 		double const nextTau{ tau + dtau };
 		Vector const nextAcc{ acceleration(nextTau) };
-		return State{ nextTau, nextAcc, nextVel, nextPos };
+		return State{ nextTau, nextPos, nextVel, nextAcc };
 	}
 
 
@@ -167,6 +186,172 @@ namespace euler
 
 } // [euler]
 
+/*! \brief Runge-Kutta (RK) solution approach.
+ */
+namespace rk
+{
+	//! \brief System of vector equations for solving acceleration() ODE.
+	struct AccelSystem : public aply::math::DiffEqSystem
+	{
+		double const theInitTau{ null<double>() };
+		Vector const theInitPos{ null<Vector>() };
+		Vector const theInitVel{ null<Vector>() };
+
+		explicit
+		AccelSystem
+			( double const initTau
+			, Vector const initPos
+			, Vector const initVel
+			)
+			: DiffEqSystem()
+			, theInitTau{ initTau }
+			, theInitPos{ initPos }
+			, theInitVel{ initVel }
+		{ }
+
+		virtual ~AccelSystem() = default;
+
+		/*! \brief TODO
+		*
+		* Functions are:
+		* \arg y0c1 position, e1 component
+		* \arg y0c2 position, e2 component
+		* \arg y0c3 position, e3 component
+		* \arg y1c1 velocity, e1 component
+		* \arg y1c2 velocity, e2 component
+		* \arg y1c3 velocity, e3 component
+		* \arg y2c1 acceleration, e1 component (from accel model)
+		* \arg y2c2 acceleration, e2 component (from accel model)
+		* \arg y2c3 acceleration, e3 component (from accel model)
+		*
+		* Derivative are:
+		* y1 = y0'
+		* y2 = y1'
+ 		*/
+		virtual
+		std::vector<double>
+		operator()
+			( std::pair<double, std::vector<double> > const & tyValues
+			) const
+		{
+			double const & tau = tyValues.first;
+			std::vector<double> const & yFuncs = tyValues.second;
+			double const * ptFuncComp = yFuncs.data();
+			double const & y0c1 = *ptFuncComp++;
+			double const & y0c2 = *ptFuncComp++;
+			double const & y0c3 = *ptFuncComp++;
+			double const & y1c1 = *ptFuncComp++;
+			double const & y1c2 = *ptFuncComp++;
+			double const & y1c3 = *ptFuncComp++;
+
+			Vector const acc{ acceleration(tau) };
+
+			double const y0c1Prime = y1c1;
+			double const y0c2Prime = y1c2;
+			double const y0c3Prime = y1c3;
+			double const y1c1Prime = acc[0];
+			double const y1c2Prime = acc[1];
+			double const y1c3Prime = acc[2];
+
+			return
+				{ // y0Prime
+				  y0c1Prime
+				, y0c2Prime
+				, y0c3Prime
+				  // y1Prime
+				, y1c1Prime
+				, y1c2Prime
+				, y1c3Prime
+				};
+		}
+
+		/*! \brief Initial conditios for spinning rocket problem
+ 		 *
+ 		 * Init Conditions
+		 * \arg Position (y0c[012] = 0.)
+		 * \arg Velocity (y1c[012] = 0.)
+ 		 */
+		std::pair<double, std::vector<double> >
+		initValues
+			() const
+		{
+			return
+				{ theInitTau
+				, std::vector<double>
+					{  // Pos(t0)
+					  theInitPos[0]
+					, theInitPos[1]
+					, theInitPos[2]
+					   // Vel(t0)
+					, theInitVel[0]
+					, theInitVel[1]
+					, theInitVel[2]
+					}
+				};
+		}
+
+	}; // AccelSystem
+
+	//! Use RK4 solver to approximation solution for one display step.
+	inline
+	State
+	nextState
+		( State const & currState //!< Initial state
+		, double const & nextTau //!< Propagate until this time
+		, double const & tauDel //!< Step size (in time)
+		)
+	{
+		// integrate until the next reporting step
+
+		// setup system at start of this step
+		AccelSystem const accelSystem
+			(currState.theTau, currState.thePos, currState.theVel);
+
+		// solve system until next step
+		aply::math::DiffEqSolve solver(tauDel);
+
+		std::pair<double, std::vector<double> >
+			const soln{ solver.solutionFor(nextTau, accelSystem) };
+
+		std::vector<double> const & sVals = soln.second;
+		Vector const nextPos{ sVals[0], sVals[1], sVals[2] };
+		Vector const nextVel{ sVals[3], sVals[4], sVals[5] };
+
+		return State{ nextTau, nextPos, nextVel, acceleration(nextTau) };
+	}
+
+	//! Use RK4 solver to approximation solution until tauMax
+	inline
+	std::vector<State>
+	nextStates
+		( State const & state0 //!< Initial state
+		, double const & tauMax //!< Propagate until this time
+		, double const & tauDel //!< Step size (in time)
+		)
+	{
+		std::vector<State> states;
+
+		// set initial state
+		State currState{ state0 };
+		states.emplace_back(currState);
+
+		// iterate over future states
+		// (solving each state with a many step RK4 integration)
+		while (! (tauMax < currState.theTau))
+		{
+			// integrate until the next reporting step
+			double const nextTau{ currState.theTau + tauDel };
+
+			// record this way point
+			currState = nextState(currState, nextTau, tauDel);
+			states.emplace_back(currState);
+		}
+
+		return states;
+	}
+
+} // [rk]
+
 
 /*! \brief Solve "rotating rocket" demo problem by two methods.
  *
@@ -177,20 +362,44 @@ main
 	()
 {
 	// initial state
-	State state0{ 0., acceleration(0.), zero<Vector>(), zero<Vector>() };
+	State state0{ 0., zero<Vector>(), zero<Vector>(), acceleration(0.) };
 
 	// propagate forward with simple Euler's method
 	std::vector<State> const eStates
 		{ euler::nextStates(state0, sTauMax, sTauDel) };
 
+	// approximate with 4th order RK solution.
+	std::vector<State> const rkStates
+		{ rk::nextStates(state0, sTauMax, sTauDel) };
+
 	// display results of Euler integration
-	std::cerr << "eStates.size: " << eStates.size() << std::endl;
+	std::cerr << "\neStates.size: " << eStates.size() << std::endl;
 	for (State const & eState : eStates)
 	{
 		if (nearInt(eState.theTau, sTauDel))
 		{
 			std::cout << "eState: " << eState << '\n';
 		}
+	}
+
+	// display results of Euler integration
+	std::cerr << "\nrkStates.size: " << rkStates.size() << std::endl;
+	for (State const & rkState : rkStates)
+	{
+		if (nearInt(rkState.theTau, sTauDel))
+		{
+			std::cout << "rkState: " << rkState << '\n';
+		}
+	}
+
+	std::size_t const eSize{ eStates.size() };
+	std::size_t const rkSize{ rkStates.size() };
+	std::size_t const minSize{ std::min(eSize, rkSize) };
+	for (std::size_t nn{0u} ; nn < minSize ; nn += 128u)
+	{
+		State difState{ eStates[nn] - rkStates[nn] };
+		difState.theTau = eStates[nn].theTau;
+		std::cout << "difState: " << difState << '\n';
 	}
 
 }
